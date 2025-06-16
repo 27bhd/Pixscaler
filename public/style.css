@@ -878,6 +878,29 @@ body {
     backdrop-filter: blur(10px);
 }
 
+/* Free Badge */
+.free-badge {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Upload Note */
+.upload-note {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.upload-note small {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+}
+
 /* Footer */
 .footer {
     background: rgba(0, 0, 0, 0.8);
