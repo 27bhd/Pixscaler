@@ -1,8 +1,5 @@
 # Server-side files (not needed for client-side app)
-server.js
-routes/
-middleware/
-database/
+legacy/
 tests/
 logs/
 
@@ -17,8 +14,12 @@ Thumbs.db
 *.md
 !README.md
 SECURITY-CHECKLIST.md
+BUTTON_AUDIT_REPORT.md
+FULL_CODE_AUDIT.md
+FAVICON_SETUP.md
 plan.txt
 project\ goals.txt
+expansion-roadmap.txt
 
 # Legacy files
 vercel.json 

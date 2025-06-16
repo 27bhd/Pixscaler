@@ -2,13 +2,13 @@
   "name": "pixscaler",
   "version": "2.0.0",
   "description": "Free client-side image resizer - no uploads, complete privacy",
-  "main": "index.html",
+  "main": "public/index.html",
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "npx serve . -p $PORT",
-    "dev": "npx serve . -p 3000",
+    "start": "npx serve public -p $PORT",
+    "dev": "npx serve public -p 3000",
     "build": "echo 'No build step required - static files ready for deployment'",
     "test": "echo 'Client-side application - no server tests needed'"
   },

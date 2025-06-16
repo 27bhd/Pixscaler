@@ -109,7 +109,7 @@ function displayImageInfo(img) {
     document.getElementById('height').value = img.naturalHeight;
     
     // Show image info
-    console.log(`📸 Image loaded: ${img.naturalWidth}x${img.naturalHeight}`);
+            // Image loaded successfully
 }
 
 function showControls() {
@@ -157,7 +157,7 @@ function resizeImage() {
             showPreview(resizedImageData, width, height, format);
             hideLoading();
         } catch (error) {
-            console.error('❌ Resize error:', error);
+            // Resize error handled by showError function
             showError('Failed to resize image: ' + error.message);
             hideLoading();
         }
@@ -258,7 +258,7 @@ function showPreview(imageData, width, height, format) {
     // Check achievements
     checkAchievements(originalSize, newSize);
 
-    console.log(`✅ Image resized successfully: ${width}x${height} (${format})`);
+    // Image resized successfully
 }
 
 function generateFileName(originalName, width, height, format) {
@@ -292,7 +292,7 @@ function hideLoading() {
 
 function showError(message) {
     alert('Pixscaler: ' + message);
-    console.error('❌ Error:', message);
+    // Error displayed to user via UI
 }
 
 function resetUpload() {
@@ -315,7 +315,7 @@ function resetUpload() {
     document.getElementById('qualityValue').textContent = '85%';
     document.querySelector('input[name="format"][value="jpeg"]').checked = true;
     
-    console.log('🔄 Upload reset');
+    // Upload reset completed
 }
 
 // Smart Drop Zone - Make entire page a drop zone
@@ -508,7 +508,7 @@ function shareSuccess() {
             text: shareText,
             url: shareUrl
         }).catch(err => {
-            console.log('Error sharing:', err);
+            // Share fallback used
             fallbackShare(shareText, shareUrl);
         });
     } else {
@@ -616,7 +616,7 @@ function updateSocialProof() {
     }
 }
 
-console.log('🚀 Pixscaler Client-Side Edition loaded successfully!');
+// Pixscaler Client-Side Edition loaded successfully
 
 // Modal functions (for legacy modal elements)
 function closeModal(modalId) {
