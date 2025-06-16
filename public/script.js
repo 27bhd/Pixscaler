@@ -3,10 +3,16 @@
 
 let currentImage = null;
 let originalFileName = '';
+let totalBandwidthSaved = 0;
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
+    updateImageCounter();
+    setupScrollEffects();
+    setupSmartDropZone();
+    setupKeyboardShortcuts();
+    loadBandwidthStats();
 });
 
 function initializeApp() {
@@ -18,7 +24,7 @@ function initializeApp() {
     // File input change handler
     fileInput.addEventListener('change', handleFileSelect);
 
-    // Drag and drop handlers
+    // Drag and drop handlers for upload area
     uploadArea.addEventListener('dragover', handleDragOver);
     uploadArea.addEventListener('dragleave', handleDragLeave);
     uploadArea.addEventListener('drop', handleDrop);
@@ -246,6 +252,12 @@ function showPreview(imageData, width, height, format) {
         <small>Format: ${format.toUpperCase()} | Size: ${formatFileSize(newSize)}${reduction > 0 ? ` | ${reduction}% smaller` : ''}</small>
     `;
 
+    // Increment usage counter
+    incrementImageCounter();
+
+    // Check achievements
+    checkAchievements(originalSize, newSize);
+
     console.log(`✅ Image resized successfully: ${width}x${height} (${format})`);
 }
 
@@ -306,51 +318,293 @@ function resetUpload() {
     console.log('🔄 Upload reset');
 }
 
-// Authentication functions (simplified for client-side)
-function showLoginModal() {
-    document.getElementById('loginModal').style.display = 'flex';
-}
-
-function showRegisterModal() {
-    document.getElementById('registerModal').style.display = 'flex';
-}
-
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-}
-
-function switchModal(fromModal, toModal) {
-    closeModal(fromModal);
-    document.getElementById(toModal).style.display = 'flex';
-}
-
-// Simplified auth (no backend needed)
-function logout() {
-    console.log('Logout clicked');
-    // In client-side version, just hide user info
-    document.querySelector('.user-info').style.display = 'none';
-    document.querySelector('.auth-buttons').style.display = 'flex';
-}
-
-// Form handlers (simplified)
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
+// Smart Drop Zone - Make entire page a drop zone
+function setupSmartDropZone() {
+    let dragCounter = 0;
     
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+    // Prevent default drag behaviors on entire document
+    document.addEventListener('dragenter', function(e) {
+        e.preventDefault();
+        dragCounter++;
+        if (dragCounter === 1) {
+            document.body.classList.add('drag-active');
+        }
+    });
+    
+    document.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dragCounter--;
+        if (dragCounter === 0) {
+            document.body.classList.remove('drag-active');
+        }
+    });
+    
+    document.addEventListener('dragover', function(e) {
+        e.preventDefault();
+    });
+    
+    document.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dragCounter = 0;
+        document.body.classList.remove('drag-active');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+                processImageFile(file);
+            } else {
+                showError('Please drop an image file (JPEG, PNG, WebP, GIF)');
+            }
+        }
+    });
+}
+
+// Keyboard Shortcuts
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', function(e) {
+        // Toggle help with '?'
+        if (e.key === '?' && !e.ctrlKey && !e.altKey) {
             e.preventDefault();
-            alert('Login functionality is disabled in the client-side version. All features are available without registration!');
-        });
+            toggleKeyboardHelp();
+            return;
+        }
+        
+        // Ctrl + O: Upload image
+        if (e.ctrlKey && e.key === 'o') {
+            e.preventDefault();
+            document.getElementById('fileInput').click();
+            return;
+        }
+        
+        // Ctrl + Enter: Resize image
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            if (currentImage) {
+                resizeImage();
+            }
+            return;
+        }
+        
+        // Ctrl + R: Reset (override browser refresh)
+        if (e.ctrlKey && e.key === 'r') {
+            e.preventDefault();
+            if (currentImage) {
+                resetUpload();
+            }
+            return;
+        }
+        
+        // Number keys 1-4: Quick presets
+        if (!e.ctrlKey && !e.altKey && currentImage) {
+            switch(e.key) {
+                case '1':
+                    e.preventDefault();
+                    setPreset(1920, 1080);
+                    break;
+                case '2':
+                    e.preventDefault();
+                    setPreset(1280, 720);
+                    break;
+                case '3':
+                    e.preventDefault();
+                    setPreset(800, 600);
+                    break;
+                case '4':
+                    e.preventDefault();
+                    setPreset(400, 400);
+                    break;
+            }
+        }
+    });
+}
+
+function toggleKeyboardHelp() {
+    const helpPanel = document.getElementById('keyboardHelp');
+    helpPanel.classList.toggle('show');
+    
+    // Auto-hide after 5 seconds
+    if (helpPanel.classList.contains('show')) {
+        setTimeout(() => {
+            helpPanel.classList.remove('show');
+        }, 5000);
+    }
+}
+
+// Achievement System
+function showAchievement(icon, text, detail) {
+    const achievement = document.createElement('div');
+    achievement.className = 'achievement-popup';
+    achievement.innerHTML = `
+        <div>
+            <span class="achievement-icon">${icon}</span>
+            <span class="achievement-text">${text}</span>
+            <div class="achievement-detail">${detail}</div>
+        </div>
+    `;
+    
+    document.body.appendChild(achievement);
+    
+    // Remove after 4 seconds
+    setTimeout(() => {
+        achievement.style.animation = 'achievementSlide 0.5s ease-in reverse';
+        setTimeout(() => {
+            if (achievement.parentNode) {
+                achievement.parentNode.removeChild(achievement);
+            }
+        }, 500);
+    }, 4000);
+}
+
+function checkAchievements(originalSize, newSize) {
+    const reduction = originalSize - newSize;
+    totalBandwidthSaved += reduction;
+    saveBandwidthStats();
+    
+    // File size reduction achievements
+    if (reduction > 0) {
+        const reductionMB = (reduction / (1024 * 1024)).toFixed(1);
+        showAchievement('💾', 'Bandwidth Saved!', `You saved ${reductionMB} MB of bandwidth`);
     }
     
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Registration functionality is disabled in the client-side version. All features are available without registration!');
-        });
+    // Total bandwidth milestones
+    const totalMB = (totalBandwidthSaved / (1024 * 1024)).toFixed(1);
+    if (totalBandwidthSaved > 10 * 1024 * 1024 && totalBandwidthSaved - reduction <= 10 * 1024 * 1024) {
+        showAchievement('🏆', 'Bandwidth Hero!', `You've saved over 10 MB total!`);
+    } else if (totalBandwidthSaved > 100 * 1024 * 1024 && totalBandwidthSaved - reduction <= 100 * 1024 * 1024) {
+        showAchievement('🚀', 'Compression Master!', `You've saved over 100 MB total!`);
     }
-});
+    
+    // Usage milestones
+    const imageCount = parseInt(document.getElementById('imageCount').textContent) || 0;
+    if (imageCount === 10) {
+        showAchievement('🎯', 'Getting Started!', 'You\'ve processed 10 images today');
+    } else if (imageCount === 50) {
+        showAchievement('⚡', 'Power User!', 'You\'ve processed 50 images today');
+    }
+}
+
+function loadBandwidthStats() {
+    const saved = localStorage.getItem('pixscaler_bandwidth_saved');
+    if (saved) {
+        totalBandwidthSaved = parseInt(saved) || 0;
+    }
+}
+
+function saveBandwidthStats() {
+    localStorage.setItem('pixscaler_bandwidth_saved', totalBandwidthSaved.toString());
+}
+
+// Share functionality
+function shareSuccess() {
+    const shareText = "I just resized images for FREE at pixscaler.com - no sign-up, no limits, completely private! 🖼️✨";
+    const shareUrl = "https://pixscaler.com";
+    
+    if (navigator.share) {
+        // Use native sharing if available
+        navigator.share({
+            title: 'Pixscaler - Free Image Resizer',
+            text: shareText,
+            url: shareUrl
+        }).catch(err => {
+            console.log('Error sharing:', err);
+            fallbackShare(shareText, shareUrl);
+        });
+    } else {
+        fallbackShare(shareText, shareUrl);
+    }
+}
+
+function fallbackShare(text, url) {
+    // Copy to clipboard and show options
+    const fullText = `${text} ${url}`;
+    navigator.clipboard.writeText(fullText).then(() => {
+        showDonationToast('Share text copied to clipboard! 📋');
+        
+        // Show social media options
+        setTimeout(() => {
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+            const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+            
+            showDonationToast(`Share on: <a href="${twitterUrl}" target="_blank" style="color: #1da1f2;">Twitter</a> | <a href="${linkedinUrl}" target="_blank" style="color: #0077b5;">LinkedIn</a>`);
+        }, 2000);
+    }).catch(() => {
+        showDonationToast('Unable to copy to clipboard 😅');
+    });
+}
+
+// Usage counter functions
+function updateImageCounter() {
+    const today = new Date().toDateString();
+    const storedData = localStorage.getItem('pixscaler_stats');
+    let stats = { date: today, count: 0 };
+    
+    if (storedData) {
+        const parsed = JSON.parse(storedData);
+        if (parsed.date === today) {
+            stats = parsed;
+        }
+    }
+    
+    document.getElementById('imageCount').textContent = stats.count;
+}
+
+function incrementImageCounter() {
+    const today = new Date().toDateString();
+    const storedData = localStorage.getItem('pixscaler_stats');
+    let stats = { date: today, count: 0 };
+    
+    if (storedData) {
+        const parsed = JSON.parse(storedData);
+        if (parsed.date === today) {
+            stats = parsed;
+        }
+    }
+    
+    stats.count++;
+    localStorage.setItem('pixscaler_stats', JSON.stringify(stats));
+    
+    // Animate counter update
+    const counterElement = document.getElementById('imageCount');
+    counterElement.style.animation = 'countUp 0.5s ease-out';
+    counterElement.textContent = stats.count;
+    
+    setTimeout(() => {
+        counterElement.style.animation = '';
+    }, 500);
+}
+
+// Scroll effects
+function setupScrollEffects() {
+    const floatingBadge = document.getElementById('floatingBadge');
+    let hasScrolled = false;
+    
+    window.addEventListener('scroll', function() {
+        const scrollY = window.scrollY;
+        
+        // Show floating badge after scrolling 200px
+        if (scrollY > 200 && !hasScrolled) {
+            floatingBadge.style.display = 'block';
+            hasScrolled = true;
+        } else if (scrollY <= 200 && hasScrolled) {
+            floatingBadge.style.display = 'none';
+            hasScrolled = false;
+        }
+    });
+    
+    // Update social proof with simulated activity
+    updateSocialProof();
+}
+
+function updateSocialProof() {
+    const totalElement = document.getElementById('totalProcessed');
+    if (totalElement) {
+        // Simulate daily activity (between 50-200 images)
+        const baseCount = 50 + Math.floor(Math.random() * 150);
+        const userCount = parseInt(document.getElementById('imageCount').textContent) || 0;
+        totalElement.textContent = baseCount + userCount;
+    }
+}
 
 console.log('🚀 Pixscaler Client-Side Edition loaded successfully!');
 

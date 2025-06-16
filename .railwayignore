@@ -1,0 +1,24 @@
+# Server-side files (not needed for client-side app)
+server.js
+routes/
+middleware/
+database/
+tests/
+logs/
+
+# Development files
+.env*
+env.example
+*.log
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+!README.md
+SECURITY-CHECKLIST.md
+plan.txt
+project\ goals.txt
+
+# Legacy files
+vercel.json 

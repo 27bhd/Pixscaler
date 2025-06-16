@@ -1,73 +1,35 @@
 {
   "name": "pixscaler",
-  "version": "1.0.0",
-  "description": "AI-powered image resizing tool with professional-grade quality and performance",
-  "main": "server.js",
+  "version": "2.0.0",
+  "description": "Free client-side image resizer - no uploads, complete privacy",
+  "main": "index.html",
   "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "NODE_ENV=development node server.js",
-    "prod": "NODE_ENV=production node server.js",
-    "test": "node tests/test-runner.js",
-    "test:auth": "node tests/auth-api-test.js",
-    "test:images": "node tests/image-processing-test.js",
-    "test:setup": "node tests/setup-tests.js",
-    "test:ui": "echo 'Open tests/ui-interaction-test.html in your browser'",
-    "test:mobile": "echo 'Open tests/mobile-test.html on your mobile device'",
-    "build": "echo 'No build step required - Node.js app ready for deployment'",
-    "deploy:vercel": "vercel --prod",
-    "deploy:railway": "railway up",
-    "security:audit": "npm audit --audit-level=moderate",
-    "security:check": "node -e \"console.log('Checking environment...'); require('./config'); console.log('✅ Configuration loaded successfully');\"",
-    "db:backup": "mkdir -p backups && sqlite3 database/pixscaler.db \".backup backups/pixscaler-$(date +%Y%m%d-%H%M%S).db\"",
-    "db:init": "node -e \"const Database = require('./database/init'); const db = new Database(); db.init().then(() => { console.log('Database initialized'); db.close(); });\"",
-    "logs:error": "tail -f logs/pixscaler.log | grep ERROR",
-    "health:check": "curl -f http://localhost:3000/health || exit 1"
+    "start": "npx serve . -p $PORT",
+    "dev": "npx serve . -p 3000",
+    "build": "echo 'No build step required - static files ready for deployment'",
+    "test": "echo 'Client-side application - no server tests needed'"
   },
-  "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^4.18.2",
-    "express-rate-limit": "^7.5.0",
-    "express-session": "^1.18.1",
-    "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^1.4.5-lts.1",
-    "node-fetch": "^3.3.2",
-    "passport": "^0.7.0",
-    "passport-github2": "^0.1.12",
-    "passport-google-oauth20": "^2.0.0",
-    "sharp": "^0.32.6",
-    "sqlite3": "^5.1.7"
-  },
-  "devDependencies": {},
   "keywords": [
-    "image",
-    "resize",
-    "compress",
-    "ai-powered",
-    "photo-editor",
-    "image-processing",
-    "web-app",
-    "nodejs",
-    "express"
+    "image-resizer",
+    "client-side",
+    "free",
+    "privacy",
+    "canvas",
+    "javascript",
+    "static",
+    "no-upload"
   ],
-  "author": {
-    "name": "Walid",
-    "email": "walid@pixscaler.com",
-    "url": "https://pixscaler.com"
-  },
+  "author": "Beniverse",
   "license": "MIT",
-  "homepage": "https://pixscaler.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/WalidMH/pixscaler.git"
+    "url": "https://github.com/yourusername/pixscaler.git"
   },
-  "bugs": {
-    "url": "https://github.com/WalidMH/pixscaler/issues"
+  "homepage": "https://pixscaler.com",
+  "devDependencies": {
+    "serve": "^14.2.1"
   }
 }

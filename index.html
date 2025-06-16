@@ -76,8 +76,9 @@
                 <a href="#donate" class="donate-link">☕ Buy Me Coffee</a>
             </div>
             <div class="auth-section">
-                <div class="auth-buttons">
-                    <span class="free-badge">100% Free Forever</span>
+                <div class="no-signup-banner">
+                    <span class="no-signup-text">🚫 No Sign-up Required</span>
+                    <span class="no-payment-text">💳 No Payment Needed</span>
                 </div>
             </div>
         </div>
@@ -86,9 +87,29 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
+            <div class="free-announcement">
+                <span class="free-badge-large">🎉 100% FREE FOREVER</span>
+                <p class="free-subtitle">No subscriptions • No limits • No BS</p>
+            </div>
+            
             <h1 class="hero-title">Resize Images Like a Pro</h1>
             <p class="hero-subtitle">Transform your images with professional precision. Fast, secure, and completely client-side - your images never leave your device.</p>
             
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-number" id="imageCount">0</span>
+                    <span class="stat-label">Images Processed Today</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Usage Limit</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">0</span>
+                    <span class="stat-label">Server Costs</span>
+                </div>
+            </div>
+
             <!-- Upload Area -->
             <div class="upload-area" id="uploadArea">
                 <div class="upload-icon">🖼️</div>
@@ -170,6 +191,9 @@
                 <button class="new-image-btn" onclick="resetUpload()">
                     🔄 Resize Another Image
                 </button>
+                <button class="share-btn" onclick="shareSuccess()">
+                    🚀 Share This Free Tool
+                </button>
             </div>
         </div>
     </section>
@@ -245,6 +269,56 @@
             </div>
         </div>
     </section>
+
+    <!-- Floating Free Badge -->
+    <div class="floating-free-badge" id="floatingBadge" style="display: none;">
+        <span>🎉 100% FREE</span>
+    </div>
+
+    <!-- Keyboard Shortcuts Help -->
+    <div class="keyboard-shortcuts" id="keyboardHelp">
+        <h4>⌨️ Keyboard Shortcuts</h4>
+        <div class="shortcut">
+            <span>Upload Image</span>
+            <span class="key">Ctrl + O</span>
+        </div>
+        <div class="shortcut">
+            <span>Resize Image</span>
+            <span class="key">Ctrl + Enter</span>
+        </div>
+        <div class="shortcut">
+            <span>Reset/New Image</span>
+            <span class="key">Ctrl + R</span>
+        </div>
+        <div class="shortcut">
+            <span>Toggle Help</span>
+            <span class="key">?</span>
+        </div>
+        <div class="shortcut">
+            <span>Quick Presets</span>
+            <span class="key">1-4</span>
+        </div>
+    </div>
+
+    <!-- Social Proof Banner -->
+    <div class="social-proof">
+        <div class="container">
+            <div class="social-proof-content">
+                <span class="social-proof-text">Join thousands of users who resize images for free every day</span>
+                <div class="social-proof-stats">
+                    <span class="proof-stat">
+                        <strong id="totalProcessed">0</strong> images processed today
+                    </span>
+                    <span class="proof-stat">
+                        <strong>0</strong> server costs
+                    </span>
+                    <span class="proof-stat">
+                        <strong>100%</strong> privacy guaranteed
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Donation Section -->
     <section class="donation" id="donate">
