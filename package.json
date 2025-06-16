@@ -1,17 +1,31 @@
 {
   "name": "pixscaler",
   "version": "1.0.0",
-  "description": "Simple image resizer tool",
+  "description": "AI-powered image resizing tool with professional-grade quality and performance",
   "main": "server.js",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
+    "dev": "NODE_ENV=development node server.js",
+    "prod": "NODE_ENV=production node server.js",
     "test": "node tests/test-runner.js",
     "test:auth": "node tests/auth-api-test.js",
     "test:images": "node tests/image-processing-test.js",
     "test:setup": "node tests/setup-tests.js",
     "test:ui": "echo 'Open tests/ui-interaction-test.html in your browser'",
-    "test:mobile": "echo 'Open tests/mobile-test.html on your mobile device'"
+    "test:mobile": "echo 'Open tests/mobile-test.html on your mobile device'",
+    "build": "echo 'No build step required - Node.js app ready for deployment'",
+    "deploy:vercel": "vercel --prod",
+    "deploy:railway": "railway up",
+    "security:audit": "npm audit --audit-level=moderate",
+    "security:check": "node -e \"console.log('Checking environment...'); require('./config'); console.log('✅ Configuration loaded successfully');\"",
+    "db:backup": "mkdir -p backups && sqlite3 database/pixscaler.db \".backup backups/pixscaler-$(date +%Y%m%d-%H%M%S).db\"",
+    "db:init": "node -e \"const Database = require('./database/init'); const db = new Database(); db.init().then(() => { console.log('Database initialized'); db.close(); });\"",
+    "logs:error": "tail -f logs/pixscaler.log | grep ERROR",
+    "health:check": "curl -f http://localhost:3000/health || exit 1"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -30,11 +44,30 @@
     "sharp": "^0.32.6",
     "sqlite3": "^5.1.7"
   },
+  "devDependencies": {},
   "keywords": [
     "image",
     "resize",
-    "compress"
+    "compress",
+    "ai-powered",
+    "photo-editor",
+    "image-processing",
+    "web-app",
+    "nodejs",
+    "express"
   ],
-  "author": "",
-  "license": "MIT"
+  "author": {
+    "name": "Walid",
+    "email": "walid@pixscaler.com",
+    "url": "https://pixscaler.com"
+  },
+  "license": "MIT",
+  "homepage": "https://pixscaler.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WalidMH/pixscaler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WalidMH/pixscaler/issues"
+  }
 }

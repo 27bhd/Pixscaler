@@ -16,9 +16,14 @@ module.exports = {
     }
   },
   
-  // JWT Configuration
+  // JWT Configuration - PRODUCTION SECURE DEFAULTS
   jwt: {
-    secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production',
+    secret: process.env.JWT_SECRET || (() => {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('JWT_SECRET environment variable is required in production');
+      }
+      return require('crypto').randomBytes(32).toString('hex');
+    })(),
     expiresIn: process.env.JWT_EXPIRES_IN || '7d'
   },
   
@@ -122,10 +127,16 @@ module.exports = {
     }
   },
   
-  // Security Configuration
+  // Security Configuration - PRODUCTION SECURE DEFAULTS
   security: {
     bcryptRounds: 12,
-    sessionSecret: process.env.SESSION_SECRET || 'your-session-secret-change-in-production',
-    corsOrigins: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : ['http://localhost:3000']
+    sessionSecret: process.env.SESSION_SECRET || (() => {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('SESSION_SECRET environment variable is required in production');
+      }
+      return require('crypto').randomBytes(32).toString('hex');
+    })(),
+    corsOrigins: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : 
+      process.env.NODE_ENV === 'production' ? [] : ['http://localhost:3000']
   }
 }; 
