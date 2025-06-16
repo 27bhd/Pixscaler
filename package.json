@@ -31,5 +31,8 @@
   "homepage": "https://pixscaler.com",
   "devDependencies": {
     "serve": "^14.2.1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
   }
 }

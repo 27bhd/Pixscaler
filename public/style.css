@@ -70,6 +70,7 @@ body {
 .nav-links {
     display: flex;
     gap: 2rem;
+    align-items: center;
 }
 
 .nav-links a {
@@ -1197,6 +1198,9 @@ body {
     font-weight: 600 !important;
     transition: all 0.3s ease !important;
     text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    line-height: 1 !important;
 }
 
 .donate-link:hover {

@@ -23,7 +23,7 @@ function initializeApp() {
 
     // File input change handler
     fileInput.addEventListener('change', handleFileSelect);
-
+    
     // Drag and drop handlers for upload area
     uploadArea.addEventListener('dragover', handleDragOver);
     uploadArea.addEventListener('dragleave', handleDragLeave);
@@ -77,16 +77,16 @@ function processImageFile(file) {
         showError('Unsupported file type. Please use JPEG, PNG, WebP, or GIF.');
         return;
     }
-
+    
     // Validate file size (50MB limit for client-side processing)
     const maxSize = 50 * 1024 * 1024; // 50MB
     if (file.size > maxSize) {
         showError('File too large. Please use files smaller than 50MB.');
         return;
     }
-
-    originalFileName = file.name;
     
+    originalFileName = file.name;
+
     const reader = new FileReader();
     reader.onload = function(e) {
         const img = new Image();
@@ -131,12 +131,12 @@ function resizeImage() {
         showError('Please select an image first');
         return;
     }
-
+    
     const width = parseInt(document.getElementById('width').value);
     const height = parseInt(document.getElementById('height').value);
     const quality = parseInt(document.getElementById('quality').value);
     const format = document.querySelector('input[name="format"]:checked').value;
-
+    
     // Validate inputs
     if (!width || !height || width <= 0 || height <= 0) {
         showError('Please enter valid dimensions');
@@ -147,7 +147,7 @@ function resizeImage() {
         showError('Maximum dimensions are 8000x8000 pixels');
         return;
     }
-
+    
     showLoading();
 
     // Use setTimeout to allow UI to update
@@ -236,10 +236,10 @@ function showPreview(imageData, width, height, format) {
     const fileName = generateFileName(originalFileName, width, height, format);
     const url = URL.createObjectURL(imageData.blob);
     
-    downloadBtn.href = url;
+        downloadBtn.href = url;
     downloadBtn.download = fileName;
-    downloadSection.style.display = 'block';
-
+        downloadSection.style.display = 'block';
+        
     // Calculate file size reduction
     const originalSize = getOriginalFileSize();
     const newSize = imageData.blob.size;
@@ -324,7 +324,7 @@ function setupSmartDropZone() {
     
     // Prevent default drag behaviors on entire document
     document.addEventListener('dragenter', function(e) {
-        e.preventDefault();
+    e.preventDefault();
         dragCounter++;
         if (dragCounter === 1) {
             document.body.classList.add('drag-active');
@@ -353,23 +353,23 @@ function setupSmartDropZone() {
             const file = files[0];
             if (file.type.startsWith('image/')) {
                 processImageFile(file);
-            } else {
+        } else {
                 showError('Please drop an image file (JPEG, PNG, WebP, GIF)');
-            }
+        }
         }
     });
-}
-
+    }
+    
 // Keyboard Shortcuts
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', function(e) {
         // Toggle help with '?'
         if (e.key === '?' && !e.ctrlKey && !e.altKey) {
-            e.preventDefault();
+    e.preventDefault();
             toggleKeyboardHelp();
-            return;
-        }
-        
+        return;
+    }
+    
         // Ctrl + O: Upload image
         if (e.ctrlKey && e.key === 'o') {
             e.preventDefault();
