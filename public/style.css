@@ -844,6 +844,40 @@ body {
     border-color: rgba(167, 139, 250, 0.6);
 }
 
+/* Tech Stack */
+.tech-stack {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tech-stack h4 {
+    color: white;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.tech-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.tech-item {
+    background: rgba(167, 139, 250, 0.2);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    backdrop-filter: blur(10px);
+}
+
 /* Footer */
 .footer {
     background: rgba(0, 0, 0, 0.8);
