@@ -7,11 +7,11 @@
 **Transform your images with professional precision - 100% free, forever!**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Client-Side](https://img.shields.io/badge/Processing-Client--Side-green.svg)](https://github.com/yourusername/pixscaler)
-[![No Backend](https://img.shields.io/badge/Backend-None-red.svg)](https://github.com/yourusername/pixscaler)
-[![Privacy First](https://img.shields.io/badge/Privacy-First-blue.svg)](https://github.com/yourusername/pixscaler)
+[![Client-Side](https://img.shields.io/badge/Processing-Client--Side-green.svg)](https://github.com/27bhd/Pixscaler)
+[![No Backend](https://img.shields.io/badge/Backend-None-red.svg)](https://github.com/27bhd/Pixscaler)
+[![Privacy First](https://img.shields.io/badge/Privacy-First-blue.svg)](https://github.com/27bhd/Pixscaler)
 
-[🚀 Live Demo](https://pixscaler.com) • [📖 Documentation](#-documentation) • [💖 Support](#-support-the-project) • [🤝 Contributing](#-contributing)
+[📖 Documentation](#-documentation) • [💖 Support](#-support-the-project) • [🤝 Contributing](#-contributing)
 
 </div>
 
@@ -179,13 +179,13 @@ graph TD
 ## 🚀 Quick Start
 
 ### 1. **Instant Use** (Recommended)
-Visit [pixscaler.com](https://pixscaler.com) and start resizing immediately!
+Open the `public/index.html` file in your browser and start resizing immediately!
 
 ### 2. **Local Development**
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/pixscaler.git
-cd pixscaler
+git clone https://github.com/27bhd/Pixscaler.git
+cd Pixscaler
 
 # Serve locally (choose one)
 python -m http.server 8000        # Python
@@ -331,9 +331,11 @@ netlify deploy --prod --dir .
 
 ### Processing Performance
 
+*Performance varies based on device capabilities and image complexity*
+
 ```mermaid
 xychart-beta
-    title "Processing Time by Image Size"
+    title "Estimated Processing Time by Image Size"
     x-axis ["1MP", "5MP", "10MP", "20MP", "50MP"]
     y-axis "Time (seconds)" 0 --> 10
     bar [0.5, 1.2, 2.1, 3.8, 8.5]
@@ -343,11 +345,11 @@ xychart-beta
 
 | Metric | Value | Description |
 |--------|-------|-------------|
-| ⚡ **Average Processing Time** | 1-2 seconds | For typical images (5-10MP) |
-| 📊 **File Size Support** | Unlimited* | *Limited by browser memory |
-| 👥 **Concurrent Users** | Unlimited | No server load |
-| ⏱️ **Uptime** | 100% | Client-side processing |
-| 🌍 **Global Availability** | Instant | No geographic restrictions |
+| ⚡ **Processing Time** | Varies by device | Depends on image size and device performance |
+| 📊 **File Size Support** | Browser dependent | Limited by available browser memory |
+| 👥 **Concurrent Users** | N/A | Client-side only, no server |
+| ⏱️ **Availability** | Offline capable | Works without internet once loaded |
+| 🌍 **Compatibility** | Modern browsers | Chrome 60+, Firefox 55+, Safari 11+, Edge 79+ |
 
 ## 💖 Support the Project
 
@@ -366,16 +368,16 @@ xychart-beta
 
 | Amount | What It Buys | Impact |
 |--------|--------------|--------|
-| 0.1 SOL 🥤 | Soda money | Keeps the developer hydrated |
-| 0.5 SOL ☕ | Coffee fuel | Powers late-night coding sessions |
-| 1.0 SOL 🍕 | Pizza power | Fuels feature development |
-| 5.0 SOL 🚀 | Rocket fuel | Enables major improvements |
+| 0.01 SOL 🥤 | Soda money | Keeps the developer hydrated |
+| 0.05 SOL ☕ | Coffee fuel | Powers late-night coding sessions |
+| 0.1 SOL 🍕 | Pizza contribution | Fuels feature development |
+| 0.25 SOL 🚀 | Major support | Enables significant improvements |
 
 ### 🌟 Other Ways to Support
 
 <div align="center">
 
-[![Star on GitHub](https://img.shields.io/badge/⭐-Star%20on%20GitHub-yellow?style=for-the-badge)](https://github.com/yourusername/pixscaler)
+[![Star on GitHub](https://img.shields.io/badge/⭐-Star%20on%20GitHub-yellow?style=for-the-badge)](https://github.com/27bhd/Pixscaler)
 [![Share on Twitter](https://img.shields.io/badge/🐦-Share%20on%20Twitter-blue?style=for-the-badge)](https://twitter.com/intent/tweet?text=Check%20out%20Pixscaler%20-%20Free%20client-side%20image%20resizer!)
 [![Tell Friends](https://img.shields.io/badge/💬-Tell%20Friends-green?style=for-the-badge)](#)
 
@@ -425,34 +427,27 @@ gitgraph
 
 ## 📚 Documentation
 
-### API Reference
+### Code Structure
 
 <details>
-<summary>🔧 <strong>Core Functions</strong></summary>
+<summary>🔧 <strong>Main Files</strong></summary>
 
-```javascript
-// Resize image
-resizeImage(file, width, height, quality)
+- `public/index.html` - Main application interface
+- `public/script.js` - Image processing logic using Canvas API
+- `public/style.css` - Application styling
+- `public/site.webmanifest` - PWA configuration
 
-// Convert format
-convertFormat(imageData, targetFormat)
-
-// Apply presets
-applyPreset(imageData, presetName)
-```
 </details>
 
 <details>
-<summary>🎛️ <strong>Configuration Options</strong></summary>
+<summary>🎛️ <strong>Key Features in Code</strong></summary>
 
-```javascript
-const config = {
-    maxWidth: 4000,
-    maxHeight: 4000,
-    quality: 0.9,
-    format: 'jpeg'
-};
-```
+- HTML5 Canvas API for image processing
+- File drag & drop functionality
+- Quality adjustment controls
+- Format conversion (JPEG, PNG, WebP)
+- Preset dimension buttons
+
 </details>
 
 ## 🛡️ Security & Privacy
@@ -526,9 +521,8 @@ graph TB
 
 **Built with ❤️ by Beniverse**
 
-[![Freelancer](https://img.shields.io/badge/💼-Freelancer-orange?style=for-the-badge)](https://www.freelancer.com/u/Beniverse)
-[![LinkedIn](https://img.shields.io/badge/💼-LinkedIn-blue?style=for-the-badge)](https://www.linkedin.com/in/beniverse/)
-[![Website](https://img.shields.io/badge/🌐-Website-green?style=for-the-badge)](https://pixscaler.com)
+[![GitHub](https://img.shields.io/badge/💼-GitHub-black?style=for-the-badge)](https://github.com/27bhd)
+[![Repository](https://img.shields.io/badge/📁-Repository-blue?style=for-the-badge)](https://github.com/27bhd/Pixscaler)
 
 </div>
 
@@ -564,9 +558,9 @@ SOFTWARE.
 
 **Made with ❤️ and lots of ☕**
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/pixscaler?style=social)](https://github.com/yourusername/pixscaler)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/pixscaler?style=social)](https://github.com/yourusername/pixscaler)
-[![GitHub watchers](https://img.shields.io/github/watchers/yourusername/pixscaler?style=social)](https://github.com/yourusername/pixscaler)
+[![GitHub stars](https://img.shields.io/github/stars/27bhd/Pixscaler?style=social)](https://github.com/27bhd/Pixscaler)
+[![GitHub forks](https://img.shields.io/github/forks/27bhd/Pixscaler?style=social)](https://github.com/27bhd/Pixscaler)
+[![GitHub watchers](https://img.shields.io/github/watchers/27bhd/Pixscaler?style=social)](https://github.com/27bhd/Pixscaler)
 
 *⭐ Star this repo if you find it useful!*
 
