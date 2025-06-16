@@ -88,42 +88,92 @@ graph LR
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant B as Browser
-    participant C as Canvas API
-    participant F as File System
+    participant U as 👤 User
+    participant B as 🌐 Browser
+    participant C as 🎨 Canvas API
+    participant F as 💾 File System
     
-    U->>B: Upload Image
-    B->>C: Load to Canvas
-    C->>C: Apply Transformations
-    C->>B: Generate Processed Image
-    B->>F: Download Result
+    Note over U,F: 🔒 100% Client-Side Processing - Zero Server Communication
     
-    Note over U,F: All processing happens locally
-    Note over B,C: No server communication
+    U->>+B: 📁 Select & Upload Image
+    activate B
+    Note right of B: 🔍 File validation & preview
+    
+    B->>+C: 🖼️ Load image to Canvas
+    activate C
+    Note right of C: 📐 Parse dimensions & format
+    
+    C->>C: ⚙️ Apply Transformations
+    Note right of C: 🎛️ Resize • Compress • Convert
+    
+    C->>-B: ✨ Generate Processed Image
+    deactivate C
+    Note right of B: 🎯 Optimized output ready
+    
+    B->>+F: 💾 Trigger Download
+    activate F
+    Note right of F: 📥 Save to user device
+    
+    F-->>-U: ✅ Download Complete
+    deactivate F
+    deactivate B
+    
+    Note over U,F: 🚀 Entire process happens locally in browser
+    Note over U,F: 🛡️ Your images never leave your device
 ```
 
 ### Technology Stack
 
 ```mermaid
 graph TD
-    A[🌐 Frontend Layer] --> B[HTML5 Canvas API]
-    A --> C[JavaScript ES6+]
-    A --> D[CSS3 Styling]
+    subgraph "🎯 Core Technologies"
+        A[🌐 Frontend Layer]
+        B[🎨 HTML5 Canvas API]
+        C[⚡ JavaScript ES6+]
+        D[💎 CSS3 Styling]
+    end
     
-    B --> E[🖼️ Image Processing]
-    C --> F[📁 File Handling]
-    C --> G[🎛️ UI Controls]
-    D --> H[📱 Responsive Design]
+    subgraph "🔧 Processing Engine"
+        E[🖼️ Image Processing]
+        F[📁 File Handling]
+        G[🎛️ UI Controls]
+        H[📱 Responsive Design]
+    end
     
-    E --> I[💾 Local Download]
+    subgraph "💾 Output Layer"
+        I[📥 Local Download]
+        J[🔒 Zero Server Storage]
+        K[⚡ Instant Results]
+    end
+    
+    A --> B
+    A --> C
+    A --> D
+    
+    B --> E
+    C --> F
+    C --> G
+    D --> H
+    
+    E --> I
     F --> I
     G --> I
     H --> I
     
-    style A fill:#e3f2fd
-    style E fill:#f1f8e9
-    style I fill:#fff3e0
+    I --> J
+    I --> K
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style D fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style E fill:#fff8e1,stroke:#ffa000,stroke-width:2px
+    style F fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style G fill:#e0f2f1,stroke:#00796b,stroke-width:2px
+    style H fill:#f1f8e9,stroke:#689f38,stroke-width:2px
+    style I fill:#e8eaf6,stroke:#3f51b5,stroke-width:3px
+    style J fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    style K fill:#e0f7fa,stroke:#0097a7,stroke-width:2px
 ```
 
 ## 🚀 Quick Start
@@ -203,31 +253,49 @@ flowchart TD
 
 ```mermaid
 graph TB
-    subgraph "Static Hosting Options"
-        A[📦 Vercel]
-        B[🌐 Netlify]
-        C[📄 GitHub Pages]
-        D[☁️ Cloudflare Pages]
-        E[🪣 AWS S3 + CloudFront]
-        F[🔥 Firebase Hosting]
+    subgraph "💻 Source"
+        G[📁 Pixscaler Repository<br/>Static Files Only]
     end
     
-    G[💻 Local Files] --> A
-    G --> B
-    G --> C
-    G --> D
-    G --> E
-    G --> F
+    subgraph "🚀 Deployment Platforms"
+        A[📦 Vercel<br/>⚡ Instant Deploy]
+        B[🌐 Netlify<br/>🔄 Auto Build]
+        C[📄 GitHub Pages<br/>🆓 Free Hosting]
+        D[☁️ Cloudflare Pages<br/>🛡️ Edge Network]
+        E[🪣 AWS S3 + CloudFront<br/>📊 Enterprise Scale]
+        F[🔥 Firebase Hosting<br/>🎯 Google Cloud]
+    end
     
-    A --> H[🌍 Global CDN]
-    B --> H
-    C --> H
-    D --> H
-    E --> H
-    F --> H
+    subgraph "🌍 Global Distribution"
+        H[🌐 Worldwide CDN<br/>⚡ Lightning Fast]
+        I[👥 End Users<br/>🔒 Private Processing]
+    end
     
-    style G fill:#e3f2fd
-    style H fill:#e8f5e8
+    G -->|git push| A
+    G -->|git push| B
+    G -->|git push| C
+    G -->|git push| D
+    G -->|deploy| E
+    G -->|deploy| F
+    
+    A -->|serve| H
+    B -->|serve| H
+    C -->|serve| H
+    D -->|serve| H
+    E -->|serve| H
+    F -->|serve| H
+    
+    H -->|deliver| I
+    
+    style G fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style A fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style B fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style D fill:#fff8e1,stroke:#ffa000,stroke-width:2px
+    style E fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style F fill:#e0f2f1,stroke:#00796b,stroke-width:2px
+    style H fill:#e8eaf6,stroke:#3f51b5,stroke-width:3px
+    style I fill:#e0f7fa,stroke:#0097a7,stroke-width:3px
 ```
 
 ### Quick Deploy Commands
@@ -392,22 +460,40 @@ const config = {
 ### Privacy-First Architecture
 
 ```mermaid
-graph LR
-    A[👤 User] --> B[🖥️ Browser]
-    B --> C[🎨 Canvas API]
-    C --> D[💾 Local Storage]
+graph TB
+    subgraph "🔒 Secure Client-Side Processing"
+        A[👤 User<br/>Your Device]
+        B[🌐 Browser<br/>Local Environment]
+        C[🎨 Canvas API<br/>Image Processing]
+        D[💾 File System<br/>Local Download]
+    end
     
-    B -.->|❌ No Upload| E[🚫 Server]
-    B -.->|❌ No Tracking| F[🚫 Analytics]
-    B -.->|❌ No Storage| G[🚫 Database]
+    subgraph "🚫 What We DON'T Do"
+        E[🚫 No Server Upload<br/>Images stay local]
+        F[🚫 No Analytics<br/>Zero tracking]
+        G[🚫 No Database<br/>No data storage]
+        H[🚫 No Accounts<br/>Anonymous usage]
+    end
     
-    style A fill:#e8f5e8
-    style B fill:#e3f2fd
-    style C fill:#fff3e0
-    style D fill:#f3e5f5
-    style E fill:#ffebee
-    style F fill:#ffebee
-    style G fill:#ffebee
+    A -->|📁 Select Image| B
+    B -->|🖼️ Process| C
+    C -->|✨ Transform| C
+    C -->|📥 Output| D
+    D -->|💾 Save| A
+    
+    B -.->|❌ Never| E
+    B -.->|❌ Never| F
+    B -.->|❌ Never| G
+    B -.->|❌ Never| H
+    
+    style A fill:#e8f5e8,stroke:#4caf50,stroke-width:3px
+    style B fill:#e3f2fd,stroke:#2196f3,stroke-width:3px
+    style C fill:#fff3e0,stroke:#ff9800,stroke-width:3px
+    style D fill:#f3e5f5,stroke:#9c27b0,stroke-width:3px
+    style E fill:#ffebee,stroke:#f44336,stroke-width:2px,stroke-dasharray: 5 5
+    style F fill:#ffebee,stroke:#f44336,stroke-width:2px,stroke-dasharray: 5 5
+    style G fill:#ffebee,stroke:#f44336,stroke-width:2px,stroke-dasharray: 5 5
+    style H fill:#ffebee,stroke:#f44336,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
 ### Security Features
