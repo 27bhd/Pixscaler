@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixscaler - Resize Images Like a Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Pixscaler</h1>
+                <div class="tagline">AI-Powered Image Resizing</div>
+            </div>
+            <div class="nav-links">
+                <a href="pricing.html">Pricing</a>
+                <a href="#about">About</a>
+            </div>
+            <div class="auth-section">
+                <div class="auth-buttons">
+                    <button class="btn btn-outline btn-sm" onclick="showLoginModal()">Login</button>
+                    <button class="btn btn-primary btn-sm" onclick="showRegisterModal()">Sign Up</button>
+                </div>
+                <div class="user-info" style="display: none;">
+                    <span class="user-email"></span>
+                    <span class="premium-badge" style="display: none;">PRO</span>
+                    <button class="btn btn-sm btn-outline" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Resize Images Like a Pro</h1>
+            <p class="hero-subtitle">Transform your images with AI-powered precision. Fast, secure, and professional-grade resizing for creators, developers, and businesses.</p>
+            
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">🖼️</div>
+                <p>Drag & drop your image here</p>
+                <div class="upload-or">or</div>
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    Choose Image
+                </button>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            </div>
+
+            <!-- Controls -->
+            <div class="controls" id="controls" style="display: none;">
+                <div class="control-section">
+                    <h3>📐 Dimensions</h3>
+                    <div class="input-group">
+                        <label>Width:</label>
+                        <input type="number" id="width" placeholder="800">
+                        <span>px</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Height:</label>
+                        <input type="number" id="height" placeholder="600">
+                        <span>px</span>
+                    </div>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="setPreset(1920, 1080)">1920×1080</button>
+                        <button class="preset-btn" onclick="setPreset(1280, 720)">1280×720</button>
+                        <button class="preset-btn" onclick="setPreset(800, 600)">800×600</button>
+                        <button class="preset-btn" onclick="setPreset(400, 400)">400×400</button>
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <h3>⚙️ Settings</h3>
+                    <div class="input-group">
+                        <label>Quality:</label>
+                        <input type="range" id="quality" min="1" max="100" value="85">
+                        <span id="qualityValue">85%</span>
+                    </div>
+                    <div class="format-options">
+                        <input type="radio" id="jpeg" name="format" value="jpeg" checked>
+                        <label for="jpeg">JPEG</label>
+                        <input type="radio" id="png" name="format" value="png">
+                        <label for="png">PNG</label>
+                        <input type="radio" id="webp" name="format" value="webp">
+                        <label for="webp">WebP</label>
+                    </div>
+                </div>
+                
+                <button class="resize-btn" onclick="resizeImage()">
+                    ✨ Resize Image
+                </button>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing your image with AI precision...</p>
+            </div>
+
+            <!-- Preview -->
+            <div class="preview-section" id="preview" style="display: none;">
+                <h3>Preview</h3>
+                <img id="previewImage" alt="Resized image preview">
+            </div>
+
+            <!-- Download -->
+            <div class="download-section" id="downloadSection" style="display: none;">
+                <div class="success-icon">✅</div>
+                <h3>Image Resized Successfully!</h3>
+                <p>Your image has been processed with AI-powered optimization.</p>
+                <a href="#" class="download-btn" id="downloadBtn" download>
+                    📥 Download Image
+                </a>
+                <button class="new-image-btn" onclick="resetUpload()">
+                    🔄 Resize Another Image
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">About Pixscaler</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Pixscaler was born from a simple frustration: why is it so hard to resize images properly? As a developer and designer, I found myself constantly switching between different tools, dealing with quality loss, and wasting precious time on what should be a simple task.</p>
+                    
+                    <p>That's when I decided to build something better. Pixscaler combines cutting-edge AI technology with an intuitive interface to deliver professional-grade image resizing that anyone can use. Whether you're a blogger optimizing images for your website, a developer preparing assets for an app, or a business owner creating marketing materials, Pixscaler has you covered.</p>
+                    
+                    <p>Built with performance in mind, Pixscaler processes images at lightning speed while maintaining exceptional quality. Our advanced algorithms ensure your images look perfect at any size, and our secure infrastructure means your data is always protected.</p>
+                    
+                    <p>Our mission is simple: make image resizing fast, beautiful, and accessible to everyone. Join thousands of creators who trust Pixscaler for their image processing needs.</p>
+                    
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <span class="feature-emoji">🚀</span>
+                            <div>
+                                <h4>Lightning Fast Processing</h4>
+                                <p>Optimized algorithms process images in seconds, not minutes</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-emoji">🎯</span>
+                            <div>
+                                <h4>AI-Powered Quality</h4>
+                                <p>Advanced machine learning maintains perfect image quality</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-emoji">🔒</span>
+                            <div>
+                                <h4>100% Secure</h4>
+                                <p>Images processed securely and deleted immediately after download</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-emoji">📱</span>
+                            <div>
+                                <h4>Works Everywhere</h4>
+                                <p>Perfect performance on desktop, tablet, and mobile devices</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-stats">
+                        <div class="stat">
+                            <div class="stat-number">1M+</div>
+                            <div class="stat-label">Images Processed</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">50K+</div>
+                            <div class="stat-label">Happy Users</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">240Hz</div>
+                            <div class="stat-label">Optimized</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="developer-card">
+                    <div class="developer-avatar">👨‍💻</div>
+                    <h3>Walid</h3>
+                    <p>Founder & Developer</p>
+                    <p>"Building tools that make creators' lives easier, one pixel at a time."</p>
+                    <div class="social-links">
+                        <a href="https://github.com/WalidMH" class="social-link" target="_blank">GitHub</a>
+                        <a href="https://linkedin.com/in/walidmh" class="social-link" target="_blank">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Pixscaler</h3>
+                    <p>AI-powered image resizing for the modern web.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <a href="#about">About</a>
+                    <a href="pricing.html">Pricing</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Pixscaler. All rights reserved. Made with ❤️ for creators worldwide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome Back</h2>
+                <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <!-- Social Login Buttons (temporarily hidden) -->
+            <div class="social-login" style="display: none;">
+                <a href="/api/auth/google" class="btn btn-social btn-google">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    Continue with Google
+                </a>
+                <a href="/api/auth/github" class="btn btn-social btn-github">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    Continue with GitHub
+                </a>
+            </div>
+            
+            <div class="divider" style="display: none;">
+                <span>or</span>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="error-message" id="loginError" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Sign up here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <!-- Social Login Buttons (temporarily hidden) -->
+            <div class="social-login" style="display: none;">
+                <a href="/api/auth/google" class="btn btn-social btn-google">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    Continue with Google
+                </a>
+                <a href="/api/auth/github" class="btn btn-social btn-github">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    Continue with GitHub
+                </a>
+            </div>
+            
+            <div class="divider" style="display: none;">
+                <span>or</span>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Name</label>
+                    <input type="text" id="registerName" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" name="password" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <div class="error-message" id="registerError" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+            </form>
+            <div class="modal-footer">
+                <p>Already have an account? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Sign in here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

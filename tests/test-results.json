@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-06-15T23:30:15.356Z",
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "duration": 1649,
+    "passRate": "100.0"
+  },
+  "results": [
+    {
+      "name": "Authentication API Tests",
+      "file": "auth-api-test.js",
+      "passed": true,
+      "duration": 1375,
+      "code": 0
+    },
+    {
+      "name": "Image Processing Tests",
+      "file": "image-processing-test.js",
+      "passed": true,
+      "duration": 274,
+      "code": 0
+    }
+  ]
+}

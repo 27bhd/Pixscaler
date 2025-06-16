@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Pixscaler</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none;">
+                    <h1>Pixscaler</h1>
+                    <div class="tagline">AI-Powered Image Resizing</div>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#about">About</a>
+            </div>
+            <div class="auth-section">
+                <div class="auth-buttons">
+                    <button class="btn btn-outline btn-sm" onclick="showLoginModal()">Login</button>
+                    <button class="btn btn-primary btn-sm" onclick="showRegisterModal()">Sign Up</button>
+                </div>
+                <div class="user-info" style="display: none;">
+                    <span class="user-email"></span>
+                    <span class="premium-badge" style="display: none;">PRO</span>
+                    <button class="btn btn-sm btn-outline" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Pricing Hero -->
+    <section class="pricing-hero">
+        <div class="container">
+            <h1 class="hero-title">Choose Your Plan</h1>
+            <p class="hero-subtitle">Start free, upgrade when you need more power. All plans include our core AI-powered resizing technology.</p>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-main">
+        <div class="container">
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Free</h3>
+                        <div class="price">$0<span>/month</span></div>
+                        <p class="plan-description">Perfect for personal use and trying out Pixscaler</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✅ 10 images per hour</li>
+                        <li>✅ Up to 5MB file size</li>
+                        <li>✅ Basic formats (JPEG, PNG)</li>
+                        <li>✅ Standard quality processing</li>
+                        <li>✅ Secure processing</li>
+                        <li>❌ Batch processing</li>
+                        <li>❌ Priority support</li>
+                        <li>❌ Advanced formats</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="selectPlan('free')">Get Started Free</button>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <h3>Pro</h3>
+                        <div class="price">$9.99<span>/month</span></div>
+                        <p class="plan-description">Ideal for content creators and small businesses</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✅ 500 images per hour</li>
+                        <li>✅ Up to 50MB file size</li>
+                        <li>✅ All formats (JPEG, PNG, WebP)</li>
+                        <li>✅ Premium AI quality</li>
+                        <li>✅ Batch processing (10 images)</li>
+                        <li>✅ Priority support</li>
+                        <li>✅ Advanced compression</li>
+                        <li>✅ API access</li>
+                    </ul>
+                    <button class="pricing-btn primary" onclick="selectPlan('pro')">Upgrade to Pro</button>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Business</h3>
+                        <div class="price">$19.99<span>/month</span></div>
+                        <p class="plan-description">For agencies and high-volume users</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✅ Unlimited images</li>
+                        <li>✅ Up to 100MB file size</li>
+                        <li>✅ All formats + RAW support</li>
+                        <li>✅ Ultra-premium AI quality</li>
+                        <li>✅ Batch processing (50 images)</li>
+                        <li>✅ 24/7 dedicated support</li>
+                        <li>✅ Custom integrations</li>
+                        <li>✅ White-label options</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="selectPlan('business')">Go Business</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Can I change plans anytime?</h3>
+                    <p>Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is there a free trial?</h3>
+                    <p>Our Free plan is permanent - no trial needed! Upgrade when you need more features.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What payment methods do you accept?</h3>
+                    <p>We accept all major credit cards, PayPal, and bank transfers for Business plans.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Do you offer refunds?</h3>
+                    <p>Yes, we offer a 30-day money-back guarantee on all paid plans.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Pixscaler</h3>
+                    <p>AI-powered image resizing for the modern web.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <a href="index.html">Home</a>
+                    <a href="index.html#about">About</a>
+                    <a href="pricing.html">Pricing</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Pixscaler. All rights reserved. Made with ❤️ for creators worldwide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome Back</h2>
+                <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="error-message" id="loginError" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            </form>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Sign up here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Name</label>
+                    <input type="text" id="registerName" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" name="password" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <div class="error-message" id="registerError" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+            </form>
+            <div class="modal-footer">
+                <p>Already have an account? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Sign in here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
