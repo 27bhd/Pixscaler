@@ -404,15 +404,26 @@ Pixscaler/
 ### Development Workflow
 
 ```mermaid
-gitgraph
-    commit id: "Initial Setup"
-    branch feature
-    checkout feature
-    commit id: "Add Feature"
-    commit id: "Test Feature"
-    checkout main
-    merge feature
-    commit id: "Deploy to Production"
+flowchart TD
+    A[📝 Initial Setup] --> B[🌿 Create Feature Branch]
+    B --> C[💻 Develop Feature]
+    C --> D[🧪 Test Feature]
+    D --> E{✅ Tests Pass?}
+    E -->|No| C
+    E -->|Yes| F[📝 Commit Changes]
+    F --> G[🚀 Push to Branch]
+    G --> H[🔄 Create Pull Request]
+    H --> I[👀 Code Review]
+    I --> J{✅ Approved?}
+    J -->|No| C
+    J -->|Yes| K[🔀 Merge to Main]
+    K --> L[🚀 Deploy to Production]
+    
+    style A fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+    style D fill:#fff3e0,stroke:#ff9800,stroke-width:2px
+    style E fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style J fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style L fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
 
 ### Contributing Guidelines
