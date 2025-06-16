@@ -137,6 +137,6 @@ module.exports = {
       return require('crypto').randomBytes(32).toString('hex');
     })(),
     corsOrigins: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : 
-      process.env.NODE_ENV === 'production' ? [] : ['http://localhost:3000']
+      process.env.NODE_ENV === 'production' ? ['https://pixscaler.com', 'https://web-production-f0949.up.railway.app'] : ['http://localhost:3000']
   }
 }; 
