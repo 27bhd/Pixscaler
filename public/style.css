@@ -947,10 +947,11 @@ body {
 
 /* Footer Styles */
 .footer {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
     color: white;
     padding: 3rem 0 1rem;
     margin-top: 4rem;
+    border-top: 1px solid rgba(167, 139, 250, 0.2);
 }
 
 .footer-content {
@@ -975,30 +976,32 @@ body {
 }
 
 .footer-section a:hover {
-    color: #6366f1;
+    color: #a78bfa;
 }
 
 .footer-bottom {
     text-align: center;
     padding-top: 2rem;
-    border-top: 1px solid #475569;
-    color: #94a3b8;
+    border-top: 1px solid rgba(167, 139, 250, 0.2);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .footer-bottom a {
-    color: #6366f1;
+    color: #a78bfa;
     text-decoration: none;
 }
 
 .footer-bottom a:hover {
+    color: #06b6d4;
     text-decoration: underline;
 }
 
 /* Donation Section Styles */
 .donation {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.8) 0%, rgba(26, 26, 46, 0.8) 100%);
     padding: 4rem 0;
     margin-top: 4rem;
+    border-top: 1px solid rgba(167, 139, 250, 0.2);
 }
 
 .donation-content {
@@ -1010,9 +1013,9 @@ body {
 .donation-header h2 {
     font-size: 2.5rem;
     font-weight: 800;
-    color: #1e293b;
+    color: white;
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #a78bfa 0%, #06b6d4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1020,24 +1023,25 @@ body {
 
 .donation-header p {
     font-size: 1.1rem;
-    color: #475569;
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 1rem;
     line-height: 1.6;
 }
 
 .crypto-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 2rem;
     margin: 2rem 0;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(167, 139, 250, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .crypto-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 15px 35px rgba(167, 139, 250, 0.2);
 }
 
 .crypto-header {
@@ -1057,7 +1061,7 @@ body {
 .crypto-header h3 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1e293b;
+    color: white;
     margin: 0;
 }
 
@@ -1071,19 +1075,19 @@ body {
 }
 
 .wallet-address code {
-    background: #f1f5f9;
+    background: rgba(255, 255, 255, 0.1);
     padding: 0.75rem 1rem;
     border-radius: 8px;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: 0.9rem;
-    color: #1e293b;
-    border: 2px solid #e2e8f0;
+    color: white;
+    border: 2px solid rgba(167, 139, 250, 0.3);
     word-break: break-all;
     max-width: 100%;
 }
 
 .copy-btn {
-    background: #6366f1;
+    background: linear-gradient(135deg, #a78bfa 0%, #06b6d4 100%);
     color: white;
     border: none;
     padding: 0.75rem;
@@ -1095,8 +1099,8 @@ body {
 }
 
 .copy-btn:hover {
-    background: #4f46e5;
     transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4);
 }
 
 .donation-amounts {
@@ -1106,7 +1110,7 @@ body {
 .amount-label {
     display: block;
     font-weight: 600;
-    color: #475569;
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 1rem;
 }
 
@@ -1118,7 +1122,7 @@ body {
 }
 
 .amount-btn {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #a78bfa 0%, #06b6d4 100%);
     color: white;
     border: none;
     padding: 0.75rem 1rem;
@@ -1131,26 +1135,26 @@ body {
 
 .amount-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4);
 }
 
 .donation-note {
-    background: #fef3c7;
-    border: 1px solid #fbbf24;
+    background: rgba(167, 139, 250, 0.1);
+    border: 1px solid rgba(167, 139, 250, 0.3);
     border-radius: 8px;
     padding: 1rem;
-    color: #92400e;
+    color: rgba(255, 255, 255, 0.8);
     font-style: italic;
 }
 
 .donation-alternatives {
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid rgba(167, 139, 250, 0.2);
 }
 
 .donation-alternatives h4 {
-    color: #1e293b;
+    color: white;
     margin-bottom: 1rem;
     font-weight: 600;
 }
@@ -1163,17 +1167,17 @@ body {
 }
 
 .alt-support span {
-    background: #f1f5f9;
+    background: rgba(255, 255, 255, 0.1);
     padding: 0.5rem 1rem;
     border-radius: 20px;
-    color: #475569;
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(167, 139, 250, 0.3);
     transition: all 0.3s ease;
 }
 
 .alt-support span:hover {
-    background: #e2e8f0;
+    background: rgba(167, 139, 250, 0.2);
     transform: translateY(-1px);
 }
 
