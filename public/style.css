@@ -42,6 +42,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 2rem;
 }
 
 .logo h1 {
@@ -58,6 +59,12 @@ body {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.7);
     font-weight: 500;
+}
+
+.nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
 }
 
 .nav-links {
@@ -1197,32 +1204,43 @@ body {
     box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4) !important;
 }
 
-/* No Signup Banner */
-.no-signup-banner {
+.donate-link::before {
+    display: none !important;
+}
+
+/* Navigation Badges */
+.nav-badges {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    align-items: flex-end;
+    gap: 0.5rem;
+    align-items: center;
 }
 
-.no-signup-text {
-    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
+.nav-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
     font-weight: 600;
     white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
 }
 
-.no-payment-text {
-    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
+.nav-badge.free-badge {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.2) 100%);
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.nav-badge.privacy-badge {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(79, 70, 229, 0.2) 100%);
+    color: #6366f1;
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.nav-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Share Button */
@@ -1398,41 +1416,107 @@ body.drag-active::before {
     }
 }
 
-
-
-
-
-/* Responsive Design */
+/* Responsive Design - Tablet */
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
         gap: 1rem;
+        padding: 0 15px;
+    }
+    
+    .nav-center {
+        order: 2;
+    }
+    
+    .nav-badges {
+        order: 3;
+        justify-content: center;
+        flex-wrap: wrap;
     }
     
     .nav-links {
-        gap: 1rem;
+        gap: 1.5rem;
+    }
+    
+    .nav-badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .hero {
+        padding: 120px 0 60px;
+    }
+    
+    .hero-content {
+        padding: 0 1rem;
     }
     
     .hero-title {
         font-size: 2.5rem;
+        line-height: 1.2;
     }
     
     .hero-subtitle {
         font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .upload-area {
+        padding: 2rem 1.5rem;
+        margin: 1.5rem 0;
+    }
+    
+    .upload-icon {
+        font-size: 2.5rem;
     }
     
     .controls {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+    
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .input-group label {
+        min-width: auto;
+        font-size: 0.9rem;
+    }
+    
+    .input-group input {
+        padding: 14px 16px;
+        font-size: 16px; /* Prevents zoom on iOS */
     }
     
     .preset-buttons {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+    
+    .preset-btn {
+        padding: 12px 8px;
+        font-size: 0.8rem;
     }
     
     .format-options {
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.75rem;
+    }
+    
+    .format-options label {
+        text-align: center;
+        padding: 12px 16px;
+    }
+    
+    .resize-btn {
+        padding: 16px 32px;
+        font-size: 1rem;
+        margin-top: 1.5rem;
     }
     
     .about-content {
@@ -1456,31 +1540,391 @@ body.drag-active::before {
     
     .upload-or::before { left: -40px; }
     .upload-or::after { right: -40px; }
+    
+    .download-section {
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+    }
+    
+    .download-btn, .new-image-btn {
+        display: block;
+        width: 100%;
+        margin: 0.5rem 0;
+        padding: 14px 20px;
+    }
 }
 
+/* Mobile Phones */
 @media (max-width: 480px) {
+    .navbar {
+        padding: 0.75rem 0;
+    }
+    
+    .nav-container {
+        padding: 0 10px;
+        gap: 0.75rem;
+    }
+    
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+    
+    .tagline {
+        font-size: 0.7rem;
+    }
+    
+    .nav-badge {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+    }
+    
+    .nav-links a {
+        font-size: 0.9rem;
+    }
+    
+    .donate-link {
+        padding: 0.4rem 0.8rem !important;
+        font-size: 0.8rem !important;
+    }
+    
     .hero {
-        padding: 100px 0 60px;
+        padding: 100px 0 40px;
+        min-height: auto;
+    }
+    
+    .hero-content {
+        padding: 0 0.75rem;
     }
     
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        line-height: 1.1;
+        margin-bottom: 0.75rem;
     }
     
-    .section-title {
-        font-size: 2rem;
+    .hero-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.4;
     }
     
     .upload-area {
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
+        margin: 1rem 0;
+        border-radius: 16px;
+    }
+    
+    .upload-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .upload-area p {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .upload-btn {
+        padding: 12px 24px;
+        font-size: 0.9rem;
     }
     
     .controls {
+        padding: 1.25rem;
+        margin: 1rem 0;
+        gap: 1.25rem;
+        border-radius: 16px;
+    }
+    
+    .control-section h3 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .input-group {
+        margin-bottom: 0.75rem;
+    }
+    
+    .input-group label {
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .input-group input {
+        padding: 12px 14px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        border-radius: 6px;
+    }
+    
+    .preset-buttons {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    
+    .preset-btn {
+        padding: 10px 6px;
+        font-size: 0.75rem;
+        border-radius: 6px;
+    }
+    
+    .format-options {
+        gap: 0.5rem;
+    }
+    
+    .format-options label {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+    
+    .resize-btn {
+        padding: 14px 24px;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        margin-top: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .about {
+        padding: 3rem 0;
+    }
+    
+    .about-content {
+        gap: 1.5rem;
+    }
+    
+    .about-text p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-item {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+    
+    .feature-emoji {
+        font-size: 1.5rem;
+    }
+    
+    .feature-item h4 {
+        font-size: 1rem;
+    }
+    
+    .feature-item p {
+        font-size: 0.85rem;
+    }
+    
+    .developer-card {
         padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .tech-items {
+        gap: 0.5rem;
+    }
+    
+    .tech-item {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .download-section {
+        padding: 1.25rem;
+        margin: 1rem 0;
+        border-radius: 16px;
+    }
+    
+    .download-section h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .download-section p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .success-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .preview-section {
+        margin: 1rem 0;
+    }
+    
+    .preview-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .preview-section img {
+        max-height: 300px;
+        border-radius: 8px;
+    }
+    
+    .loading {
+        margin: 1rem 0;
+    }
+    
+    .loading p {
+        font-size: 0.9rem;
+    }
+    
+    .footer {
+        padding: 2rem 0 1rem;
+    }
+    
+    .footer-content {
+        gap: 1.5rem;
+    }
+    
+    .footer-section h3 {
+        font-size: 1.1rem;
+    }
+    
+    .footer-section p,
+    .footer-section a {
+        font-size: 0.85rem;
     }
     
     .pricing-grid,
     .features-grid {
         grid-template-columns: 1fr;
     }
-} 
+    
+    /* Touch-friendly improvements */
+    button, .upload-btn, .preset-btn, .resize-btn, .download-btn, .new-image-btn {
+        min-height: 44px; /* iOS recommended touch target */
+        touch-action: manipulation; /* Prevents double-tap zoom */
+    }
+    
+    input[type="number"], input[type="range"] {
+        min-height: 44px;
+    }
+    
+    /* Prevent horizontal scroll */
+    body {
+        overflow-x: hidden;
+    }
+    
+    .container {
+        padding: 0 0.75rem;
+    }
+}
+
+/* Extra Small Mobile Devices */
+@media (max-width: 360px) {
+    .hero-title {
+        font-size: 1.6rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .nav-container {
+        padding: 0 8px;
+    }
+    
+    .logo h1 {
+        font-size: 1.3rem;
+    }
+    
+    .nav-badge {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .upload-area {
+        padding: 1.25rem 0.75rem;
+    }
+    
+    .controls {
+        padding: 1rem;
+    }
+    
+    .preset-buttons {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .preset-btn {
+        padding: 12px 8px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Mobile Landscape Orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        padding: 80px 0 40px;
+        min-height: 100vh;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .upload-area {
+        padding: 1.5rem 1rem;
+        margin: 1rem 0;
+    }
+    
+    .controls {
+        padding: 1.25rem;
+        margin: 1rem 0;
+    }
+    
+    .navbar {
+        padding: 0.5rem 0;
+    }
+    
+    .nav-container {
+        gap: 0.75rem;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .upload-icon {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Reduce Motion for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .upload-area:hover,
+    .upload-area.dragover {
+        transform: none;
+    }
+    
+    .resize-btn:hover,
+    .download-btn:hover,
+    .nav-badge:hover {
+        transform: none;
+    }
+}
