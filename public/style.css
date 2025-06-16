@@ -128,82 +128,7 @@ body {
     margin-right: auto;
 }
 
-/* Free Announcement Banner */
-.free-announcement {
-    margin-bottom: 2rem;
-    animation: bounceIn 1s ease-out;
-}
-
-.free-badge-large {
-    display: inline-block;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 50px;
-    font-size: 1.2rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.free-badge-large::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    animation: shimmer 3s infinite;
-}
-
-.free-subtitle {
-    color: #6b7280;
-    font-size: 1rem;
-    font-weight: 500;
-    margin-top: 0.5rem;
-    margin-bottom: 0;
-}
-
-/* Stats Bar */
-.stats-bar {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    flex-wrap: wrap;
-}
-
-.stat-item {
-    text-align: center;
-    min-width: 120px;
-}
-
-.stat-number {
-    display: block;
-    font-size: 2rem;
-    font-weight: 800;
-    color: #6366f1;
-    margin-bottom: 0.25rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.stat-label {
-    font-size: 0.9rem;
-    color: #6b7280;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+/* Upload Area */
 
 /* Animations */
 @keyframes bounceIn {
@@ -1254,7 +1179,7 @@ body {
 
 /* Navigation donation link */
 .donate-link {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    background: linear-gradient(135deg, #a78bfa 0%, #06b6d4 100%) !important;
     color: white !important;
     padding: 0.5rem 1rem !important;
     border-radius: 20px !important;
@@ -1265,7 +1190,7 @@ body {
 
 .donate-link:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4) !important;
+    box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4) !important;
 }
 
 /* No Signup Banner */
@@ -1277,7 +1202,7 @@ body {
 }
 
 .no-signup-text {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
@@ -1287,7 +1212,7 @@ body {
 }
 
 .no-payment-text {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
@@ -1298,7 +1223,7 @@ body {
 
 /* Share Button */
 .share-btn {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #a78bfa 0%, #06b6d4 100%);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -1312,7 +1237,7 @@ body {
 
 .share-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4);
 }
 
 /* Achievement Popup */
@@ -1320,11 +1245,11 @@ body {
     position: fixed;
     top: 80px;
     right: 20px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #a78bfa 0%, #06b6d4 100%);
     color: white;
     padding: 1rem 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 10px 25px rgba(167, 139, 250, 0.3);
     z-index: 10000;
     animation: achievementSlide 0.5s ease-out;
     max-width: 300px;
@@ -1469,110 +1394,9 @@ body.drag-active::before {
     }
 }
 
-/* Floating Free Badge */
-.floating-free-badge {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-    z-index: 1000;
-    animation: slideInLeft 0.5s ease-out;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-}
 
-.floating-free-badge:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
-}
 
-/* Social Proof Banner */
-.social-proof {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    padding: 2rem 0;
-    border-top: 1px solid #e2e8f0;
-    border-bottom: 1px solid #e2e8f0;
-}
 
-.social-proof-content {
-    text-align: center;
-}
-
-.social-proof-text {
-    display: block;
-    font-size: 1.1rem;
-    color: #374151;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.social-proof-stats {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-}
-
-.proof-stat {
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-.proof-stat strong {
-    color: #6366f1;
-    font-weight: 700;
-}
-
-/* Animations */
-@keyframes slideInLeft {
-    from {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* Mobile Responsive Updates */
-@media (max-width: 768px) {
-    .floating-free-badge {
-        top: 10px;
-        left: 10px;
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
-    }
-    
-    .social-proof-stats {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .stats-bar {
-        gap: 1rem;
-        padding: 1rem;
-    }
-    
-    .stat-number {
-        font-size: 1.5rem;
-    }
-    
-    .free-badge-large {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-    }
-    
-    .hero-title {
-        font-size: 2.5rem;
-    }
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
