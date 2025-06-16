@@ -72,12 +72,12 @@
                 <div class="tagline">Client-Side Image Resizing</div>
             </div>
             <div class="nav-links">
-                <a href="public/pricing.html">Pricing</a>
                 <a href="#about">About</a>
+                <a href="#donate" class="donate-link">☕ Buy Me Coffee</a>
             </div>
             <div class="auth-section">
                 <div class="auth-buttons">
-                    <span class="free-badge">100% Free</span>
+                    <span class="free-badge">100% Free Forever</span>
                 </div>
             </div>
         </div>
@@ -246,6 +246,52 @@
         </div>
     </section>
 
+    <!-- Donation Section -->
+    <section class="donation" id="donate">
+        <div class="container">
+            <div class="donation-content">
+                <div class="donation-header">
+                    <h2>🚀 Fuel the Pixel Revolution</h2>
+                    <p>Pixscaler is 100% free, no ads, no tracking, no BS. Just pure image resizing magic!</p>
+                    <p>If this tool saved you time (and sanity), consider sending some Solana love ❤️</p>
+                </div>
+                
+                <div class="crypto-card">
+                    <div class="crypto-header">
+                        <span class="crypto-icon">◎</span>
+                        <h3>Send SOL to the Pixel Gods</h3>
+                    </div>
+                    <div class="wallet-address">
+                        <code id="solanaAddress">5Ap6T93SRLFj9Urg7SWk1As5nNDunb6zEzyw8fpSUuHo</code>
+                        <button class="copy-btn" onclick="copyAddress()" title="Copy to clipboard">📋</button>
+                    </div>
+                    <div class="donation-amounts">
+                        <span class="amount-label">Suggested amounts:</span>
+                        <div class="amount-buttons">
+                            <button class="amount-btn" onclick="showDonationMessage(0.1)">0.1 SOL 🥤</button>
+                            <button class="amount-btn" onclick="showDonationMessage(0.5)">0.5 SOL ☕</button>
+                            <button class="amount-btn" onclick="showDonationMessage(1.0)">1.0 SOL 🍕</button>
+                            <button class="amount-btn" onclick="showDonationMessage(5.0)">5.0 SOL 🚀</button>
+                        </div>
+                    </div>
+                    <div class="donation-note">
+                        <small>💡 <strong>Pro tip:</strong> Each donation makes the pixels 0.001% more crispy (scientifically unproven but spiritually accurate)</small>
+                    </div>
+                </div>
+                
+                <div class="donation-alternatives">
+                    <h4>Not into crypto? No worries!</h4>
+                    <div class="alt-support">
+                        <span>⭐ Star us on GitHub</span>
+                        <span>🐦 Share on Twitter</span>
+                        <span>💬 Tell your friends</span>
+                        <span>🐛 Report bugs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -253,17 +299,26 @@
                 <div class="footer-section">
                     <h3>Pixscaler</h3>
                     <p>Client-side image resizing for the modern web.</p>
+                    <p><small>Made with ❤️ and lots of ☕</small></p>
                 </div>
                 <div class="footer-section">
                     <h4>Features</h4>
-                    <p>✅ 100% Free</p>
-                    <p>✅ No Registration</p>
+                    <p>✅ 100% Free Forever</p>
+                    <p>✅ No Registration Required</p>
                     <p>✅ Complete Privacy</p>
                     <p>✅ No File Size Limits</p>
+                    <p>✅ No Ads, No Tracking</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Support the Project</h4>
+                    <p>◎ Solana Donations Welcome</p>
+                    <p>⭐ GitHub Stars Appreciated</p>
+                    <p>🐛 Bug Reports Helpful</p>
+                    <p>💬 Feedback Always Welcome</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Pixscaler. Built by <a href="https://www.freelancer.com/u/Beniverse" target="_blank">Beniverse</a>. All rights reserved.</p>
+                <p>&copy; 2025 Pixscaler. Built by <a href="https://www.freelancer.com/u/Beniverse" target="_blank">Beniverse</a>. Free as in beer 🍺</p>
             </div>
         </div>
     </footer>

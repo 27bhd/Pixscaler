@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO Meta Tags -->
-    <title>Pixscaler Pricing - Choose Your Plan | Image Resizing Plans</title>
-    <meta name="description" content="Choose the perfect Pixscaler plan for your image resizing needs. Free tier available. Pro plans with unlimited processing, larger files, and priority support.">
-    <meta name="keywords" content="pixscaler pricing, image resizer plans, photo editor subscription, image processing pricing, bulk resize pricing">
+    <title>Pixscaler - 100% Free Forever | No Pricing, Just Donations</title>
+    <meta name="description" content="Pixscaler is now completely free! No subscriptions, no paywalls, just pure image resizing magic. Support us with Solana donations if you love the tool.">
+    <meta name="keywords" content="free image resizer, no subscription, donation based, solana donations, client-side image processing">
     <meta name="author" content="Beniverse">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://pixscaler.com/pricing.html">
@@ -15,28 +15,23 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pixscaler.com/pricing.html">
-    <meta property="og:title" content="Pixscaler Pricing - Choose Your Plan">
-    <meta property="og:description" content="Choose the perfect Pixscaler plan for your image resizing needs. Free tier available with pro plans for unlimited processing.">
+    <meta property="og:title" content="Pixscaler - 100% Free Forever">
+    <meta property="og:description" content="No more pricing plans! Pixscaler is now completely free with optional Solana donations.">
     <meta property="og:image" content="https://pixscaler.com/og-image.png">
     <meta property="og:site_name" content="Pixscaler">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://pixscaler.com/pricing.html">
-    <meta property="twitter:title" content="Pixscaler Pricing - Choose Your Plan">
-    <meta property="twitter:description" content="Choose the perfect Pixscaler plan for your image resizing needs. Free tier available with pro plans for unlimited processing.">
+    <meta property="twitter:title" content="Pixscaler - 100% Free Forever">
+    <meta property="twitter:description" content="No more pricing plans! Pixscaler is now completely free with optional Solana donations.">
     <meta property="twitter:image" content="https://pixscaler.com/og-image.png">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖼️</text></svg>">
     
     <!-- Theme Color -->
     <meta name="theme-color" content="#6366f1">
-    <meta name="msapplication-TileColor" content="#6366f1">
     
     <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,38 +41,11 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "name": "Pixscaler Pro Plans",
-      "description": "Professional image resizing plans with unlimited processing and premium features",
-      "brand": {
-        "@type": "Brand",
-        "name": "Pixscaler"
-      },
-      "offers": [
-        {
-          "@type": "Offer",
-          "name": "Free Plan",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        {
-          "@type": "Offer",
-          "name": "Basic Plan",
-          "price": "3.99",
-          "priceCurrency": "USD",
-          "priceSpecification": {
-            "@type": "UnitPriceSpecification",
-            "price": "3.99",
-            "priceCurrency": "USD",
-            "unitCode": "MON"
-          }
-        }
-      ]
-    }
+    <!-- Auto redirect to main page after 5 seconds -->
+    <script>
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 5000);
     </script>
 </head>
 <body>
@@ -85,123 +53,80 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <a href="index.html" style="text-decoration: none;">
+                <a href="/" style="text-decoration: none;">
                     <h1>Pixscaler</h1>
-                    <div class="tagline">Professional Image Resizing</div>
+                    <div class="tagline">Client-Side Image Resizing</div>
                 </a>
             </div>
             <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="index.html#about">About</a>
+                <a href="/">Home</a>
+                <a href="/#about">About</a>
+                <a href="/#donate" class="donate-link">☕ Buy Me Coffee</a>
             </div>
             <div class="auth-section">
                 <div class="auth-buttons">
-                    <button class="btn btn-outline btn-sm" onclick="showLoginModal()">Login</button>
-                    <button class="btn btn-primary btn-sm" onclick="showRegisterModal()">Sign Up</button>
-                </div>
-                <div class="user-info" style="display: none;">
-                    <span class="user-email"></span>
-                    <span class="premium-badge" style="display: none;">PRO</span>
-                    <button class="btn btn-sm btn-outline" onclick="logout()">Logout</button>
+                    <span class="free-badge">100% Free Forever</span>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Pricing Hero -->
-    <section class="pricing-hero">
-        <div class="container">
-            <h1 class="hero-title">Choose Your Plan</h1>
-            <p class="hero-subtitle">Start free, upgrade when you need more power. All plans include professional-grade resizing technology.</p>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="pricing-main">
-        <div class="container">
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>Free</h3>
-                        <div class="price">$0<span>/month</span></div>
-                        <p class="plan-description">Perfect for personal use and trying out Pixscaler</p>
+    <!-- Free Announcement -->
+    <section class="hero">
+        <div class="hero-content">
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <h1 class="hero-title">🎉 Plot Twist: Everything is FREE!</h1>
+                <p class="hero-subtitle">We ditched the pricing plans! Pixscaler is now 100% free forever with no limitations, no subscriptions, and no BS.</p>
+                
+                <div style="background: white; border-radius: 16px; padding: 2rem; margin: 2rem 0; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                    <h2 style="color: #1e293b; margin-bottom: 1rem;">🚀 What Changed?</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; text-align: left;">
+                        <div>
+                            <h3 style="color: #059669; margin-bottom: 0.5rem;">✅ Now FREE:</h3>
+                            <ul style="color: #374151; line-height: 1.6;">
+                                <li>Unlimited image resizing</li>
+                                <li>All formats (JPEG, PNG, WebP)</li>
+                                <li>No file size limits</li>
+                                <li>High-quality processing</li>
+                                <li>Complete privacy</li>
+                                <li>No registration required</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 style="color: #dc2626; margin-bottom: 0.5rem;">❌ Gone Forever:</h3>
+                            <ul style="color: #374151; line-height: 1.6;">
+                                <li>Monthly subscriptions</li>
+                                <li>Usage limits</li>
+                                <li>Premium tiers</li>
+                                <li>Paywalls</li>
+                                <li>Account requirements</li>
+                                <li>Server costs (thanks to client-side!)</li>
+                            </ul>
+                        </div>
                     </div>
-                    <ul class="pricing-features">
-                        <li>✅ 10 images per hour</li>
-                        <li>✅ Up to 5MB file size</li>
-                        <li>✅ Basic formats (JPEG, PNG)</li>
-                        <li>✅ High quality processing</li>
-                        <li>✅ Secure processing</li>
-                        <li>❌ Batch processing</li>
-                        <li>❌ Priority support</li>
-                        <li>❌ WebP format</li>
-                    </ul>
-                    <button class="pricing-btn" onclick="selectPlan('free')">Get Started Free</button>
                 </div>
                 
-                <div class="pricing-card featured">
-                    <div class="pricing-badge">Most Popular</div>
-                    <div class="pricing-header">
-                        <h3>Pro</h3>
-                        <div class="price">$9.99<span>/month</span></div>
-                        <p class="plan-description">Ideal for content creators and small businesses</p>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>✅ 500 images per hour</li>
-                        <li>✅ Up to 50MB file size</li>
-                        <li>✅ All formats (JPEG, PNG, WebP)</li>
-                        <li>✅ Premium quality processing</li>
-                        <li>✅ Batch processing (10 images)</li>
-                        <li>✅ Priority support</li>
-                        <li>✅ Advanced compression</li>
-                        <li>✅ API access</li>
-                    </ul>
-                    <button class="pricing-btn primary" onclick="selectPlan('pro')">Upgrade to Pro</button>
+                <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; border: 2px solid #f59e0b;">
+                    <h3 style="color: #92400e; margin-bottom: 1rem;">💡 Why Free?</h3>
+                    <p style="color: #92400e; margin: 0; line-height: 1.6;">
+                        By going client-side, we eliminated server costs! Your images process locally in your browser, 
+                        making it faster, more private, and completely free to operate. If you love the tool, 
+                        consider sending some Solana love to keep the developer caffeinated ☕
+                    </p>
                 </div>
                 
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>Business</h3>
-                        <div class="price">$19.99<span>/month</span></div>
-                        <p class="plan-description">For agencies and high-volume users</p>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>✅ Unlimited images</li>
-                        <li>✅ Up to 100MB file size</li>
-                        <li>✅ All formats + RAW support</li>
-                        <li>✅ Ultra-premium quality</li>
-                        <li>✅ Batch processing (50 images)</li>
-                        <li>✅ 24/7 dedicated support</li>
-                        <li>✅ Custom integrations</li>
-                        <li>✅ White-label options</li>
-                    </ul>
-                    <button class="pricing-btn" onclick="selectPlan('business')">Go Business</button>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                    <a href="/" class="btn btn-primary" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                        🖼️ Start Resizing Images
+                    </a>
+                    <a href="/#donate" class="btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                        ◎ Send SOL Donation
+                    </a>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="faq">
-        <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <h3>Can I change plans anytime?</h3>
-                    <p>Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Is there a free trial?</h3>
-                    <p>Our Free plan is permanent - no trial needed! Upgrade when you need more features.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>What payment methods do you accept?</h3>
-                    <p>We accept all major credit cards, PayPal, and bank transfers for Business plans.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Do you offer refunds?</h3>
-                    <p>Yes, we offer a 30-day money-back guarantee on all paid plans.</p>
-                </div>
+                
+                <p style="color: #6b7280; margin-top: 2rem; font-size: 0.9rem;">
+                    🔄 Redirecting to main page in <span id="countdown">5</span> seconds...
+                </p>
             </div>
         </div>
     </section>
@@ -212,79 +137,45 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Pixscaler</h3>
-                    <p>AI-powered image resizing for the modern web.</p>
+                    <p>Client-side image resizing for the modern web.</p>
+                    <p><small>Made with ❤️ and lots of ☕</small></p>
                 </div>
                 <div class="footer-section">
-                    <h4>Product</h4>
-                    <a href="index.html">Home</a>
-                    <a href="index.html#about">About</a>
-                    <a href="pricing.html">Pricing</a>
+                    <h4>Features</h4>
+                    <p>✅ 100% Free Forever</p>
+                    <p>✅ No Registration Required</p>
+                    <p>✅ Complete Privacy</p>
+                    <p>✅ No File Size Limits</p>
+                    <p>✅ No Ads, No Tracking</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Support the Project</h4>
+                    <p>◎ Solana Donations Welcome</p>
+                    <p>⭐ GitHub Stars Appreciated</p>
+                    <p>🐛 Bug Reports Helpful</p>
+                    <p>💬 Feedback Always Welcome</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Pixscaler. All rights reserved. Made with ❤️ for creators worldwide.</p>
+                <p>&copy; 2025 Pixscaler. Built by <a href="https://www.freelancer.com/u/Beniverse" target="_blank">Beniverse</a>. Free as in beer 🍺</p>
             </div>
         </div>
     </footer>
 
-    <!-- Login Modal -->
-    <div class="modal" id="loginModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Welcome Back</h2>
-                <button class="modal-close" onclick="closeModal('loginModal')">&times;</button>
-            </div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
-                </div>
-                <div class="error-message" id="loginError" style="display: none;"></div>
-                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
-            </form>
-            <div class="modal-footer">
-                <p>Don't have an account? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Sign up here</a></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Register Modal -->
-    <div class="modal" id="registerModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Create Account</h2>
-                <button class="modal-close" onclick="closeModal('registerModal')">&times;</button>
-            </div>
-            <form id="registerForm">
-                <div class="form-group">
-                    <label for="registerName">Name</label>
-                    <input type="text" id="registerName" name="name" placeholder="Enter your name" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerEmail">Email</label>
-                    <input type="email" id="registerEmail" name="email" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword">Password</label>
-                    <input type="password" id="registerPassword" name="password" placeholder="Create a password" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
-                </div>
-                <div class="error-message" id="registerError" style="display: none;"></div>
-                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
-            </form>
-            <div class="modal-footer">
-                <p>Already have an account? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Sign in here</a></p>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <script>
+        // Countdown timer
+        let seconds = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            seconds--;
+            countdownElement.textContent = seconds;
+            
+            if (seconds <= 0) {
+                clearInterval(timer);
+                countdownElement.textContent = '0';
+            }
+        }, 1000);
+    </script>
 </body>
 </html> 
