@@ -476,7 +476,8 @@ function checkAchievements(originalSize, newSize) {
     }
     
     // Usage milestones
-    const imageCount = parseInt(document.getElementById('imageCount').textContent) || 0;
+    const imageCountElement = document.getElementById('imageCount');
+    const imageCount = imageCountElement ? parseInt(imageCountElement.textContent) || 0 : 0;
     if (imageCount === 10) {
         showAchievement('🎯', 'Getting Started!', 'You\'ve processed 10 images today');
     } else if (imageCount === 50) {
@@ -546,7 +547,10 @@ function updateImageCounter() {
         }
     }
     
-    document.getElementById('imageCount').textContent = stats.count;
+    const imageCountElement = document.getElementById('imageCount');
+    if (imageCountElement) {
+        imageCountElement.textContent = stats.count;
+    }
 }
 
 function incrementImageCounter() {
@@ -566,12 +570,14 @@ function incrementImageCounter() {
     
     // Animate counter update
     const counterElement = document.getElementById('imageCount');
-    counterElement.style.animation = 'countUp 0.5s ease-out';
-    counterElement.textContent = stats.count;
-    
-    setTimeout(() => {
-        counterElement.style.animation = '';
-    }, 500);
+    if (counterElement) {
+        counterElement.style.animation = 'countUp 0.5s ease-out';
+        counterElement.textContent = stats.count;
+        
+        setTimeout(() => {
+            counterElement.style.animation = '';
+        }, 500);
+    }
 }
 
 // Scroll effects
@@ -579,18 +585,21 @@ function setupScrollEffects() {
     const floatingBadge = document.getElementById('floatingBadge');
     let hasScrolled = false;
     
-    window.addEventListener('scroll', function() {
-        const scrollY = window.scrollY;
-        
-        // Show floating badge after scrolling 200px
-        if (scrollY > 200 && !hasScrolled) {
-            floatingBadge.style.display = 'block';
-            hasScrolled = true;
-        } else if (scrollY <= 200 && hasScrolled) {
-            floatingBadge.style.display = 'none';
-            hasScrolled = false;
-        }
-    });
+    // Only set up scroll listener if floating badge exists
+    if (floatingBadge) {
+        window.addEventListener('scroll', function() {
+            const scrollY = window.scrollY;
+            
+            // Show floating badge after scrolling 200px
+            if (scrollY > 200 && !hasScrolled) {
+                floatingBadge.style.display = 'block';
+                hasScrolled = true;
+            } else if (scrollY <= 200 && hasScrolled) {
+                floatingBadge.style.display = 'none';
+                hasScrolled = false;
+            }
+        });
+    }
     
     // Update social proof with simulated activity
     updateSocialProof();
@@ -601,12 +610,33 @@ function updateSocialProof() {
     if (totalElement) {
         // Simulate daily activity (between 50-200 images)
         const baseCount = 50 + Math.floor(Math.random() * 150);
-        const userCount = parseInt(document.getElementById('imageCount').textContent) || 0;
+        const imageCountElement = document.getElementById('imageCount');
+        const userCount = imageCountElement ? parseInt(imageCountElement.textContent) || 0 : 0;
         totalElement.textContent = baseCount + userCount;
     }
 }
 
 console.log('🚀 Pixscaler Client-Side Edition loaded successfully!');
+
+// Modal functions (for legacy modal elements)
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function switchModal(fromModal, toModal) {
+    const fromElement = document.getElementById(fromModal);
+    const toElement = document.getElementById(toModal);
+    
+    if (fromElement) {
+        fromElement.style.display = 'none';
+    }
+    if (toElement) {
+        toElement.style.display = 'block';
+    }
+}
 
 // Donation functions
 function copyAddress() {
@@ -630,10 +660,10 @@ function copyAddress() {
 
 function showDonationMessage(amount) {
     const messages = {
-        0.1: "🥤 Soda money! Every pixel thanks you!",
-        0.5: "☕ Coffee fuel! The code runs smoother now!",
-        1.0: "🍕 Pizza power! You're keeping the developer fed!",
-        5.0: "🚀 Rocket fuel! You're a legend in the pixel universe!"
+        0.01: "☕ Coffee money! Every pixel thanks you!",
+        0.05: "🥤 Soda fuel! The code runs smoother now!",
+        0.1: "🍕 Pizza power! You're keeping the developer fed!",
+        0.25: "🚀 Rocket fuel! You're a legend in the pixel universe!"
     };
     
     showDonationToast(messages[amount] || "Thanks for considering a donation! 💖");
