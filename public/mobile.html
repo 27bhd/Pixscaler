@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    
+    <!-- SEO Meta Tags -->
+    <title>Pixscaler - Mobile Image Resizer</title>
+    <meta name="description" content="Resize images on mobile with professional precision. Fast, secure, and client-side image resizing tool.">
+    <meta name="keywords" content="mobile image resizer, resize images, photo editor, image optimizer">
+    <meta name="author" content="Beniverse">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="android-chrome-192x192.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="mobile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- JSZip for bulk download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="header-content">
+            <h1 class="app-title">Pixscaler</h1>
+            <div class="header-badges">
+                <span class="badge free">Free</span>
+                <span class="badge private">Private</span>
+            </div>
+        </div>
+        <p class="app-subtitle">Professional Image Resizing</p>
+    </header>
+
+    <!-- Main App Container -->
+    <main class="app-container">
+        
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📱</div>
+                <h2>Resize Your Images</h2>
+                <p>Tap to select photos from your device</p>
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    Choose Photos
+                </button>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                <div class="supported-formats">
+                    <small>JPEG, PNG, WebP, GIF • Up to 50MB each</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Image Info -->
+        <section class="image-info" id="imageInfo" style="display: none;">
+            <div class="info-card">
+                <div class="info-icon">🖼️</div>
+                <div class="info-details">
+                    <span class="file-count" id="fileCount">1 image selected</span>
+                    <span class="file-size" id="totalSize">2.5 MB</span>
+                </div>
+                <button class="clear-btn" onclick="clearSelection()">×</button>
+            </div>
+        </section>
+
+        <!-- Settings Panel -->
+        <section class="settings-panel" id="settingsPanel" style="display: none;">
+            <h3>Resize Settings</h3>
+            
+            <!-- Dimensions -->
+            <div class="setting-group">
+                <label class="setting-label">Dimensions</label>
+                <div class="dimension-inputs">
+                    <div class="input-field">
+                        <label>Width</label>
+                        <input type="number" id="width" placeholder="800">
+                    </div>
+                    <div class="input-field">
+                        <label>Height</label>
+                        <input type="number" id="height" placeholder="600">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="setting-group">
+                <label class="setting-label">Quick Sizes</label>
+                <div class="preset-grid">
+                    <button class="preset-btn" onclick="setPreset(1920, 1080)">1920×1080</button>
+                    <button class="preset-btn" onclick="setPreset(1280, 720)">1280×720</button>
+                    <button class="preset-btn" onclick="setPreset(800, 600)">800×600</button>
+                    <button class="preset-btn" onclick="setPreset(400, 400)">400×400</button>
+                </div>
+            </div>
+
+            <!-- Quality -->
+            <div class="setting-group">
+                <label class="setting-label">Quality: <span id="qualityValue">85%</span></label>
+                <input type="range" id="quality" min="1" max="100" value="85" class="quality-slider">
+            </div>
+
+            <!-- Format -->
+            <div class="setting-group">
+                <label class="setting-label">Format</label>
+                <div class="format-tabs">
+                    <input type="radio" id="jpeg" name="format" value="jpeg" checked>
+                    <label for="jpeg" class="format-tab">JPEG</label>
+                    <input type="radio" id="png" name="format" value="png">
+                    <label for="png" class="format-tab">PNG</label>
+                    <input type="radio" id="webp" name="format" value="webp">
+                    <label for="webp" class="format-tab">WebP</label>
+                </div>
+            </div>
+
+            <!-- Process Button -->
+            <button class="process-btn" id="processBtn" onclick="processImages()">
+                <span class="btn-icon">✨</span>
+                <span id="processBtnText">Resize Images</span>
+            </button>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="progress-section" id="progressSection" style="display: none;">
+            <div class="progress-card">
+                <h3>Processing Images...</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Processing 0 of 0 images...</div>
+                <button class="cancel-btn" onclick="cancelProcessing()">Cancel</button>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <div class="results-header">
+                <div class="success-icon">✅</div>
+                <h3>Done!</h3>
+                <p>Your images have been resized</p>
+            </div>
+
+            <!-- Single Image Result -->
+            <div class="single-result" id="singleResult" style="display: none;">
+                <div class="result-preview">
+                    <img id="previewImage" alt="Resized image preview">
+                </div>
+                <button class="download-btn" id="downloadBtn">
+                    <span class="btn-icon">📥</span>
+                    Download Image
+                </button>
+            </div>
+
+            <!-- Bulk Results -->
+            <div class="bulk-result" id="bulkResult" style="display: none;">
+                <div class="result-stats">
+                    <div class="stat">
+                        <span class="stat-number" id="processedCount">0</span>
+                        <span class="stat-label">Images</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="sizeSaved">0%</span>
+                        <span class="stat-label">Size Saved</span>
+                    </div>
+                </div>
+                <button class="download-zip-btn" id="downloadZipBtn" onclick="downloadZip()">
+                    <span class="btn-icon">📦</span>
+                    Download ZIP
+                </button>
+            </div>
+
+            <button class="new-image-btn" onclick="resetUpload()">
+                <span class="btn-icon">🔄</span>
+                Process More Images
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-btn" onclick="showAbout()">
+            <span class="nav-icon">ℹ️</span>
+            <span class="nav-label">About</span>
+        </button>
+        <button class="nav-btn" onclick="showDesktopVersion()">
+            <span class="nav-icon">🖥️</span>
+            <span class="nav-label">Desktop</span>
+        </button>
+        <button class="nav-btn" onclick="showSupport()">
+            <span class="nav-icon">☕</span>
+            <span class="nav-label">Support</span>
+        </button>
+    </nav>
+
+    <!-- Modal Overlays -->
+    <div class="modal-overlay" id="aboutModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>About Pixscaler</h3>
+                <button class="modal-close" onclick="hideModal('aboutModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Pixscaler processes images entirely in your browser using HTML5 Canvas. Your images never leave your device, ensuring complete privacy and security.</p>
+                
+                <div class="features-list">
+                    <div class="feature">
+                        <span class="feature-icon">🚀</span>
+                        <span>Fast client-side processing</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🔒</span>
+                        <span>Complete privacy - no uploads</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🎯</span>
+                        <span>Professional quality output</span>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📱</span>
+                        <span>Works on all devices</span>
+                    </div>
+                </div>
+
+                <div class="developer-info">
+                    <p><strong>Built by Beniverse</strong></p>
+                    <p>Full-Stack Developer passionate about building efficient web applications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="supportModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Support the Project</h3>
+                <button class="modal-close" onclick="hideModal('supportModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <p>If this tool saves you time, consider supporting the developer!</p>
+                
+                <div class="crypto-section">
+                    <div class="crypto-header">
+                        <span class="crypto-icon">💰</span>
+                        <span>Solana (SOL)</span>
+                    </div>
+                    <div class="wallet-address">
+                        <code id="solanaAddress">5Ap6T93SRLFj9Urg7SWk1As5nNDunb6zEzyw8fpSUuHo</code>
+                        <button class="copy-btn" onclick="copyAddress()">Copy</button>
+                    </div>
+                </div>
+
+                <div class="support-alternatives">
+                    <p><strong>Other ways to support:</strong></p>
+                    <button class="alt-btn" onclick="shareApp()">📢 Share this tool</button>
+                    <button class="alt-btn" onclick="openGitHub()">⭐ Star on GitHub</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="mobile.js"></script>
+</body>
+</html> 
