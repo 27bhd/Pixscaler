@@ -13,14 +13,6 @@ Thumbs.db
 .env.production.local
 dist/
 build/
-temp/
-uploads/
-database/*.db
-database/*.sqlite
-database/*.sqlite3
-test-results/
-coverage/
-.nyc_output/
 .vscode/
 .idea/
 *.swp

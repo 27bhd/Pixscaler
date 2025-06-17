@@ -29,10 +29,7 @@
     "url": "https://github.com/yourusername/pixscaler.git"
   },
   "homepage": "https://pixscaler.com",
-  "devDependencies": {
-    "serve": "^14.2.1"
-  },
   "dependencies": {
-    "express": "^5.1.0"
+    "serve": "^14.2.1"
   }
 }
