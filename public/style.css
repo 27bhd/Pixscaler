@@ -15,6 +15,8 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
+    word-wrap: break-word;
+    -webkit-text-size-adjust: 100%;
 }
 
 .container {
@@ -1766,63 +1768,49 @@ body.drag-active::before {
 
 /* Responsive Design for Donation Section */
 @media (max-width: 768px) {
-    .donation-header h2 {
-        font-size: 1.8rem;
-    }
-    
-    .crypto-card {
-        padding: 1.5rem;
-    }
-    
-    .wallet-address {
-        flex-direction: column;
-    }
-    
-    .wallet-address code {
-        font-size: 0.8rem;
-    }
-    
-    .amount-buttons {
-        justify-content: center;
-    }
-    
-    .amount-btn {
-        padding: 0.5rem 1rem;
-    }
-    
-    .alt-support {
-        flex-direction: column;
-        gap: 1rem;
-    }
-}
-
-@media (max-width: 768px) {
     .nav-container {
-        flex-direction: column;
-        gap: 1rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
         padding: 0 15px;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .logo {
+        flex: 0 0 auto;
     }
     
     .nav-center {
-        order: -1;
+        order: 3;
+        flex: 1 1 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
     }
     
     .nav-badges {
+        flex: 0 0 auto;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: flex-end;
+        gap: 0.25rem;
     }
     
     .nav-links {
-        gap: 1.5rem;
+        gap: 1rem;
     }
     
     .nav-badge {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        white-space: nowrap;
+    }
+    
+    .navbar {
+        padding: 0.75rem 0;
     }
     
     .hero {
-        padding: 100px 0 40px;
+        padding: 120px 0 40px;
     }
     
     .hero-content {
@@ -1830,17 +1818,19 @@ body.drag-active::before {
     }
     
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         line-height: 1.2;
+        margin-bottom: 1rem;
     }
     
     .hero-subtitle {
         font-size: 1rem;
         margin-bottom: 2rem;
+        line-height: 1.5;
     }
     
     .upload-area {
-        padding: 2rem 1rem;
+        padding: 2rem 1.5rem;
         margin: 1.5rem 0;
     }
     
@@ -1862,12 +1852,14 @@ body.drag-active::before {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+        text-align: left;
     }
     
     .input-group {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+        margin-bottom: 1rem;
     }
     
     .input-group input {
@@ -1877,55 +1869,106 @@ body.drag-active::before {
     
     .input-group label {
         font-size: 0.9rem;
+        font-weight: 500;
     }
     
     .preset-buttons {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
     }
     
     .preset-btn {
-        padding: 0.6rem 0.5rem;
-        font-size: 0.8rem;
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
     }
     
     .format-options {
         justify-content: center;
         gap: 0.5rem;
+        flex-wrap: wrap;
     }
     
     .format-options label {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.8rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
     }
     
     .resize-btn {
         padding: 1rem 2rem;
         font-size: 1rem;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
+        width: 100%;
+    }
+    
+    /* About section fixes */
+    .about {
+        padding: 4rem 0;
     }
     
     .about-content {
         flex-direction: column;
-        gap: 2rem;
+        gap: 2.5rem;
+        align-items: center;
+    }
+    
+    .about-text {
+        order: 1;
+        text-align: left;
+    }
+    
+    .developer-card {
+        order: 2;
+        width: 100%;
+        max-width: 400px;
+        margin: 0;
+        text-align: center;
+    }
+    
+    .about-features {
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .feature-item {
+        padding: 1.5rem;
+        text-align: left;
+        align-items: flex-start;
+    }
+    
+    .feature-emoji {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-item h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-item p {
+        font-size: 0.9rem;
+        line-height: 1.4;
     }
     
     .about-stats {
         grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin: 2rem 0;
     }
     
     .footer-content {
         flex-direction: column;
         gap: 2rem;
+        text-align: center;
     }
     
     .upload-or::before,
     .upload-or::after {
-        width: 40px;
+        width: 50px;
     }
     
-    .upload-or::before { left: -40px; }
-    .upload-or::after { right: -40px; }
+    .upload-or::before { left: -50px; }
+    .upload-or::after { right: -50px; }
     
     .download-section {
         padding: 1.5rem;
@@ -1993,6 +2036,43 @@ body.drag-active::before {
         width: 100%;
         margin: 1rem 0;
     }
+    
+    /* Donation section mobile fixes */
+    .donation-header h2 {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+    
+    .crypto-card {
+        padding: 1.5rem;
+    }
+    
+    .wallet-address {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .wallet-address code {
+        font-size: 0.8rem;
+        word-break: break-all;
+        text-align: center;
+    }
+    
+    .amount-buttons {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .amount-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .alt-support {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
 }
 
 /* Mobile Phones */
@@ -2003,33 +2083,35 @@ body.drag-active::before {
     
     .nav-container {
         padding: 0 10px;
-        gap: 0.75rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
     }
     
     .logo h1 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
     
     .tagline {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
     
     .nav-badge {
-        font-size: 0.65rem;
-        padding: 0.25rem 0.5rem;
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+        margin: 0.1rem;
     }
     
     .nav-links {
-        gap: 1rem;
+        gap: 0.75rem;
     }
     
     .nav-links a {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
     .donate-link {
-        padding: 0.4rem 0.8rem !important;
-        font-size: 0.8rem !important;
+        padding: 0.35rem 0.7rem !important;
+        font-size: 0.75rem !important;
     }
     
     .hero {
@@ -2072,6 +2154,7 @@ body.drag-active::before {
     .upload-btn {
         padding: 12px 24px;
         font-size: 0.9rem;
+        width: 100%;
     }
     
     .controls {
@@ -2114,6 +2197,7 @@ body.drag-active::before {
     
     .format-options {
         gap: 0.5rem;
+        justify-content: center;
     }
     
     .format-options label {
@@ -2127,6 +2211,24 @@ body.drag-active::before {
         font-size: 0.95rem;
         border-radius: 12px;
         margin-top: 1rem;
+        width: 100%;
+    }
+    
+    /* About section mobile fixes */
+    .about-content {
+        gap: 2rem;
+    }
+    
+    .feature-item {
+        padding: 1.25rem;
+    }
+    
+    .feature-emoji {
+        font-size: 1.75rem;
+    }
+    
+    .developer-card {
+        padding: 1.25rem;
     }
     
     .section-title {
@@ -2276,15 +2378,29 @@ body.drag-active::before {
     
     .nav-container {
         padding: 0 8px;
+        gap: 0.25rem;
     }
     
     .logo h1 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+    }
+    
+    .tagline {
+        font-size: 0.6rem;
     }
     
     .nav-badge {
-        font-size: 0.6rem;
-        padding: 0.2rem 0.4rem;
+        font-size: 0.55rem;
+        padding: 0.15rem 0.3rem;
+        margin: 0.05rem;
+    }
+    
+    .nav-links {
+        gap: 0.5rem;
+    }
+    
+    .nav-links a {
+        font-size: 0.8rem;
     }
     
     .upload-area {
@@ -2303,6 +2419,18 @@ body.drag-active::before {
     .preset-btn {
         padding: 12px 8px;
         font-size: 0.8rem;
+    }
+    
+    .about-content {
+        gap: 1.5rem;
+    }
+    
+    .feature-item {
+        padding: 1rem;
+    }
+    
+    .developer-card {
+        padding: 1rem;
     }
 }
 
