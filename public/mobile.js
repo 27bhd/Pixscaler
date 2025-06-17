@@ -3,20 +3,63 @@ let selectedFiles = [];
 let processedImages = [];
 let isProcessing = false;
 
+// Detect iOS device
+function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('fileInput');
     const uploadArea = document.getElementById('uploadArea');
+    const uploadButton = document.getElementById('uploadButton');
     const qualitySlider = document.getElementById('quality');
     const qualityValue = document.getElementById('qualityValue');
+    
+    // Detect iOS and show helpful tip
+    if (isIOS()) {
+        const iosTip = document.getElementById('iosTip');
+        if (iosTip) {
+            iosTip.style.display = 'block';
+        }
+    }
     
     // File input change handler
     fileInput.addEventListener('change', handleFileSelect);
     
-    // Upload area drag and drop
+    // Upload button click handler (better iOS compatibility)
+    uploadButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        fileInput.click();
+    });
+    
+    // Upload area click handler
+    uploadArea.addEventListener('click', function(e) {
+        // Only trigger if not clicking the button directly
+        if (e.target !== uploadButton && !uploadButton.contains(e.target)) {
+            fileInput.click();
+        }
+    });
+    
+    // Touch event handlers for better iOS support
+    uploadArea.addEventListener('touchstart', function(e) {
+        if (e.target !== uploadButton && !uploadButton.contains(e.target)) {
+            e.preventDefault();
+        }
+    });
+    
+    uploadArea.addEventListener('touchend', function(e) {
+        if (e.target !== uploadButton && !uploadButton.contains(e.target)) {
+            e.preventDefault();
+            fileInput.click();
+        }
+    });
+    
+    // Upload area drag and drop (for desktop compatibility)
     uploadArea.addEventListener('dragover', handleDragOver);
     uploadArea.addEventListener('drop', handleDrop);
-    uploadArea.addEventListener('click', () => fileInput.click());
     
     // Quality slider update
     qualitySlider.addEventListener('input', function() {
@@ -31,10 +74,56 @@ document.addEventListener('DOMContentLoaded', function() {
 function handleFileSelect(event) {
     const files = Array.from(event.target.files);
     if (files.length > 0) {
-        selectedFiles = files;
-        showImageInfo();
-        showSettings();
+        // Filter and validate files
+        const validFiles = [];
+        const invalidFiles = [];
+        
+        files.forEach(file => {
+            if (isValidImageFile(file)) {
+                validFiles.push(file);
+            } else {
+                invalidFiles.push(file.name);
+            }
+        });
+        
+        if (invalidFiles.length > 0) {
+            showToast(`Unsupported files: ${invalidFiles.join(', ')}`);
+        }
+        
+        if (validFiles.length > 0) {
+            selectedFiles = validFiles;
+            showImageInfo();
+            showSettings();
+        } else {
+            showToast('Please select valid image files (JPEG, PNG, WebP, GIF, HEIC)');
+        }
     }
+}
+
+// Check if file is a valid image
+function isValidImageFile(file) {
+    const validTypes = [
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/webp',
+        'image/gif',
+        'image/heic',
+        'image/heif'
+    ];
+    
+    const validExtensions = [
+        '.jpg', '.jpeg', '.png', '.webp', '.gif', '.heic', '.heif'
+    ];
+    
+    // Check MIME type
+    if (validTypes.includes(file.type.toLowerCase())) {
+        return true;
+    }
+    
+    // Fallback: check file extension (for HEIC files that might not have proper MIME type)
+    const fileName = file.name.toLowerCase();
+    return validExtensions.some(ext => fileName.endsWith(ext));
 }
 
 // Handle drag over
@@ -179,6 +268,16 @@ async function processImages() {
 // Process single image
 function processImage(file, width, height, quality, format) {
     return new Promise((resolve, reject) => {
+        // Check if this is a HEIC file
+        const isHEIC = file.type === 'image/heic' || file.type === 'image/heif' || 
+                       file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+        
+        if (isHEIC) {
+            // For HEIC files, provide guidance to user
+            reject(new Error('HEIC files need to be converted to JPEG first. Please go to your iPhone Photos app, select the image, tap Share, then "Copy Photo" and try uploading again. Or change your camera settings to capture in JPEG format.'));
+            return;
+        }
+        
         const img = new Image();
         img.onload = function() {
             try {
@@ -221,8 +320,15 @@ function processImage(file, width, height, quality, format) {
             }
         };
         
-        img.onerror = () => reject(new Error('Failed to load image'));
-        img.src = URL.createObjectURL(file);
+        img.onerror = () => {
+            reject(new Error('Failed to load image. Please make sure the file is a valid image format.'));
+        };
+        
+        try {
+            img.src = URL.createObjectURL(file);
+        } catch (error) {
+            reject(new Error('Failed to read image file. Please try selecting the image again.'));
+        }
     });
 }
 

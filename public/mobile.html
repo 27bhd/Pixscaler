@@ -53,12 +53,15 @@
                 <div class="upload-icon">📱</div>
                 <h2>Resize Your Images</h2>
                 <p>Tap to select photos from your device</p>
-                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                <button class="upload-btn" id="uploadButton">
                     Choose Photos
                 </button>
-                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                <input type="file" id="fileInput" accept="image/*,image/heic,image/heif,.heic,.heif" multiple style="display: none;">
                 <div class="supported-formats">
-                    <small>JPEG, PNG, WebP, GIF • Up to 50MB each</small>
+                    <small>JPEG, PNG, WebP, GIF, HEIC • Up to 50MB each</small>
+                    <div class="ios-tip" id="iosTip" style="display: none;">
+                        <small>📱 iPhone users: For HEIC photos, please copy the photo first (Share → Copy Photo) or change camera settings to JPEG format</small>
+                    </div>
                 </div>
             </div>
         </section>
