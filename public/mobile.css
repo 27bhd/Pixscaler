@@ -240,6 +240,7 @@ body {
     padding: 2rem 1.5rem;
     margin-bottom: 1.5rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden; /* Prevent content overflow */
 }
 
 .settings-panel h3 {
@@ -248,23 +249,28 @@ body {
     color: #fff;
     text-align: center;
     font-weight: 700;
+    line-height: 1.3;
 }
 
 .setting-group {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 1;
 }
 
 .setting-group:last-child {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .setting-label {
     display: block;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     color: #fff;
     font-size: 1rem;
     text-align: center;
+    line-height: 1.3;
+    word-wrap: break-word;
 }
 
 /* Dimension Inputs */
@@ -272,13 +278,15 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.25rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    position: relative;
 }
 
 .input-field {
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.7rem;
+    position: relative;
 }
 
 .input-field label {
@@ -286,6 +294,8 @@ body {
     color: rgba(255, 255, 255, 0.8);
     font-weight: 600;
     text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
 .input-field input {
@@ -294,19 +304,21 @@ body {
     border-radius: 12px;
     padding: 1rem 0.75rem;
     color: #fff;
-    font-size: 18px; /* Prevents zoom on iOS */
+    font-size: 16px; /* Prevents zoom on iOS while being readable */
     font-weight: 600;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     min-height: 56px; /* Better touch target */
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .input-field input:focus {
     outline: none;
     border-color: #667eea;
     background: rgba(102, 126, 234, 0.15);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-    transform: scale(1.02);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+    /* Removed transform scale to prevent layout shifts */
 }
 
 .input-field input::placeholder {
@@ -319,7 +331,8 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .preset-btn {
@@ -331,15 +344,18 @@ body {
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     min-height: 56px; /* Better touch target */
     display: flex;
     align-items: center;
     justify-content: center;
+    white-space: nowrap;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .preset-btn:active {
-    transform: scale(0.96);
+    transform: scale(0.98); /* Reduced scale to prevent layout shifts */
     background: rgba(102, 126, 234, 0.25);
     border-color: #667eea;
     color: #fff;
@@ -404,7 +420,9 @@ body {
     border-radius: 12px;
     padding: 0.4rem;
     gap: 0.3rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    position: relative;
 }
 
 .format-tabs input[type="radio"] {
@@ -419,21 +437,24 @@ body {
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     color: rgba(255, 255, 255, 0.7);
     min-height: 48px; /* Better touch target */
     display: flex;
     align-items: center;
     justify-content: center;
     border: 2px solid transparent;
+    box-sizing: border-box;
+    white-space: nowrap;
+    position: relative;
 }
 
 .format-tabs input[type="radio"]:checked + .format-tab {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #fff;
-    transform: scale(1.02);
     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
     border-color: rgba(255, 255, 255, 0.2);
+    /* Removed transform scale to prevent layout shifts */
 }
 
 .format-tab:active {
@@ -451,25 +472,27 @@ body {
     font-weight: 700;
     width: 100%;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     min-height: 60px; /* Better touch target */
     border: 2px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    position: relative;
 }
 
 .process-btn:active {
-    transform: scale(0.96);
+    transform: scale(0.98); /* Reduced scale to prevent layout shifts */
     box-shadow: 0 4px 16px rgba(102, 126, 234, 0.6);
 }
 
 .process-btn:hover {
     box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
-    transform: translateY(-2px);
+    /* Removed transform to prevent layout shifts */
 }
 
 .btn-icon {
@@ -1134,6 +1157,33 @@ body {
     color: rgba(255, 255, 255, 0.8);
     font-size: 0.85rem;
     margin-bottom: 0;
+}
+
+/* Layout Stability Improvements */
+.app-container {
+    /* Ensure consistent spacing and prevent layout shifts */  
+    min-height: calc(100vh - 140px); /* Account for header and nav */
+}
+
+/* Prevent text wrapping issues and ensure proper spacing */
+.settings-panel * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Prevent content jumping during interactions */
+.settings-panel,
+.setting-group,
+.dimension-inputs,
+.preset-grid,
+.format-tabs {
+    contain: layout;
+    isolation: isolate;
+}
+
+/* Ensure consistent spacing between sections */
+.setting-group + .setting-group {
+    margin-top: 0;
 }
 
 /* Animations */
