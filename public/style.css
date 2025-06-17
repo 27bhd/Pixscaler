@@ -1030,6 +1030,12 @@ body {
     background-clip: text;
 }
 
+.donation-header h2 .emoji {
+    -webkit-text-fill-color: initial;
+    background: none;
+    color: initial;
+}
+
 .donation-header p {
     font-size: 1.1rem;
     color: rgba(255, 255, 255, 0.8);
