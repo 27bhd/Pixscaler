@@ -406,7 +406,7 @@ function downloadFile(blob, filename) {
 // iOS-specific download function
 function downloadFileIOS(blob, filename) {
     try {
-        // Method 1: Try Web Share API first (works on iOS 12+)
+        // Try Web Share API (works on iOS 12+)
         if (navigator.share && navigator.canShare) {
             const file = new File([blob], filename, { type: blob.type });
             
@@ -416,206 +416,36 @@ function downloadFileIOS(blob, filename) {
                     title: filename,
                     text: `Download ${filename} from Pixscaler`
                 }).then(() => {
-                    showToast('File shared successfully! Choose "Save to Files" to download.');
+                    showToast('✅ Choose "Save to Files" to download your image!');
                 }).catch((error) => {
                     if (error.name !== 'AbortError') {
-                        console.log('Share failed, trying alternative method');
-                        downloadFileIOSAlternative(blob, filename);
+                        showToast('Download ready! Check your Files app or try again.');
                     }
                 });
                 return;
             }
         }
         
-        // Method 2: Alternative approach if share API fails
-        downloadFileIOSAlternative(blob, filename);
+        // Simple fallback: try standard download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast('Download started! Check your Downloads folder.');
         
     } catch (error) {
         console.error('iOS download error:', error);
-        downloadFileIOSAlternative(blob, filename);
+        showToast('Download ready! Please try again or check your Downloads folder.');
     }
 }
 
-// Alternative iOS download method
-function downloadFileIOSAlternative(blob, filename) {
-    try {
-        // Convert blob to data URL
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const dataUrl = e.target.result;
-            
-            // Method 1: Try creating a temporary link with data URL
-            const link = document.createElement('a');
-            link.href = dataUrl;
-            link.download = filename;
-            link.style.display = 'none';
-            
-            // Add to DOM and click
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Show instructions
-            setTimeout(() => {
-                showIOSDownloadInstructions(filename);
-            }, 500);
-        };
-        
-        reader.onerror = function() {
-            // Final fallback: open in new tab
-            openImageInNewTab(blob, filename);
-        };
-        
-        reader.readAsDataURL(blob);
-        
-    } catch (error) {
-        console.error('iOS alternative download error:', error);
-        openImageInNewTab(blob, filename);
-    }
-}
 
-// Open image in new tab for manual save
-function openImageInNewTab(blob, filename) {
-    try {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const dataUrl = e.target.result;
-            const newWindow = window.open('', '_blank');
-            
-            if (newWindow) {
-                newWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>${filename}</title>
-                        <style>
-                            body {
-                                margin: 0;
-                                padding: 20px;
-                                background: #000;
-                                display: flex;
-                                flex-direction: column;
-                                align-items: center;
-                                justify-content: center;
-                                min-height: 100vh;
-                                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-                            }
-                            img {
-                                max-width: 100%;
-                                max-height: 80vh;
-                                object-fit: contain;
-                                border-radius: 8px;
-                                box-shadow: 0 4px 20px rgba(255,255,255,0.1);
-                            }
-                            .instructions {
-                                color: white;
-                                text-align: center;
-                                margin-top: 20px;
-                                font-size: 16px;
-                                line-height: 1.5;
-                            }
-                            .filename {
-                                color: #007AFF;
-                                font-weight: 600;
-                                margin-bottom: 10px;
-                            }
-                            .steps {
-                                background: rgba(255,255,255,0.1);
-                                padding: 15px;
-                                border-radius: 8px;
-                                margin-top: 15px;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <img src="${dataUrl}" alt="${filename}">
-                        <div class="instructions">
-                            <div class="filename">${filename}</div>
-                            <div class="steps">
-                                📱 <strong>To save this image:</strong><br>
-                                1. Tap and hold the image above<br>
-                                2. Select "Save to Photos" or "Add to Photos"<br>
-                                3. The image will be saved to your Photos app
-                            </div>
-                        </div>
-                    </body>
-                    </html>
-                `);
-                newWindow.document.close();
-                showToast('Image opened in new tab. Tap and hold to save!');
-            } else {
-                showToast('Please allow popups to download images');
-            }
-        };
-        reader.readAsDataURL(blob);
-    } catch (error) {
-        console.error('Error opening image in new tab:', error);
-        showToast('Download failed. Please try again.');
-    }
-}
-
-// Show iOS-specific download instructions
-function showIOSDownloadInstructions(filename) {
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        padding: 20px;
-        box-sizing: border-box;
-    `;
-    
-    modal.innerHTML = `
-        <div style="
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        ">
-            <h3 style="margin: 0 0 16px 0; color: #007AFF;">📱 Download Instructions</h3>
-            <p style="margin: 0 0 20px 0; color: #333; line-height: 1.5;">
-                <strong>${filename}</strong><br><br>
-                If the download didn't start automatically:
-            </p>
-            <ol style="text-align: left; color: #666; line-height: 1.6; margin: 0 0 20px 0;">
-                <li>Check your Downloads folder in the Files app</li>
-                <li>Or look for the file in Safari's download manager</li>
-                <li>If not found, the image may have opened in a new tab - tap and hold it to save to Photos</li>
-            </ol>
-            <button onclick="this.parentElement.parentElement.remove()" style="
-                background: #007AFF;
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 8px;
-                font-size: 16px;
-                font-weight: 600;
-                cursor: pointer;
-            ">Got it!</button>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Auto-remove after 10 seconds
-    setTimeout(() => {
-        if (document.body.contains(modal)) {
-            document.body.removeChild(modal);
-        }
-    }, 10000);
-}
 
 
 
