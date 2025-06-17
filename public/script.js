@@ -255,12 +255,16 @@ async function processImages() {
 async function processSingleImage(width, height, quality, format) {
     showLoading();
     
+    const startTime = Date.now();
+    
     try {
         const imageData = currentImages[0];
         const resizedData = performResize(imageData.image, width, height, quality, format);
         
+        const processingTime = Date.now() - startTime;
+        
         hideLoading();
-        showSinglePreview(resizedData, width, height, format, imageData.name);
+        showSinglePreview(resizedData, width, height, format, imageData.name, processingTime, imageData.originalSize);
         
     } catch (error) {
         hideLoading();
@@ -334,6 +338,7 @@ async function processBulkImages(width, height, quality, format) {
         
         if (!processingCancelled) {
             // Processing complete
+            const totalProcessingTime = Date.now() - startTime;
             progressFill.style.width = '100%';
             progressText.textContent = `Completed ${processedImages.length} of ${totalImages} images`;
             progressTime.textContent = 'Processing complete!';
@@ -341,7 +346,7 @@ async function processBulkImages(width, height, quality, format) {
             // Show download section after a brief delay
             setTimeout(() => {
                 document.getElementById('bulkProgress').style.display = 'none';
-                showBulkDownload();
+                showBulkDownload(totalProcessingTime);
             }, 1000);
         }
         
@@ -426,7 +431,7 @@ function dataURLToBlob(dataURL) {
     return new Blob([u8arr], { type: mime });
 }
 
-function showSinglePreview(imageData, width, height, format, originalName) {
+function showSinglePreview(imageData, width, height, format, originalName, processingTimeMs = 0, originalSize = 0) {
     const previewSection = document.getElementById('preview');
     const previewImage = document.getElementById('previewImage');
     const downloadSection = document.getElementById('downloadSection');
@@ -455,24 +460,29 @@ function showSinglePreview(imageData, width, height, format, originalName) {
     downloadSection.style.display = 'block';
     
     // Calculate file size reduction
-    const originalSize = currentImages[0].originalSize;
+    const actualOriginalSize = originalSize || currentImages[0].originalSize;
     const newSize = imageData.blob.size;
-    const reduction = originalSize ? Math.round((1 - newSize / originalSize) * 100) : 0;
+    const reduction = actualOriginalSize ? Math.round((1 - newSize / actualOriginalSize) * 100) : 0;
     
-    // Update success message with file info
-    downloadDescription.innerHTML = `
-        Your image has been resized to ${width}x${height} pixels.<br>
-        <small>Format: ${format.toUpperCase()} | Size: ${formatFileSize(newSize)}${reduction > 0 ? ` | ${reduction}% smaller` : ''}</small>
-    `;
+    // Build description with processing time for large files
+    let descriptionHTML = `Your image has been resized to ${width}x${height} pixels.<br>`;
+    let smallText = `Format: ${format.toUpperCase()} | Size: ${formatFileSize(newSize)}${reduction > 0 ? ` | ${reduction}% smaller` : ''}`;
+    
+    // Show processing time if file size is large (> 5MB)
+    if (actualOriginalSize > 5 * 1024 * 1024 && processingTimeMs > 0) {
+        smallText += ` | Processed in ${formatProcessingTime(processingTimeMs)}`;
+    }
+    
+    downloadDescription.innerHTML = descriptionHTML + `<small>${smallText}</small>`;
 
     // Increment usage counter
     incrementImageCounter();
 
     // Check achievements
-    checkAchievements(originalSize, newSize);
+    checkAchievements(actualOriginalSize, newSize);
 }
 
-function showBulkDownload() {
+function showBulkDownload(processingTimeMs = 0) {
     const downloadSection = document.getElementById('downloadSection');
     const downloadTitle = document.getElementById('downloadTitle');
     const downloadDescription = document.getElementById('downloadDescription');
@@ -481,6 +491,8 @@ function showBulkDownload() {
     const processedCount = document.getElementById('processedCount');
     const totalSaved = document.getElementById('totalSaved');
     const zipSize = document.getElementById('zipSize');
+    const processingTimeStatDesktop = document.getElementById('processingTimeStatDesktop');
+    const processingTimeDesktop = document.getElementById('processingTimeDesktop');
 
     // Calculate statistics
     const totalOriginalSize = processedImages.reduce((sum, img) => sum + img.originalSize, 0);
@@ -498,11 +510,34 @@ function showBulkDownload() {
     totalSaved.textContent = `${totalReduction}%`;
     zipSize.textContent = formatFileSize(totalNewSize);
     
+    // Show processing time if file size is large (> 5MB) or many images (> 10)
+    const shouldShowTime = totalOriginalSize > 5 * 1024 * 1024 || processedImages.length > 10;
+    
+    if (shouldShowTime && processingTimeMs > 0) {
+        processingTimeStatDesktop.style.display = 'block';
+        processingTimeDesktop.textContent = formatProcessingTime(processingTimeMs);
+    } else {
+        processingTimeStatDesktop.style.display = 'none';
+    }
+    
     downloadSection.style.display = 'block';
 
     // Increment usage counter for bulk
     for (let i = 0; i < processedImages.length; i++) {
         incrementImageCounter();
+    }
+}
+
+// Format processing time
+function formatProcessingTime(ms) {
+    if (ms < 1000) {
+        return `${ms}ms`;
+    } else if (ms < 60000) {
+        return `${(ms / 1000).toFixed(1)}s`;
+    } else {
+        const minutes = Math.floor(ms / 60000);
+        const seconds = Math.floor((ms % 60000) / 1000);
+        return `${minutes}m ${seconds}s`;
     }
 }
 

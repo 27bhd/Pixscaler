@@ -240,6 +240,9 @@ async function processImages() {
     showProgress();
     processedImages = [];
     
+    // Start timing
+    const startTime = Date.now();
+    
     try {
         for (let i = 0; i < selectedFiles.length; i++) {
             if (!isProcessing) break; // Cancelled
@@ -254,7 +257,9 @@ async function processImages() {
         }
         
         if (isProcessing) {
-            showResults();
+            // Calculate processing time
+            const processingTimeMs = Date.now() - startTime;
+            showResults(processingTimeMs);
         }
     } catch (error) {
         console.error('Processing error:', error);
@@ -361,7 +366,7 @@ function cancelProcessing() {
 }
 
 // Show results
-function showResults() {
+function showResults(processingTimeMs = 0) {
     const resultsSection = document.getElementById('resultsSection');
     const singleResult = document.getElementById('singleResult');
     const bulkResult = document.getElementById('bulkResult');
@@ -388,6 +393,8 @@ function showResults() {
         
         const processedCount = document.getElementById('processedCount');
         const sizeSaved = document.getElementById('sizeSaved');
+        const processingTimeStat = document.getElementById('processingTimeStat');
+        const processingTime = document.getElementById('processingTime');
         
         const totalOriginalSize = processedImages.reduce((sum, img) => sum + img.originalSize, 0);
         const totalNewSize = processedImages.reduce((sum, img) => sum + img.newSize, 0);
@@ -395,6 +402,29 @@ function showResults() {
         
         processedCount.textContent = processedImages.length;
         sizeSaved.textContent = percentSaved > 0 ? `${percentSaved}%` : '0%';
+        
+        // Show processing time if file size is large (> 5MB) or many images (> 10)
+        const shouldShowTime = totalOriginalSize > 5 * 1024 * 1024 || processedImages.length > 10;
+        
+        if (shouldShowTime && processingTimeMs > 0) {
+            processingTimeStat.style.display = 'block';
+            processingTime.textContent = formatProcessingTime(processingTimeMs);
+        } else {
+            processingTimeStat.style.display = 'none';
+        }
+    }
+}
+
+// Format processing time
+function formatProcessingTime(ms) {
+    if (ms < 1000) {
+        return `${ms}ms`;
+    } else if (ms < 60000) {
+        return `${(ms / 1000).toFixed(1)}s`;
+    } else {
+        const minutes = Math.floor(ms / 60000);
+        const seconds = Math.floor((ms % 60000) / 1000);
+        return `${minutes}m ${seconds}s`;
     }
 }
 
