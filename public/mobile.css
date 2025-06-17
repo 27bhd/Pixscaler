@@ -155,21 +155,7 @@ body {
     font-size: 0.8rem;
 }
 
-.ios-tip {
-    margin-top: 0.75rem;
-    padding: 0.75rem;
-    background: rgba(255, 193, 7, 0.1);
-    border: 1px solid rgba(255, 193, 7, 0.2);
-    border-radius: 8px;
-    text-align: center;
-}
-
-.ios-tip small {
-    color: rgba(255, 193, 7, 0.9);
-    font-size: 0.75rem;
-    line-height: 1.4;
-    display: block;
-}
+/* iOS tip styles removed - warning no longer displayed */
 
 /* Image Info */
 .image-info {

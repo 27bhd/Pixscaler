@@ -17,13 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const qualitySlider = document.getElementById('quality');
     const qualityValue = document.getElementById('qualityValue');
     
-    // Detect iOS and show helpful tip
-    if (isIOS()) {
-        const iosTip = document.getElementById('iosTip');
-        if (iosTip) {
-            iosTip.style.display = 'block';
-        }
-    }
+    // iOS detection kept for download compatibility
+    // (Warning removed per user request)
     
     // File input change handler
     fileInput.addEventListener('change', handleFileSelect);
@@ -278,8 +273,8 @@ function processImage(file, width, height, quality, format) {
                        file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
         
         if (isHEIC) {
-            // For HEIC files, provide guidance to user
-            reject(new Error('HEIC files need to be converted to JPEG first. Please go to your iPhone Photos app, select the image, tap Share, then "Copy Photo" and try uploading again. Or change your camera settings to capture in JPEG format.'));
+            // For HEIC files, provide simple guidance
+            reject(new Error('HEIC format not supported. Please convert to JPEG or PNG first.'));
             return;
         }
         
@@ -433,16 +428,128 @@ function hideResults() {
     document.getElementById('resultsSection').style.display = 'none';
 }
 
-// Download single file
+// Download single file with iOS compatibility
 function downloadFile(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    if (isIOS()) {
+        // iOS Safari specific handling
+        downloadFileIOS(blob, filename);
+    } else {
+        // Standard download for other browsers
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+}
+
+// iOS-specific download function
+function downloadFileIOS(blob, filename) {
+    try {
+        // Convert blob to data URL for iOS compatibility
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const dataUrl = e.target.result;
+            
+            // Create a new window/tab with the image
+            const newWindow = window.open('', '_blank');
+            if (newWindow) {
+                newWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>${filename}</title>
+                        <style>
+                            body {
+                                margin: 0;
+                                padding: 20px;
+                                background: #000;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                min-height: 100vh;
+                                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                            }
+                            img {
+                                max-width: 100%;
+                                max-height: 80vh;
+                                object-fit: contain;
+                                border-radius: 8px;
+                                box-shadow: 0 4px 20px rgba(255,255,255,0.1);
+                            }
+                            .instructions {
+                                color: white;
+                                text-align: center;
+                                margin-top: 20px;
+                                font-size: 16px;
+                                line-height: 1.5;
+                            }
+                            .filename {
+                                color: #007AFF;
+                                font-weight: 600;
+                                margin-bottom: 10px;
+                            }
+                            .steps {
+                                background: rgba(255,255,255,0.1);
+                                padding: 15px;
+                                border-radius: 8px;
+                                margin-top: 15px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <img src="${dataUrl}" alt="${filename}">
+                        <div class="instructions">
+                            <div class="filename">${filename}</div>
+                            <div class="steps">
+                                📱 <strong>To save this image:</strong><br>
+                                1. Tap and hold the image<br>
+                                2. Select "Save to Photos"<br>
+                                3. The image will be saved to your Photos app
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                newWindow.document.close();
+                showToast('Image opened in new tab. Tap and hold to save to Photos!');
+            } else {
+                // Fallback: try to trigger download anyway
+                fallbackDownload(dataUrl, filename);
+            }
+        };
+        reader.onerror = function() {
+            showToast('Error preparing image for download');
+        };
+        reader.readAsDataURL(blob);
+    } catch (error) {
+        console.error('iOS download error:', error);
+        showToast('Download failed. Please try again.');
+    }
+}
+
+// Fallback download method
+function fallbackDownload(dataUrl, filename) {
+    try {
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('If download didn\'t start, tap and hold the image to save');
+    } catch (error) {
+        console.error('Fallback download error:', error);
+        showToast('Please tap and hold the image above to save it');
+    }
 }
 
 // Download ZIP archive
@@ -450,6 +557,14 @@ async function downloadZip() {
     if (typeof JSZip === 'undefined') {
         showToast('ZIP functionality not available');
         return;
+    }
+    
+    // For iOS, offer alternative since ZIP downloads are problematic
+    if (isIOS() && processedImages.length > 1) {
+        if (confirm('ZIP downloads don\'t work well on iPhone. Would you like to download images one by one instead?')) {
+            downloadImagesIndividually();
+            return;
+        }
     }
     
     const zip = new JSZip();
@@ -467,6 +582,36 @@ async function downloadZip() {
         console.error('ZIP creation error:', error);
         showToast('Error creating ZIP file');
     }
+}
+
+// Download images individually (iOS fallback)
+function downloadImagesIndividually() {
+    if (processedImages.length === 0) {
+        showToast('No images to download');
+        return;
+    }
+    
+    let currentIndex = 0;
+    
+    function downloadNext() {
+        if (currentIndex < processedImages.length) {
+            const img = processedImages[currentIndex];
+            downloadFile(img.blob, img.name);
+            currentIndex++;
+            
+            // Show progress
+            showToast(`Downloaded ${currentIndex} of ${processedImages.length} images`);
+            
+            // Small delay before next download to prevent overwhelming the browser
+            setTimeout(() => {
+                downloadNext();
+            }, 1000);
+        } else {
+            showToast('All images downloaded! 🎉');
+        }
+    }
+    
+    downloadNext();
 }
 
 // Reset upload
