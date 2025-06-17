@@ -34,8 +34,17 @@ function initializeApp() {
 
     // Quality slider handler
     qualitySlider.addEventListener('input', function() {
-        qualityValue.textContent = this.value + '%';
+        const value = this.value;
+        qualityValue.textContent = value + '%';
+        
+        // Update the slider's visual fill using CSS custom property
+        this.style.setProperty('--value', value + '%');
     });
+    
+    // Initialize slider value on page load
+    const initialValue = qualitySlider.value;
+    qualityValue.textContent = initialValue + '%';
+    qualitySlider.style.setProperty('--value', initialValue + '%');
 
     // Preset button handlers
     setupPresetButtons();
@@ -603,7 +612,9 @@ function resetUpload() {
     document.getElementById('fileInput').value = '';
     document.getElementById('width').value = '';
     document.getElementById('height').value = '';
-    document.getElementById('quality').value = 85;
+    const qualitySlider = document.getElementById('quality');
+    qualitySlider.value = 85;
+    qualitySlider.style.setProperty('--value', '85%');
     document.getElementById('qualityValue').textContent = '85%';
     
     // Reset upload text

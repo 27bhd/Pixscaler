@@ -444,12 +444,20 @@ body {
 
 .quality-group input[type="range"] {
     flex: 1;
-    height: 6px;
+    height: 8px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
+    border-radius: 4px;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
+    position: relative;
+}
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+.quality-group input[type="range"]::-webkit-slider-track {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
 }
 
 .quality-group input[type="range"]::-webkit-slider-thumb {
@@ -461,6 +469,16 @@ body {
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+/* Firefox */
+.quality-group input[type="range"]::-moz-range-track {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    border: none;
 }
 
 .quality-group input[type="range"]::-moz-range-thumb {
@@ -473,12 +491,81 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Progress fill effect using CSS custom properties */
+.quality-group input[type="range"] {
+    background: linear-gradient(to right, 
+        #a78bfa 0%, 
+        #06b6d4 var(--value, 85%), 
+        rgba(255, 255, 255, 0.2) var(--value, 85%), 
+        rgba(255, 255, 255, 0.2) 100%);
+}
+
 .quality-group span {
     color: #fff;
     font-weight: 600;
     min-width: 50px;
     text-align: right;
     font-size: 1rem;
+}
+
+/* Emoji and icon fixes - comprehensive support */
+.mode-indicator,
+.controls-header h3,
+.crypto-icon,
+.feature-emoji,
+.upload-icon,
+.success-icon,
+.emoji,
+.donate-link,
+.nav-badge,
+.achievement-icon,
+.amount-btn,
+.alt-support span,
+.resize-btn,
+.download-btn,
+.new-image-btn,
+.copy-btn,
+.cancel-btn {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", "Twemoji Mozilla", "Helvetica Neue", Arial, sans-serif;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Specific emoji styling for better display */
+.crypto-icon {
+    font-size: 1.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.upload-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.feature-emoji {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.success-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Ensure emojis in buttons display properly */
+button .emoji,
+.btn .emoji,
+a .emoji {
+    display: inline;
+    vertical-align: middle;
+    margin-right: 0.25rem;
 }
 
 .resize-btn {
@@ -528,11 +615,6 @@ body {
     padding: 2rem;
     margin: 2rem 0;
     animation: slideDown 0.5s ease;
-}
-
-.success-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
 }
 
 .download-btn {
