@@ -1,0 +1,18 @@
+# Pixscaler Environment Variables
+# Copy to .env file and update values
+
+# Required for deployment
+NODE_ENV=production
+PORT=3000
+
+# Security (required in production)
+JWT_SECRET=your-jwt-secret-minimum-32-characters
+SESSION_SECRET=your-session-secret-minimum-32-characters
+CORS_ORIGINS=https://yourdomain.com
+
+# Database
+DB_PATH=./database/pixscaler.db
+
+# Optional
+DISABLE_RATE_LIMITING=false
+GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX 

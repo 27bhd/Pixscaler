@@ -673,7 +673,7 @@ function showDonationToast(message) {
     // Create toast element
     const toast = document.createElement('div');
     toast.className = 'donation-toast';
-    toast.textContent = message;
+    toast.innerHTML = message;
     
     // Add styles
     toast.style.cssText = `
@@ -720,4 +720,22 @@ function showDonationToast(message) {
             }
         }, 300);
     }, 3000);
+}
+
+// Donation section functions
+function shareProject() {
+    const text = "Check out Pixscaler - a free, professional image resizer that works entirely in your browser!";
+    const url = window.location.href;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Pixscaler - Professional Image Resizer',
+            text: text,
+            url: url
+        }).catch(() => {
+            fallbackShare(text, url);
+        });
+    } else {
+        fallbackShare(text, url);
+    }
 } 
