@@ -39,6 +39,9 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- JSZip for bulk download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
@@ -91,56 +94,94 @@
             <!-- Upload Area -->
             <div class="upload-area" id="uploadArea">
                 <div class="upload-icon">🖼️</div>
-                <p>Drag & drop your image here</p>
+                <p id="uploadText">Drag & drop your images here</p>
                 <div class="upload-or">or</div>
                 <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
-                    Choose Image
+                    Choose Images
                 </button>
-                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                <div class="upload-info">
+                    <small>Support for JPEG, PNG, WebP, GIF • Single or multiple files • Up to 50MB each</small>
+                </div>
+            </div>
+
+            <!-- Bulk Processing Info -->
+            <div class="bulk-info" id="bulkInfo" style="display: none;">
+                <div class="bulk-stats">
+                    <span id="fileCount">0</span> images selected
+                    <span class="separator">•</span>
+                    <span id="totalSize">0 MB</span> total
+                </div>
+                <div class="bulk-actions">
+                    <button class="clear-btn" onclick="clearSelection()">Clear All</button>
+                </div>
             </div>
 
             <!-- Controls -->
             <div class="controls" id="controls" style="display: none;">
-                <div class="control-section">
-                    <h3>📐 Dimensions</h3>
-                    <div class="input-group">
-                        <label>Width:</label>
-                        <input type="number" id="width" placeholder="800">
-                        <span>px</span>
+                <div class="controls-header">
+                    <h3 id="controlsTitle">📐 Image Settings</h3>
+                    <div class="mode-indicator" id="modeIndicator"></div>
+                </div>
+                
+                <div class="controls-grid">
+                    <div class="control-group dimensions">
+                        <div class="control-row">
+                            <div class="input-group">
+                                <label>Width:</label>
+                                <input type="number" id="width" placeholder="800">
+                                <span>px</span>
+                            </div>
+                            <div class="input-group">
+                                <label>Height:</label>
+                                <input type="number" id="height" placeholder="600">
+                                <span>px</span>
+                            </div>
+                        </div>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="setPreset(1920, 1080)">1920×1080</button>
+                            <button class="preset-btn" onclick="setPreset(1280, 720)">1280×720</button>
+                            <button class="preset-btn" onclick="setPreset(800, 600)">800×600</button>
+                            <button class="preset-btn" onclick="setPreset(400, 400)">400×400</button>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Height:</label>
-                        <input type="number" id="height" placeholder="600">
-                        <span>px</span>
-                    </div>
-                    <div class="preset-buttons">
-                        <button class="preset-btn" onclick="setPreset(1920, 1080)">1920×1080</button>
-                        <button class="preset-btn" onclick="setPreset(1280, 720)">1280×720</button>
-                        <button class="preset-btn" onclick="setPreset(800, 600)">800×600</button>
-                        <button class="preset-btn" onclick="setPreset(400, 400)">400×400</button>
+                    
+                    <div class="control-group settings">
+                        <div class="input-group quality-group">
+                            <label>Quality:</label>
+                            <input type="range" id="quality" min="1" max="100" value="85">
+                            <span id="qualityValue">85%</span>
+                        </div>
+                        <div class="format-options">
+                            <input type="radio" id="jpeg" name="format" value="jpeg" checked>
+                            <label for="jpeg">JPEG</label>
+                            <input type="radio" id="png" name="format" value="png">
+                            <label for="png">PNG</label>
+                            <input type="radio" id="webp" name="format" value="webp">
+                            <label for="webp">WebP</label>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="control-section">
-                    <h3>⚙️ Settings</h3>
-                    <div class="input-group">
-                        <label>Quality:</label>
-                        <input type="range" id="quality" min="1" max="100" value="85">
-                        <span id="qualityValue">85%</span>
-                    </div>
-                    <div class="format-options">
-                        <input type="radio" id="jpeg" name="format" value="jpeg" checked>
-                        <label for="jpeg">JPEG</label>
-                        <input type="radio" id="png" name="format" value="png">
-                        <label for="png">PNG</label>
-                        <input type="radio" id="webp" name="format" value="webp">
-                        <label for="webp">WebP</label>
-                    </div>
-                </div>
-                
-                <button class="resize-btn" onclick="resizeImage()">
-                    ✨ Resize Image
+                <button class="resize-btn" id="resizeBtn" onclick="processImages()">
+                    ✨ <span id="resizeBtnText">Resize Images</span>
                 </button>
+            </div>
+
+            <!-- Bulk Progress -->
+            <div class="bulk-progress" id="bulkProgress" style="display: none;">
+                <div class="progress-header">
+                    <h3>Processing Images...</h3>
+                    <button class="cancel-btn" onclick="cancelProcessing()">Cancel</button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="progressText">Processing 0 of 0 images...</span>
+                    <span id="progressTime">Estimated time: calculating...</span>
+                </div>
+                <div class="progress-details" id="progressDetails"></div>
             </div>
 
             <!-- Loading -->
@@ -158,13 +199,42 @@
             <!-- Download -->
             <div class="download-section" id="downloadSection" style="display: none;">
                 <div class="success-icon">✅</div>
-                <h3>Image Resized Successfully!</h3>
-                <p>Your image has been processed with professional optimization.</p>
-                <a href="#" class="download-btn" id="downloadBtn" download>
-                    📥 Download Image
-                </a>
+                <h3 id="downloadTitle">Images Processed Successfully!</h3>
+                <p id="downloadDescription">Your images have been processed with professional optimization.</p>
+                
+                <!-- Single Image Download -->
+                <div class="single-download" id="singleDownload" style="display: none;">
+                    <a href="#" class="download-btn" id="downloadBtn" download>
+                        📥 Download Image
+                    </a>
+                </div>
+                
+                <!-- Bulk Download -->
+                <div class="bulk-download" id="bulkDownload" style="display: none;">
+                    <div class="download-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="processedCount">0</span>
+                            <span class="stat-label">Images Processed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalSaved">0%</span>
+                            <span class="stat-label">Size Reduction</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="zipSize">0 MB</span>
+                            <span class="stat-label">ZIP Size</span>
+                        </div>
+                    </div>
+                    <button class="download-zip-btn" id="downloadZipBtn" onclick="downloadZip()">
+                        📦 Download ZIP Archive
+                    </button>
+                    <div class="zip-info">
+                        <small>All images with original names + dimensions (e.g., photo_800x600.jpg)</small>
+                    </div>
+                </div>
+                
                 <button class="new-image-btn" onclick="resetUpload()">
-                    🔄 Resize Another Image
+                    🔄 Process More Images
                 </button>
             </div>
         </div>

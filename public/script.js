@@ -1,8 +1,11 @@
-// Pixscaler - Client-Side Image Resizer
-// Built by Beniverse
+// Pixscaler - Advanced Client-Side Image Resizer
+// Built by Beniverse - Now with Bulk Processing Support
 
-let currentImage = null;
-let originalFileName = '';
+// Global state management
+let currentImages = [];
+let processedImages = [];
+let isProcessing = false;
+let processingCancelled = false;
 let totalBandwidthSaved = 0;
 
 // Initialize the app
@@ -21,7 +24,7 @@ function initializeApp() {
     const qualitySlider = document.getElementById('quality');
     const qualityValue = document.getElementById('qualityValue');
 
-    // File input change handler
+    // File input change handler - supports multiple files
     fileInput.addEventListener('change', handleFileSelect);
     
     // Drag and drop handlers for upload area
@@ -39,9 +42,9 @@ function initializeApp() {
 }
 
 function handleFileSelect(event) {
-    const file = event.target.files[0];
-    if (file) {
-        processImageFile(file);
+    const files = Array.from(event.target.files);
+    if (files.length > 0) {
+        processFileSelection(files);
     }
 }
 
@@ -59,62 +62,145 @@ function handleDrop(event) {
     event.preventDefault();
     event.currentTarget.classList.remove('dragover');
     
-    const files = event.dataTransfer.files;
+    const files = Array.from(event.dataTransfer.files);
     if (files.length > 0) {
-        const file = files[0];
-        if (file.type.startsWith('image/')) {
-            processImageFile(file);
+        // Filter only image files
+        const imageFiles = files.filter(file => file.type.startsWith('image/'));
+        if (imageFiles.length > 0) {
+            processFileSelection(imageFiles);
         } else {
-            showError('Please select an image file (JPEG, PNG, WebP, GIF)');
+            showError('Please select image files (JPEG, PNG, WebP, GIF)');
         }
     }
 }
 
-function processImageFile(file) {
-    // Validate file type
+function processFileSelection(files) {
+    // Validate file types and sizes
+    const validFiles = [];
+    const maxSize = 50 * 1024 * 1024; // 50MB per file
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
-        showError('Unsupported file type. Please use JPEG, PNG, WebP, or GIF.');
+    
+    for (const file of files) {
+        if (!allowedTypes.includes(file.type)) {
+            showError(`Unsupported file type: ${file.name}. Please use JPEG, PNG, WebP, or GIF.`);
+            continue;
+        }
+        
+        if (file.size > maxSize) {
+            showError(`File too large: ${file.name}. Please use files smaller than 50MB.`);
+            continue;
+        }
+        
+        validFiles.push(file);
+    }
+    
+    if (validFiles.length === 0) {
         return;
     }
     
-    // Validate file size (50MB limit for client-side processing)
-    const maxSize = 50 * 1024 * 1024; // 50MB
-    if (file.size > maxSize) {
-        showError('File too large. Please use files smaller than 50MB.');
-        return;
+    // Load images
+    loadImages(validFiles);
+}
+
+async function loadImages(files) {
+    showLoading();
+    currentImages = [];
+    
+    try {
+        for (const file of files) {
+            const imageData = await loadImageFile(file);
+            currentImages.push(imageData);
+        }
+        
+        hideLoading();
+        setupUI();
+        
+    } catch (error) {
+        hideLoading();
+        showError('Failed to load images: ' + error.message);
+    }
+}
+
+function loadImageFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                resolve({
+                    file: file,
+                    image: img,
+                    originalSize: file.size,
+                    name: file.name
+                });
+            };
+            img.onerror = () => reject(new Error(`Failed to load ${file.name}`));
+            img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error(`Failed to read ${file.name}`));
+        reader.readAsDataURL(file);
+    });
+}
+
+function setupUI() {
+    const isBulk = currentImages.length > 1;
+    
+    // Update UI elements based on mode
+    updateUIForMode(isBulk);
+    
+    // Set default dimensions from first image
+    if (currentImages.length > 0) {
+        const firstImage = currentImages[0].image;
+        document.getElementById('width').value = firstImage.naturalWidth;
+        document.getElementById('height').value = firstImage.naturalHeight;
     }
     
-    originalFileName = file.name;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            currentImage = img;
-            displayImageInfo(img);
-            showControls();
-        };
-        img.onerror = function() {
-            showError('Failed to load image. Please try a different file.');
-        };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-}
-
-function displayImageInfo(img) {
-    // Set default dimensions to current image size
-    document.getElementById('width').value = img.naturalWidth;
-    document.getElementById('height').value = img.naturalHeight;
-    
-    // Show image info
-            // Image loaded successfully
-}
-
-function showControls() {
+    // Show controls
     document.getElementById('uploadArea').style.display = 'none';
     document.getElementById('controls').style.display = 'block';
+    
+    // Show bulk info if multiple files
+    if (isBulk) {
+        showBulkInfo();
+    }
+}
+
+function updateUIForMode(isBulk) {
+    const uploadText = document.getElementById('uploadText');
+    const controlsTitle = document.getElementById('controlsTitle');
+    const modeIndicator = document.getElementById('modeIndicator');
+    const resizeBtnText = document.getElementById('resizeBtnText');
+    
+    if (isBulk) {
+        uploadText.textContent = 'Drag & drop your images here';
+        controlsTitle.textContent = '📦 Bulk Processing Settings';
+        modeIndicator.textContent = `${currentImages.length} images`;
+        modeIndicator.style.display = 'block';
+        resizeBtnText.textContent = `Process ${currentImages.length} Images`;
+    } else {
+        uploadText.textContent = 'Drag & drop your image here';
+        controlsTitle.textContent = '📐 Image Settings';
+        modeIndicator.style.display = 'none';
+        resizeBtnText.textContent = 'Resize Image';
+    }
+}
+
+function showBulkInfo() {
+    const bulkInfo = document.getElementById('bulkInfo');
+    const fileCount = document.getElementById('fileCount');
+    const totalSize = document.getElementById('totalSize');
+    
+    const totalBytes = currentImages.reduce((sum, img) => sum + img.originalSize, 0);
+    
+    fileCount.textContent = currentImages.length;
+    totalSize.textContent = formatFileSize(totalBytes);
+    bulkInfo.style.display = 'flex';
+}
+
+function clearSelection() {
+    currentImages = [];
+    processedImages = [];
+    resetUpload();
 }
 
 function setupPresetButtons() {
@@ -126,9 +212,9 @@ function setPreset(width, height) {
     document.getElementById('height').value = height;
 }
 
-function resizeImage() {
-    if (!currentImage) {
-        showError('Please select an image first');
+async function processImages() {
+    if (currentImages.length === 0) {
+        showError('Please select images first');
         return;
     }
     
@@ -148,20 +234,125 @@ function resizeImage() {
         return;
     }
     
-    showLoading();
+    const isBulk = currentImages.length > 1;
+    
+    if (isBulk) {
+        await processBulkImages(width, height, quality, format);
+    } else {
+        await processSingleImage(width, height, quality, format);
+    }
+}
 
-    // Use setTimeout to allow UI to update
-    setTimeout(() => {
-        try {
-            const resizedImageData = performResize(currentImage, width, height, quality, format);
-            showPreview(resizedImageData, width, height, format);
-            hideLoading();
-        } catch (error) {
-            // Resize error handled by showError function
-            showError('Failed to resize image: ' + error.message);
-            hideLoading();
+async function processSingleImage(width, height, quality, format) {
+    showLoading();
+    
+    try {
+        const imageData = currentImages[0];
+        const resizedData = performResize(imageData.image, width, height, quality, format);
+        
+        hideLoading();
+        showSinglePreview(resizedData, width, height, format, imageData.name);
+        
+    } catch (error) {
+        hideLoading();
+        showError('Failed to resize image: ' + error.message);
+    }
+}
+
+async function processBulkImages(width, height, quality, format) {
+    isProcessing = true;
+    processingCancelled = false;
+    processedImages = [];
+    
+    // Hide controls and show progress
+    document.getElementById('controls').style.display = 'none';
+    document.getElementById('bulkProgress').style.display = 'block';
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const progressTime = document.getElementById('progressTime');
+    const progressDetails = document.getElementById('progressDetails');
+    
+    const totalImages = currentImages.length;
+    const startTime = Date.now();
+    
+    try {
+        for (let i = 0; i < totalImages; i++) {
+            if (processingCancelled) {
+                break;
+            }
+            
+            const imageData = currentImages[i];
+            const progress = ((i + 1) / totalImages) * 100;
+            
+            // Update progress
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `Processing ${i + 1} of ${totalImages} images...`;
+            
+            // Calculate estimated time
+            const elapsed = Date.now() - startTime;
+            const avgTimePerImage = elapsed / (i + 1);
+            const remaining = (totalImages - i - 1) * avgTimePerImage;
+            progressTime.textContent = `Estimated time: ${formatTime(remaining)}`;
+            
+            // Add processing detail
+            const detail = document.createElement('div');
+            detail.textContent = `✓ Processing ${imageData.name}...`;
+            progressDetails.appendChild(detail);
+            progressDetails.scrollTop = progressDetails.scrollHeight;
+            
+            try {
+                // Process image
+                const resizedData = performResize(imageData.image, width, height, quality, format);
+                const fileName = generateFileName(imageData.name, width, height, format);
+                
+                processedImages.push({
+                    ...resizedData,
+                    originalName: imageData.name,
+                    fileName: fileName,
+                    originalSize: imageData.originalSize
+                });
+                
+                detail.textContent = `✅ ${imageData.name} → ${fileName}`;
+                
+            } catch (error) {
+                detail.textContent = `❌ Failed: ${imageData.name} (${error.message})`;
+            }
+            
+            // Small delay to prevent browser freeze
+            await new Promise(resolve => setTimeout(resolve, 50));
         }
-    }, 100);
+        
+        if (!processingCancelled) {
+            // Processing complete
+            progressFill.style.width = '100%';
+            progressText.textContent = `Completed ${processedImages.length} of ${totalImages} images`;
+            progressTime.textContent = 'Processing complete!';
+            
+            // Show download section after a brief delay
+            setTimeout(() => {
+                document.getElementById('bulkProgress').style.display = 'none';
+                showBulkDownload();
+            }, 1000);
+        }
+        
+    } catch (error) {
+        showError('Bulk processing failed: ' + error.message);
+        document.getElementById('bulkProgress').style.display = 'none';
+        document.getElementById('controls').style.display = 'block';
+    }
+    
+    isProcessing = false;
+}
+
+function cancelProcessing() {
+    processingCancelled = true;
+    isProcessing = false;
+    
+    document.getElementById('bulkProgress').style.display = 'none';
+    document.getElementById('controls').style.display = 'block';
+    
+    showDonationToast('Processing cancelled');
 }
 
 function performResize(img, targetWidth, targetHeight, quality, format) {
@@ -222,32 +413,41 @@ function dataURLToBlob(dataURL) {
     return new Blob([u8arr], { type: mime });
 }
 
-function showPreview(imageData, width, height, format) {
+function showSinglePreview(imageData, width, height, format, originalName) {
     const previewSection = document.getElementById('preview');
     const previewImage = document.getElementById('previewImage');
     const downloadSection = document.getElementById('downloadSection');
+    const downloadTitle = document.getElementById('downloadTitle');
+    const downloadDescription = document.getElementById('downloadDescription');
+    const singleDownload = document.getElementById('singleDownload');
+    const bulkDownload = document.getElementById('bulkDownload');
     const downloadBtn = document.getElementById('downloadBtn');
 
     // Show preview
     previewImage.src = imageData.dataURL;
     previewSection.style.display = 'block';
 
-    // Setup download
-    const fileName = generateFileName(originalFileName, width, height, format);
+    // Setup single download
+    downloadTitle.textContent = 'Image Resized Successfully!';
+    downloadDescription.textContent = 'Your image has been processed with professional optimization.';
+    
+    singleDownload.style.display = 'block';
+    bulkDownload.style.display = 'none';
+    
+    const fileName = generateFileName(originalName, width, height, format);
     const url = URL.createObjectURL(imageData.blob);
     
-        downloadBtn.href = url;
+    downloadBtn.href = url;
     downloadBtn.download = fileName;
-        downloadSection.style.display = 'block';
-        
+    downloadSection.style.display = 'block';
+    
     // Calculate file size reduction
-    const originalSize = getOriginalFileSize();
+    const originalSize = currentImages[0].originalSize;
     const newSize = imageData.blob.size;
     const reduction = originalSize ? Math.round((1 - newSize / originalSize) * 100) : 0;
     
     // Update success message with file info
-    const successMessage = downloadSection.querySelector('p');
-    successMessage.innerHTML = `
+    downloadDescription.innerHTML = `
         Your image has been resized to ${width}x${height} pixels.<br>
         <small>Format: ${format.toUpperCase()} | Size: ${formatFileSize(newSize)}${reduction > 0 ? ` | ${reduction}% smaller` : ''}</small>
     `;
@@ -257,8 +457,74 @@ function showPreview(imageData, width, height, format) {
 
     // Check achievements
     checkAchievements(originalSize, newSize);
+}
 
-    // Image resized successfully
+function showBulkDownload() {
+    const downloadSection = document.getElementById('downloadSection');
+    const downloadTitle = document.getElementById('downloadTitle');
+    const downloadDescription = document.getElementById('downloadDescription');
+    const singleDownload = document.getElementById('singleDownload');
+    const bulkDownload = document.getElementById('bulkDownload');
+    const processedCount = document.getElementById('processedCount');
+    const totalSaved = document.getElementById('totalSaved');
+    const zipSize = document.getElementById('zipSize');
+
+    // Calculate statistics
+    const totalOriginalSize = processedImages.reduce((sum, img) => sum + img.originalSize, 0);
+    const totalNewSize = processedImages.reduce((sum, img) => sum + img.blob.size, 0);
+    const totalReduction = totalOriginalSize ? Math.round((1 - totalNewSize / totalOriginalSize) * 100) : 0;
+
+    // Update UI
+    downloadTitle.textContent = 'Images Processed Successfully!';
+    downloadDescription.textContent = 'Your images have been processed with professional optimization.';
+    
+    singleDownload.style.display = 'none';
+    bulkDownload.style.display = 'block';
+    
+    processedCount.textContent = processedImages.length;
+    totalSaved.textContent = `${totalReduction}%`;
+    zipSize.textContent = formatFileSize(totalNewSize);
+    
+    downloadSection.style.display = 'block';
+
+    // Increment usage counter for bulk
+    for (let i = 0; i < processedImages.length; i++) {
+        incrementImageCounter();
+    }
+}
+
+async function downloadZip() {
+    if (!window.JSZip) {
+        showError('ZIP library not loaded. Please refresh the page.');
+        return;
+    }
+    
+    try {
+        const zip = new JSZip();
+        
+        // Add all processed images to ZIP
+        for (const imageData of processedImages) {
+            zip.file(imageData.fileName, imageData.blob);
+        }
+        
+        // Generate ZIP
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        
+        // Download ZIP
+        const url = URL.createObjectURL(zipBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `pixscaler_resized_${Date.now()}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showDonationToast('ZIP download started! 📦');
+        
+    } catch (error) {
+        showError('Failed to create ZIP: ' + error.message);
+    }
 }
 
 function generateFileName(originalName, width, height, format) {
@@ -267,17 +533,21 @@ function generateFileName(originalName, width, height, format) {
     return `${nameWithoutExt}_${width}x${height}.${extension}`;
 }
 
-function getOriginalFileSize() {
-    const fileInput = document.getElementById('fileInput');
-    return fileInput.files[0] ? fileInput.files[0].size : null;
-}
-
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function formatTime(ms) {
+    if (ms < 1000) return 'Less than a second';
+    const seconds = Math.floor(ms / 1000);
+    if (seconds < 60) return `${seconds} seconds`;
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m ${remainingSeconds}s`;
 }
 
 function showLoading() {
@@ -292,17 +562,20 @@ function hideLoading() {
 
 function showError(message) {
     alert('Pixscaler: ' + message);
-    // Error displayed to user via UI
 }
 
 function resetUpload() {
     // Reset all states
-    currentImage = null;
-    originalFileName = '';
+    currentImages = [];
+    processedImages = [];
+    isProcessing = false;
+    processingCancelled = false;
     
     // Reset UI
     document.getElementById('uploadArea').style.display = 'block';
+    document.getElementById('bulkInfo').style.display = 'none';
     document.getElementById('controls').style.display = 'none';
+    document.getElementById('bulkProgress').style.display = 'none';
     document.getElementById('preview').style.display = 'none';
     document.getElementById('downloadSection').style.display = 'none';
     document.getElementById('loading').style.display = 'none';
@@ -315,7 +588,8 @@ function resetUpload() {
     document.getElementById('qualityValue').textContent = '85%';
     document.querySelector('input[name="format"][value="jpeg"]').checked = true;
     
-    // Upload reset completed
+    // Reset upload text
+    document.getElementById('uploadText').textContent = 'Drag & drop your images here';
 }
 
 // Smart Drop Zone - Make entire page a drop zone
@@ -324,7 +598,7 @@ function setupSmartDropZone() {
     
     // Prevent default drag behaviors on entire document
     document.addEventListener('dragenter', function(e) {
-    e.preventDefault();
+        e.preventDefault();
         dragCounter++;
         if (dragCounter === 1) {
             document.body.classList.add('drag-active');
@@ -348,40 +622,40 @@ function setupSmartDropZone() {
         dragCounter = 0;
         document.body.classList.remove('drag-active');
         
-        const files = e.dataTransfer.files;
+        const files = Array.from(e.dataTransfer.files);
         if (files.length > 0) {
-            const file = files[0];
-            if (file.type.startsWith('image/')) {
-                processImageFile(file);
-        } else {
-                showError('Please drop an image file (JPEG, PNG, WebP, GIF)');
-        }
+            const imageFiles = files.filter(file => file.type.startsWith('image/'));
+            if (imageFiles.length > 0) {
+                processFileSelection(imageFiles);
+            } else {
+                showError('Please drop image files (JPEG, PNG, WebP, GIF)');
+            }
         }
     });
-    }
-    
+}
+
 // Keyboard Shortcuts
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', function(e) {
         // Toggle help with '?'
         if (e.key === '?' && !e.ctrlKey && !e.altKey) {
-    e.preventDefault();
+            e.preventDefault();
             toggleKeyboardHelp();
-        return;
-    }
-    
-        // Ctrl + O: Upload image
+            return;
+        }
+        
+        // Ctrl + O: Upload images
         if (e.ctrlKey && e.key === 'o') {
             e.preventDefault();
             document.getElementById('fileInput').click();
             return;
         }
         
-        // Ctrl + Enter: Resize image
+        // Ctrl + Enter: Process images
         if (e.ctrlKey && e.key === 'Enter') {
             e.preventDefault();
-            if (currentImage) {
-                resizeImage();
+            if (currentImages.length > 0) {
+                processImages();
             }
             return;
         }
@@ -389,14 +663,21 @@ function setupKeyboardShortcuts() {
         // Ctrl + R: Reset (override browser refresh)
         if (e.ctrlKey && e.key === 'r') {
             e.preventDefault();
-            if (currentImage) {
+            if (currentImages.length > 0) {
                 resetUpload();
             }
             return;
         }
         
+        // Escape: Cancel processing
+        if (e.key === 'Escape' && isProcessing) {
+            e.preventDefault();
+            cancelProcessing();
+            return;
+        }
+        
         // Number keys 1-4: Quick presets
-        if (!e.ctrlKey && !e.altKey && currentImage) {
+        if (!e.ctrlKey && !e.altKey && currentImages.length > 0) {
             switch(e.key) {
                 case '1':
                     e.preventDefault();
@@ -420,99 +701,97 @@ function setupKeyboardShortcuts() {
 }
 
 function toggleKeyboardHelp() {
-    const helpPanel = document.getElementById('keyboardHelp');
-    helpPanel.classList.toggle('show');
-    
-    // Auto-hide after 5 seconds
-    if (helpPanel.classList.contains('show')) {
+    const helpElement = document.querySelector('.keyboard-shortcuts');
+    if (helpElement) {
+        helpElement.classList.toggle('show');
+    } else {
+        // Create help overlay
+        const help = document.createElement('div');
+        help.className = 'keyboard-shortcuts show';
+        help.innerHTML = `
+            <h4>⌨️ Keyboard Shortcuts</h4>
+            <div class="shortcut"><span>Ctrl + O</span><span>Upload Images</span></div>
+            <div class="shortcut"><span>Ctrl + Enter</span><span>Process Images</span></div>
+            <div class="shortcut"><span>Ctrl + R</span><span>Reset</span></div>
+            <div class="shortcut"><span>Escape</span><span>Cancel Processing</span></div>
+            <div class="shortcut"><span>1-4</span><span>Quick Presets</span></div>
+            <div class="shortcut"><span>?</span><span>Toggle Help</span></div>
+        `;
+        document.body.appendChild(help);
+        
+        // Auto-hide after 5 seconds
         setTimeout(() => {
-            helpPanel.classList.remove('show');
+            if (help.parentNode) {
+                help.parentNode.removeChild(help);
+            }
         }, 5000);
     }
 }
 
-// Achievement System
 function showAchievement(icon, text, detail) {
     const achievement = document.createElement('div');
     achievement.className = 'achievement-popup';
     achievement.innerHTML = `
-        <div>
-            <span class="achievement-icon">${icon}</span>
-            <span class="achievement-text">${text}</span>
-            <div class="achievement-detail">${detail}</div>
-        </div>
+        <span class="achievement-icon">${icon}</span>
+        <div class="achievement-text">${text}</div>
+        <div class="achievement-detail">${detail}</div>
     `;
     
     document.body.appendChild(achievement);
     
     // Remove after 4 seconds
     setTimeout(() => {
-        achievement.style.animation = 'achievementSlide 0.5s ease-in reverse';
-        setTimeout(() => {
-            if (achievement.parentNode) {
-                achievement.parentNode.removeChild(achievement);
-            }
-        }, 500);
+        if (achievement.parentNode) {
+            achievement.parentNode.removeChild(achievement);
+        }
     }, 4000);
 }
 
 function checkAchievements(originalSize, newSize) {
-    const reduction = originalSize - newSize;
-    totalBandwidthSaved += reduction;
-    saveBandwidthStats();
+    const reduction = originalSize ? Math.round((1 - newSize / originalSize) * 100) : 0;
     
-    // File size reduction achievements
-    if (reduction > 0) {
-        const reductionMB = (reduction / (1024 * 1024)).toFixed(1);
-        showAchievement('💾', 'Bandwidth Saved!', `You saved ${reductionMB} MB of bandwidth`);
+    if (reduction >= 50) {
+        showAchievement('🏆', 'Space Saver!', `${reduction}% size reduction achieved`);
+    } else if (reduction >= 25) {
+        showAchievement('💾', 'Efficient!', `${reduction}% smaller file size`);
     }
     
-    // Total bandwidth milestones
-    const totalMB = (totalBandwidthSaved / (1024 * 1024)).toFixed(1);
-    if (totalBandwidthSaved > 10 * 1024 * 1024 && totalBandwidthSaved - reduction <= 10 * 1024 * 1024) {
-        showAchievement('🏆', 'Bandwidth Hero!', `You've saved over 10 MB total!`);
-    } else if (totalBandwidthSaved > 100 * 1024 * 1024 && totalBandwidthSaved - reduction <= 100 * 1024 * 1024) {
-        showAchievement('🚀', 'Compression Master!', `You've saved over 100 MB total!`);
-    }
-    
-    // Usage milestones
-    const imageCountElement = document.getElementById('imageCount');
-    const imageCount = imageCountElement ? parseInt(imageCountElement.textContent) || 0 : 0;
-    if (imageCount === 10) {
-        showAchievement('🎯', 'Getting Started!', 'You\'ve processed 10 images today');
-    } else if (imageCount === 50) {
-        showAchievement('⚡', 'Power User!', 'You\'ve processed 50 images today');
+    // Check processing count
+    const stats = JSON.parse(localStorage.getItem('pixscaler_stats') || '{"count": 0}');
+    if (stats.count === 10) {
+        showAchievement('🎯', 'Getting Started!', '10 images processed');
+    } else if (stats.count === 50) {
+        showAchievement('🚀', 'Power User!', '50 images processed');
+    } else if (stats.count === 100) {
+        showAchievement('⭐', 'Expert!', '100 images processed');
     }
 }
 
 function loadBandwidthStats() {
-    const saved = localStorage.getItem('pixscaler_bandwidth_saved');
+    const saved = localStorage.getItem('pixscaler_bandwidth');
     if (saved) {
         totalBandwidthSaved = parseInt(saved) || 0;
     }
 }
 
 function saveBandwidthStats() {
-    localStorage.setItem('pixscaler_bandwidth_saved', totalBandwidthSaved.toString());
+    localStorage.setItem('pixscaler_bandwidth', totalBandwidthSaved.toString());
 }
 
-// Share functionality
 function shareSuccess() {
-    const shareText = "I just resized images for FREE at pixscaler.com - no sign-up, no limits, completely private! 🖼️✨";
-    const shareUrl = "https://pixscaler.com";
+    const text = "Just resized images with Pixscaler - amazing quality and completely free!";
+    const url = window.location.href;
     
     if (navigator.share) {
-        // Use native sharing if available
         navigator.share({
-            title: 'Pixscaler - Free Image Resizer',
-            text: shareText,
-            url: shareUrl
-        }).catch(err => {
-            // Share fallback used
-            fallbackShare(shareText, shareUrl);
+            title: 'Pixscaler Success',
+            text: text,
+            url: url
+        }).catch(() => {
+            fallbackShare(text, url);
         });
     } else {
-        fallbackShare(shareText, shareUrl);
+        fallbackShare(text, url);
     }
 }
 
@@ -615,8 +894,6 @@ function updateSocialProof() {
         totalElement.textContent = baseCount + userCount;
     }
 }
-
-// Pixscaler Client-Side Edition loaded successfully
 
 // Modal functions (for legacy modal elements)
 function closeModal(modalId) {
@@ -738,4 +1015,9 @@ function shareProject() {
     } else {
         fallbackShare(text, url);
     }
+}
+
+// Legacy function aliases for backward compatibility
+function resizeImage() {
+    processImages();
 } 

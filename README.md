@@ -10,6 +10,7 @@
 [![Client-Side](https://img.shields.io/badge/Processing-Client--Side-green.svg)](https://github.com/27bhd/Pixscaler)
 [![No Backend](https://img.shields.io/badge/Backend-None-red.svg)](https://github.com/27bhd/Pixscaler)
 [![Privacy First](https://img.shields.io/badge/Privacy-First-blue.svg)](https://github.com/27bhd/Pixscaler)
+[![Bulk Processing](https://img.shields.io/badge/Bulk-Processing-orange.svg)](https://github.com/27bhd/Pixscaler)
 
 [📖 Documentation](#-documentation) • [💖 Support](#-support-the-project) • [🤝 Contributing](#-contributing)
 
@@ -21,20 +22,33 @@
 
 Pixscaler is a **completely client-side image resizing tool** that processes your images locally in your browser. No uploads, no servers, no subscriptions - just pure image resizing magic powered by HTML5 Canvas API.
 
+### 🆕 **NEW: Bulk Processing**
+Process hundreds of images at once with intelligent batch processing, progress tracking, and ZIP download - all while maintaining complete privacy!
+
 ### 🔄 How It Works
 
 ```mermaid
 graph LR
-    A[📁 Select Image] --> B[🖥️ Browser Processing]
-    B --> C[🎛️ Adjust Settings]
-    C --> D[⚡ Instant Resize]
-    D --> E[💾 Download Result]
+    A[📁 Select Images] --> B{Single or Bulk?}
+    B -->|Single| C[🖥️ Instant Processing]
+    B -->|Bulk| D[📦 Batch Processing]
+    C --> E[🎛️ Adjust Settings]
+    D --> F[📊 Progress Tracking]
+    E --> G[⚡ Instant Resize]
+    F --> H[⚡ Bulk Resize]
+    G --> I[💾 Download Image]
+    H --> J[📦 Download ZIP]
     
     style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style C fill:#fff3e0
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
     style D fill:#e8f5e8
-    style E fill:#fce4ec
+    style E fill:#fff3e0
+    style F fill:#e8f5e8
+    style G fill:#e8f5e8
+    style H fill:#e8f5e8
+    style I fill:#fce4ec
+    style J fill:#fce4ec
 ```
 
 ## ✨ Features Overview
@@ -48,6 +62,7 @@ graph LR
 - 🔒 **Complete Privacy** - Images never leave your device
 - 🚫 **No Registration** - Start using immediately
 - 🛡️ **Zero Data Collection** - No tracking, no analytics
+- 📦 **Bulk Processing** - Process 100+ images while maintaining privacy
 
 </td>
 <td width="50%">
@@ -57,6 +72,8 @@ graph LR
 - 🎯 **High Quality** - Professional-grade Canvas API
 - 📏 **Unlimited File Sizes** - Process images of any size
 - 🎛️ **Quality Control** - Adjustable compression settings
+- 📊 **Smart Progress Tracking** - Real-time bulk processing updates
+- 📦 **ZIP Downloads** - Organized bulk output with smart naming
 
 </td>
 </tr>
@@ -195,9 +212,58 @@ php -S localhost:8000            # PHP
 
 Open `http://localhost:8000` in your browser.
 
+## 📦 Bulk Processing Features
+
+### 🚀 **Intelligent Batch Processing**
+Process hundreds of images simultaneously with smart memory management and progress tracking.
+
+#### **Key Features:**
+- **📊 Real-time Progress** - Live updates with estimated completion time
+- **🎯 Smart Memory Management** - Processes images in chunks to prevent browser freeze
+- **📦 ZIP Downloads** - All processed images packaged with smart naming
+- **⚡ Cancellable Processing** - Stop processing anytime with Escape key
+- **📈 Statistics Dashboard** - File count, size reduction, and processing stats
+
+#### **Smart File Naming:**
+```
+Original: photo.jpg → Resized: photo_800x600.jpg
+Original: image.png → Resized: image_1920x1080.png
+```
+
+#### **Bulk Processing Workflow:**
+```mermaid
+graph TD
+    A[📁 Select Multiple Images] --> B[📊 Bulk Info Display]
+    B --> C[🎛️ Configure Settings]
+    C --> D[📦 Start Batch Processing]
+    D --> E[📈 Progress Tracking]
+    E --> F{Processing Complete?}
+    F -->|No| G[⚡ Process Next Image]
+    G --> E
+    F -->|Yes| H[📦 Generate ZIP]
+    H --> I[💾 Download ZIP Archive]
+    
+    style A fill:#e3f2fd
+    style B fill:#f3e5f5
+    style C fill:#fff3e0
+    style D fill:#e8f5e8
+    style E fill:#fff8e1
+    style F fill:#fce4ec
+    style G fill:#e0f2f1
+    style H fill:#f1f8e9
+    style I fill:#e8eaf6
+```
+
+### 🎯 **When to Use Bulk Processing**
+- **Web Development**: Optimize multiple images for websites
+- **Content Creation**: Resize social media assets in batches
+- **Photography**: Process photo collections efficiently
+- **E-commerce**: Standardize product images
+- **Digital Marketing**: Prepare campaign assets
+
 ## 🎛️ Usage Guide
 
-### Basic Workflow
+### Single Image Processing
 
 ```mermaid
 flowchart TD
@@ -383,6 +449,33 @@ xychart-beta
 
 </div>
 
+## ⌨️ Keyboard Shortcuts
+
+Pixscaler includes powerful keyboard shortcuts for efficient workflow:
+
+### **🚀 Processing Shortcuts**
+| Shortcut | Action | Description |
+|----------|--------|-------------|
+| `Ctrl + O` | Upload Images | Open file picker to select images |
+| `Ctrl + Enter` | Process Images | Start processing selected images |
+| `Ctrl + R` | Reset | Clear all images and reset interface |
+| `Escape` | Cancel Processing | Stop bulk processing (during batch operations) |
+
+### **🎯 Quick Presets**
+| Key | Preset | Dimensions |
+|-----|--------|------------|
+| `1` | Full HD | 1920×1080 |
+| `2` | HD | 1280×720 |
+| `3` | Standard | 800×600 |
+| `4` | Square | 400×400 |
+
+### **ℹ️ Help & Navigation**
+| Shortcut | Action | Description |
+|----------|--------|-------------|
+| `?` | Toggle Help | Show/hide keyboard shortcuts overlay |
+
+> **💡 Pro Tip:** Press `?` anytime to see the keyboard shortcuts overlay with real-time help!
+
 ## 🔧 Development
 
 ### Project Structure
@@ -512,19 +605,25 @@ graph TB
 
 ## 📈 Roadmap
 
-### Current Version: v2.0
+### Current Version: v3.0 🆕
 - ✅ Client-side image processing
-- ✅ Multiple format support
-- ✅ Quality controls
-- ✅ Preset dimensions
+- ✅ Multiple format support (JPEG, PNG, WebP)
+- ✅ Quality controls and compression
+- ✅ Preset dimensions with quick shortcuts
 - ✅ Mobile responsive design
+- ✅ **Bulk Processing** - Process 100+ images simultaneously
+- ✅ **ZIP Downloads** - Smart batch output with organized naming
+- ✅ **Progress Tracking** - Real-time processing updates
+- ✅ **Keyboard Shortcuts** - Efficient workflow controls
+- ✅ **Smart Memory Management** - Handles large batches without freezing
 
 ### Upcoming Features
-- 🔄 **Batch Processing** - Process multiple images
-- 🎨 **Advanced Filters** - Blur, sharpen, brightness
-- 📐 **Custom Crop** - Precise cropping tools
+- 🎨 **Advanced Filters** - Blur, sharpen, brightness, contrast
+- 📐 **Custom Crop** - Precise cropping tools with aspect ratio lock
+- 🖼️ **Image Optimization** - Smart compression algorithms
 - 💾 **Offline Mode** - Full PWA capabilities
 - 🌙 **Dark Mode** - Theme switching
+- 📊 **Processing Analytics** - Detailed statistics and insights
 
 ## 📞 Contact & Support
 
