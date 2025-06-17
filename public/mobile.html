@@ -51,12 +51,12 @@
         <section class="upload-section">
             <div class="upload-area" id="uploadArea">
                 <div class="upload-icon">📱</div>
-                <h2>Resize Your Images</h2>
-                <p>Tap to select photos from your device</p>
+                <h2>Resize Your Image</h2>
+                <p>Tap to select a photo from your device</p>
                 <button class="upload-btn" id="uploadButton">
-                    Choose Photos
+                    Choose Photo
                 </button>
-                <input type="file" id="fileInput" accept="image/*,image/heic,image/heif,.heic,.heif" multiple style="display: none;">
+                <input type="file" id="fileInput" accept="image/*,image/heic,image/heif,.heic,.heif" style="display: none;">
                 <div class="supported-formats">
                     <small>JPEG, PNG, WebP, GIF, HEIC • Up to 50MB each</small>
                 </div>
@@ -127,14 +127,14 @@
             <!-- Process Button -->
             <button class="process-btn" id="processBtn" onclick="processImages()">
                 <span class="btn-icon">✨</span>
-                <span id="processBtnText">Resize Images</span>
+                <span id="processBtnText">Resize Image</span>
             </button>
         </section>
 
         <!-- Progress Section -->
         <section class="progress-section" id="progressSection" style="display: none;">
             <div class="progress-card">
-                <h3>Processing Images...</h3>
+                <h3>Processing Image...</h3>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
@@ -148,7 +148,7 @@
             <div class="results-header">
                 <div class="success-icon">✅</div>
                 <h3>Done!</h3>
-                <p>Your images have been resized</p>
+                <p>Your image has been resized</p>
             </div>
 
             <!-- Single Image Result -->
@@ -162,31 +162,11 @@
                 </button>
             </div>
 
-            <!-- Bulk Results -->
-            <div class="bulk-result" id="bulkResult" style="display: none;">
-                <div class="result-stats">
-                    <div class="stat">
-                        <span class="stat-number" id="processedCount">0</span>
-                        <span class="stat-label">Images</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number" id="sizeSaved">0%</span>
-                        <span class="stat-label">Size Saved</span>
-                    </div>
-                    <div class="stat" id="processingTimeStat" style="display: none;">
-                        <span class="stat-number" id="processingTime">0s</span>
-                        <span class="stat-label">Processing Time</span>
-                    </div>
-                </div>
-                <button class="download-zip-btn" id="downloadZipBtn" onclick="downloadZip()">
-                    <span class="btn-icon">📦</span>
-                    Download ZIP
-                </button>
-            </div>
+
 
             <button class="new-image-btn" onclick="resetUpload()">
                 <span class="btn-icon">🔄</span>
-                Process More Images
+                Process Another Image
             </button>
         </section>
 

@@ -69,28 +69,15 @@ document.addEventListener('DOMContentLoaded', function() {
 function handleFileSelect(event) {
     const files = Array.from(event.target.files);
     if (files.length > 0) {
-        // Filter and validate files
-        const validFiles = [];
-        const invalidFiles = [];
+        // Take only the first file for mobile
+        const file = files[0];
         
-        files.forEach(file => {
-            if (isValidImageFile(file)) {
-                validFiles.push(file);
-            } else {
-                invalidFiles.push(file.name);
-            }
-        });
-        
-        if (invalidFiles.length > 0) {
-            showToast(`Unsupported files: ${invalidFiles.join(', ')}`);
-        }
-        
-        if (validFiles.length > 0) {
-            selectedFiles = validFiles;
+        if (isValidImageFile(file)) {
+            selectedFiles = [file]; // Always single file array
             showImageInfo();
             showSettings();
         } else {
-            showToast('Please select valid image files (JPEG, PNG, WebP, GIF, HEIC)');
+            showToast('Please select a valid image file (JPEG, PNG, WebP, GIF, HEIC)');
         }
     }
 }
@@ -137,9 +124,15 @@ function handleDrop(event) {
     );
     
     if (files.length > 0) {
-        selectedFiles = files;
-        showImageInfo();
-        showSettings();
+        // Take only the first file for mobile
+        const file = files[0];
+        if (isValidImageFile(file)) {
+            selectedFiles = [file];
+            showImageInfo();
+            showSettings();
+        } else {
+            showToast('Please select a valid image file');
+        }
     }
 }
 
@@ -149,13 +142,11 @@ function showImageInfo() {
     const fileCount = document.getElementById('fileCount');
     const totalSize = document.getElementById('totalSize');
     
-    const totalBytes = selectedFiles.reduce((sum, file) => sum + file.size, 0);
-    const totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
+    const file = selectedFiles[0]; // Always single file
+    const fileMB = (file.size / (1024 * 1024)).toFixed(1);
     
-    fileCount.textContent = selectedFiles.length === 1 ? 
-        '1 image selected' : 
-        `${selectedFiles.length} images selected`;
-    totalSize.textContent = `${totalMB} MB`;
+    fileCount.textContent = '1 image selected';
+    totalSize.textContent = `${fileMB} MB`;
     
     imageInfo.style.display = 'block';
 }
@@ -239,17 +230,12 @@ async function processImages() {
     const startTime = Date.now();
     
     try {
-        for (let i = 0; i < selectedFiles.length; i++) {
-            if (!isProcessing) break; // Cancelled
-            
-            updateProgress(i, selectedFiles.length, `Processing ${selectedFiles[i].name}...`);
-            
-            const processedImage = await processImage(selectedFiles[i], width, height, quality, format);
-            processedImages.push(processedImage);
-            
-            // Small delay for better UX
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
+        const file = selectedFiles[0]; // Single file processing
+        
+        updateProgress(0, 1, `Processing ${file.name}...`);
+        
+        const processedImage = await processImage(file, width, height, quality, format);
+        processedImages.push(processedImage);
         
         if (isProcessing) {
             // Calculate processing time
@@ -345,7 +331,7 @@ function updateProgress(current, total, message) {
     
     const percentage = ((current + 1) / total) * 100;
     progressFill.style.width = percentage + '%';
-    progressText.textContent = message || `Processing ${current + 1} of ${total} images...`;
+    progressText.textContent = message || 'Processing image...';
 }
 
 // Hide progress
@@ -364,50 +350,20 @@ function cancelProcessing() {
 function showResults(processingTimeMs = 0) {
     const resultsSection = document.getElementById('resultsSection');
     const singleResult = document.getElementById('singleResult');
-    const bulkResult = document.getElementById('bulkResult');
     
     resultsSection.style.display = 'block';
     
-    if (processedImages.length === 1) {
-        // Single image result
-        singleResult.style.display = 'block';
-        bulkResult.style.display = 'none';
-        
-        const previewImage = document.getElementById('previewImage');
-        const downloadBtn = document.getElementById('downloadBtn');
-        
-        previewImage.src = URL.createObjectURL(processedImages[0].blob);
-        
-        downloadBtn.onclick = () => {
-            downloadFile(processedImages[0].blob, processedImages[0].name);
-        };
-    } else {
-        // Bulk result
-        singleResult.style.display = 'none';
-        bulkResult.style.display = 'block';
-        
-        const processedCount = document.getElementById('processedCount');
-        const sizeSaved = document.getElementById('sizeSaved');
-        const processingTimeStat = document.getElementById('processingTimeStat');
-        const processingTime = document.getElementById('processingTime');
-        
-        const totalOriginalSize = processedImages.reduce((sum, img) => sum + img.originalSize, 0);
-        const totalNewSize = processedImages.reduce((sum, img) => sum + img.newSize, 0);
-        const percentSaved = Math.round((1 - totalNewSize / totalOriginalSize) * 100);
-        
-        processedCount.textContent = processedImages.length;
-        sizeSaved.textContent = percentSaved > 0 ? `${percentSaved}%` : '0%';
-        
-        // Show processing time if file size is large (> 5MB) or many images (> 10)
-        const shouldShowTime = totalOriginalSize > 5 * 1024 * 1024 || processedImages.length > 10;
-        
-        if (shouldShowTime && processingTimeMs > 0) {
-            processingTimeStat.style.display = 'block';
-            processingTime.textContent = formatProcessingTime(processingTimeMs);
-        } else {
-            processingTimeStat.style.display = 'none';
-        }
-    }
+    // Always single image result on mobile
+    singleResult.style.display = 'block';
+    
+    const previewImage = document.getElementById('previewImage');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    previewImage.src = URL.createObjectURL(processedImages[0].blob);
+    
+    downloadBtn.onclick = () => {
+        downloadFile(processedImages[0].blob, processedImages[0].name);
+    };
 }
 
 // Format processing time
@@ -663,186 +619,7 @@ function showIOSDownloadInstructions(filename) {
 
 
 
-// Download ZIP archive
-async function downloadZip() {
-    if (typeof JSZip === 'undefined') {
-        showToast('ZIP functionality not available');
-        return;
-    }
-    
-    // For iOS, show options since ZIP downloads can be tricky
-    if (isIOS() && processedImages.length > 1) {
-        showIOSDownloadOptions();
-        return;
-    }
-    
-    const zip = new JSZip();
-    
-    // Add all processed images to ZIP
-    processedImages.forEach((img, index) => {
-        zip.file(img.name, img.blob);
-    });
-    
-    try {
-        const zipBlob = await zip.generateAsync({type: 'blob'});
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-        downloadFile(zipBlob, `pixscaler-images-${timestamp}.zip`);
-    } catch (error) {
-        console.error('ZIP creation error:', error);
-        showToast('Error creating ZIP file');
-    }
-}
 
-// Show iOS download options modal
-function showIOSDownloadOptions() {
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        padding: 20px;
-        box-sizing: border-box;
-    `;
-    
-    modal.innerHTML = `
-        <div style="
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        ">
-            <h3 style="margin: 0 0 16px 0; color: #007AFF;">📱 Download Options</h3>
-            <p style="margin: 0 0 20px 0; color: #333; line-height: 1.5;">
-                You have ${processedImages.length} images to download. Choose your preferred method:
-            </p>
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <button onclick="downloadImagesIndividually(); this.parentElement.parentElement.parentElement.remove();" style="
-                    background: #007AFF;
-                    color: white;
-                    border: none;
-                    padding: 16px;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                ">📱 Download One by One (Recommended)</button>
-                <button onclick="tryZipDownloadIOS(); this.parentElement.parentElement.parentElement.remove();" style="
-                    background: #34C759;
-                    color: white;
-                    border: none;
-                    padding: 16px;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                ">📦 Try ZIP Download</button>
-                <button onclick="this.parentElement.parentElement.parentElement.remove();" style="
-                    background: #8E8E93;
-                    color: white;
-                    border: none;
-                    padding: 12px;
-                    border-radius: 8px;
-                    font-size: 14px;
-                    cursor: pointer;
-                ">Cancel</button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-}
-
-// Try ZIP download on iOS
-async function tryZipDownloadIOS() {
-    if (typeof JSZip === 'undefined') {
-        showToast('ZIP functionality not available');
-        return;
-    }
-    
-    showToast('Creating ZIP file...');
-    
-    const zip = new JSZip();
-    
-    // Add all processed images to ZIP
-    processedImages.forEach((img, index) => {
-        zip.file(img.name, img.blob);
-    });
-    
-    try {
-        const zipBlob = await zip.generateAsync({type: 'blob'});
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-        const filename = `pixscaler-images-${timestamp}.zip`;
-        
-        // Try Web Share API for ZIP files
-        if (navigator.share && navigator.canShare) {
-            const file = new File([zipBlob], filename, { type: 'application/zip' });
-            
-            if (navigator.canShare({ files: [file] })) {
-                try {
-                    await navigator.share({
-                        files: [file],
-                        title: filename,
-                        text: `Download ${processedImages.length} images from Pixscaler`
-                    });
-                    showToast('ZIP file shared! Choose "Save to Files" to download.');
-                    return;
-                } catch (shareError) {
-                    if (shareError.name !== 'AbortError') {
-                        console.log('ZIP share failed, trying fallback');
-                    }
-                }
-            }
-        }
-        
-        // Fallback to regular download
-        downloadFile(zipBlob, filename);
-        
-    } catch (error) {
-        console.error('ZIP creation error:', error);
-        showToast('ZIP creation failed. Try downloading images individually.');
-        downloadImagesIndividually();
-    }
-}
-
-// Download images individually (iOS fallback)
-function downloadImagesIndividually() {
-    if (processedImages.length === 0) {
-        showToast('No images to download');
-        return;
-    }
-    
-    let currentIndex = 0;
-    
-    function downloadNext() {
-        if (currentIndex < processedImages.length) {
-            const img = processedImages[currentIndex];
-            downloadFile(img.blob, img.name);
-            currentIndex++;
-            
-            // Show progress
-            showToast(`Downloaded ${currentIndex} of ${processedImages.length} images`);
-            
-            // Small delay before next download to prevent overwhelming the browser
-            setTimeout(() => {
-                downloadNext();
-            }, 1000);
-        } else {
-            showToast('All images downloaded! 🎉');
-        }
-    }
-    
-    downloadNext();
-}
 
 // Reset upload
 function resetUpload() {
