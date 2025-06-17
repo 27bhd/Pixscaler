@@ -378,7 +378,7 @@ function performResize(img, targetWidth, targetHeight, quality, format) {
     switch (format) {
         case 'png':
             mimeType = 'image/png';
-            qualityValue = undefined; // PNG doesn't use quality
+            qualityValue = null; // PNG doesn't use quality parameter - more explicit than undefined
             break;
         case 'webp':
             mimeType = 'image/webp';
@@ -389,16 +389,20 @@ function performResize(img, targetWidth, targetHeight, quality, format) {
             break;
     }
 
-    // Get image data
-    const dataURL = canvas.toDataURL(mimeType, qualityValue);
-    
-    return {
-        dataURL: dataURL,
-        blob: dataURLToBlob(dataURL),
-        mimeType: mimeType,
-        width: targetWidth,
-        height: targetHeight
-    };
+    // Get image data with proper error handling
+    try {
+        const dataURL = canvas.toDataURL(mimeType, qualityValue);
+        
+        return {
+            dataURL: dataURL,
+            blob: dataURLToBlob(dataURL),
+            mimeType: mimeType,
+            width: targetWidth,
+            height: targetHeight
+        };
+    } catch (error) {
+        throw new Error(`Failed to generate image data: ${error.message}`);
+    }
 }
 
 function dataURLToBlob(dataURL) {
@@ -571,6 +575,21 @@ function resetUpload() {
     isProcessing = false;
     processingCancelled = false;
     
+    // Clean up memory - revoke any existing object URLs
+    try {
+        document.querySelectorAll('a[href^="blob:"]').forEach(link => {
+            URL.revokeObjectURL(link.href);
+        });
+        
+        const previewImage = document.getElementById('previewImage');
+        if (previewImage && previewImage.src.startsWith('blob:')) {
+            URL.revokeObjectURL(previewImage.src);
+            previewImage.src = '';
+        }
+    } catch (error) {
+        console.warn('Error cleaning up object URLs:', error);
+    }
+    
     // Reset UI
     document.getElementById('uploadArea').style.display = 'block';
     document.getElementById('bulkInfo').style.display = 'none';
@@ -580,16 +599,20 @@ function resetUpload() {
     document.getElementById('downloadSection').style.display = 'none';
     document.getElementById('loading').style.display = 'none';
     
-    // Reset form
+    // Reset form values
     document.getElementById('fileInput').value = '';
     document.getElementById('width').value = '';
     document.getElementById('height').value = '';
     document.getElementById('quality').value = 85;
     document.getElementById('qualityValue').textContent = '85%';
-    document.querySelector('input[name="format"][value="jpeg"]').checked = true;
     
     // Reset upload text
     document.getElementById('uploadText').textContent = 'Drag & drop your images here';
+    
+    // Force garbage collection hint
+    if (window.gc) {
+        window.gc();
+    }
 }
 
 // Smart Drop Zone - Make entire page a drop zone
@@ -815,83 +838,102 @@ function fallbackShare(text, url) {
 
 // Usage counter functions
 function updateImageCounter() {
-    const today = new Date().toDateString();
-    const storedData = localStorage.getItem('pixscaler_stats');
-    let stats = { date: today, count: 0 };
-    
-    if (storedData) {
-        const parsed = JSON.parse(storedData);
-        if (parsed.date === today) {
-            stats = parsed;
-        }
+    try {
+        const count = loadImageCounter();
+        // Remove reference to non-existent imageCount element
+        // const imageCountElement = document.getElementById('imageCount');
+        // if (imageCountElement) {
+        //     imageCountElement.textContent = count.toLocaleString();
+        // }
+        
+        // Update localStorage
+        localStorage.setItem('pixscaler_image_count', count.toString());
+        
+        // Update social proof if element exists
+        updateSocialProof();
+    } catch (error) {
+        console.warn('Failed to update image counter:', error);
     }
-    
-    const imageCountElement = document.getElementById('imageCount');
-    if (imageCountElement) {
-        imageCountElement.textContent = stats.count;
+}
+
+function loadImageCounter() {
+    try {
+        return parseInt(localStorage.getItem('pixscaler_image_count') || '0');
+    } catch (error) {
+        return 0;
     }
 }
 
 function incrementImageCounter() {
-    const today = new Date().toDateString();
-    const storedData = localStorage.getItem('pixscaler_stats');
-    let stats = { date: today, count: 0 };
-    
-    if (storedData) {
-        const parsed = JSON.parse(storedData);
-        if (parsed.date === today) {
-            stats = parsed;
-        }
-    }
-    
-    stats.count++;
-    localStorage.setItem('pixscaler_stats', JSON.stringify(stats));
-    
-    // Animate counter update
-    const counterElement = document.getElementById('imageCount');
-    if (counterElement) {
-        counterElement.style.animation = 'countUp 0.5s ease-out';
-        counterElement.textContent = stats.count;
+    try {
+        const currentCount = loadImageCounter();
+        const newCount = currentCount + 1;
+        localStorage.setItem('pixscaler_image_count', newCount.toString());
         
-        setTimeout(() => {
-            counterElement.style.animation = '';
-        }, 500);
+        // Remove reference to non-existent counterElement
+        // const counterElement = document.getElementById('imageCount');
+        // if (counterElement) {
+        //     counterElement.style.animation = 'countUp 0.5s ease-out';
+        //     counterElement.textContent = newCount.toLocaleString();
+        //     
+        //     setTimeout(() => {
+        //         counterElement.style.animation = '';
+        //     }, 500);
+        // }
+        
+        // Update social proof
+        updateSocialProof();
+        
+        // Show achievement for milestones
+        if (newCount === 10 || newCount === 50 || newCount === 100 || newCount % 500 === 0) {
+            showAchievement('🎉', `${newCount} Images Processed!`, 'You\'re becoming a pro!');
+        }
+    } catch (error) {
+        console.warn('Failed to increment image counter:', error);
     }
 }
 
 // Scroll effects
 function setupScrollEffects() {
-    const floatingBadge = document.getElementById('floatingBadge');
-    let hasScrolled = false;
+    // Remove reference to non-existent floatingBadge element
+    // const floatingBadge = document.getElementById('floatingBadge');
+    // if (!floatingBadge) return;
     
-    // Only set up scroll listener if floating badge exists
-    if (floatingBadge) {
-        window.addEventListener('scroll', function() {
-            const scrollY = window.scrollY;
-            
-            // Show floating badge after scrolling 200px
-            if (scrollY > 200 && !hasScrolled) {
-                floatingBadge.style.display = 'block';
-                hasScrolled = true;
-            } else if (scrollY <= 200 && hasScrolled) {
-                floatingBadge.style.display = 'none';
-                hasScrolled = false;
-            }
-        });
-    }
-    
-    // Update social proof with simulated activity
-    updateSocialProof();
+    // Simplified scroll effects without non-existent elements
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5;
+        
+        // Apply parallax effect to existing elements only
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.style.transform = `translateY(${rate}px)`;
+        }
+    });
 }
 
 function updateSocialProof() {
-    const totalElement = document.getElementById('totalProcessed');
-    if (totalElement) {
-        // Simulate daily activity (between 50-200 images)
-        const baseCount = 50 + Math.floor(Math.random() * 150);
-        const imageCountElement = document.getElementById('imageCount');
-        const userCount = imageCountElement ? parseInt(imageCountElement.textContent) || 0 : 0;
-        totalElement.textContent = baseCount + userCount;
+    try {
+        const totalProcessed = loadImageCounter();
+        
+        // Remove reference to non-existent totalElement
+        // const totalElement = document.getElementById('totalProcessed');
+        // if (totalElement) {
+        //     totalElement.textContent = totalProcessed.toLocaleString();
+        // }
+        
+        // Remove reference to non-existent imageCountElement  
+        // const imageCountElement = document.getElementById('imageCount');
+        // if (imageCountElement) {
+        //     imageCountElement.textContent = totalProcessed.toLocaleString();
+        // }
+        
+        // Update page title with count if significant
+        if (totalProcessed > 0) {
+            document.title = `Pixscaler - ${totalProcessed.toLocaleString()} Images Processed`;
+        }
+    } catch (error) {
+        console.warn('Failed to update social proof:', error);
     }
 }
 
