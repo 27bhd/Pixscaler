@@ -212,30 +212,62 @@
                 <button class="modal-close" onclick="hideModal('aboutModal')">×</button>
             </div>
             <div class="modal-body">
-                <p>Pixscaler processes images entirely in your browser using HTML5 Canvas. Your images never leave your device, ensuring complete privacy and security.</p>
+                <div class="about-intro">
+                    <p>Pixscaler processes images entirely in your browser using HTML5 Canvas. Your images never leave your device, ensuring complete privacy and security.</p>
+                </div>
                 
-                <div class="features-list">
-                    <div class="feature">
-                        <span class="feature-icon">🚀</span>
-                        <span>Fast client-side processing</span>
+                <div class="features-section">
+                    <h4>Key Features</h4>
+                    <div class="features-list">
+                        <div class="feature">
+                            <span class="feature-icon">🚀</span>
+                            <div class="feature-content">
+                                <strong>Fast Processing</strong>
+                                <p>Instant client-side image processing with HTML5 Canvas</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔒</span>
+                            <div class="feature-content">
+                                <strong>Complete Privacy</strong>
+                                <p>Images never leave your device - no uploads anywhere</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎯</span>
+                            <div class="feature-content">
+                                <strong>Professional Quality</strong>
+                                <p>High-quality output with advanced image smoothing</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">📱</span>
+                            <div class="feature-content">
+                                <strong>Cross-Platform</strong>
+                                <p>Works perfectly on desktop, tablet, and mobile</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="feature">
-                        <span class="feature-icon">🔒</span>
-                        <span>Complete privacy - no uploads</span>
-                    </div>
-                    <div class="feature">
-                        <span class="feature-icon">🎯</span>
-                        <span>Professional quality output</span>
-                    </div>
-                    <div class="feature">
-                        <span class="feature-icon">📱</span>
-                        <span>Works on all devices</span>
+                </div>
+
+                <div class="tech-section">
+                    <h4>Built With</h4>
+                    <div class="tech-stack">
+                        <span class="tech-item">HTML5 Canvas</span>
+                        <span class="tech-item">JavaScript</span>
+                        <span class="tech-item">CSS3</span>
+                        <span class="tech-item">Client-Side</span>
+                        <span class="tech-item">Privacy-First</span>
                     </div>
                 </div>
 
                 <div class="developer-info">
-                    <p><strong>Built by Beniverse</strong></p>
-                    <p>Full-Stack Developer passionate about building efficient web applications.</p>
+                    <div class="developer-avatar">👨‍💻</div>
+                    <div class="developer-details">
+                        <h4>Beniverse</h4>
+                        <p class="developer-title">Full-Stack Developer</p>
+                        <p class="developer-bio">Passionate about building efficient web applications with modern technologies. Specializing in client-side solutions that prioritize user privacy and performance.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -248,23 +280,69 @@
                 <button class="modal-close" onclick="hideModal('supportModal')">×</button>
             </div>
             <div class="modal-body">
-                <p>If this tool saves you time, consider supporting the developer!</p>
+                <div class="support-intro">
+                    <div class="support-icon">☕</div>
+                    <h4>Support the Project</h4>
+                    <p>If this tool saves you time and effort, consider supporting the developer to keep it free and continuously improved!</p>
+                </div>
                 
                 <div class="crypto-section">
                     <div class="crypto-header">
-                        <span class="crypto-icon">💰</span>
-                        <span>Solana (SOL)</span>
+                        <div class="crypto-icon">💰</div>
+                        <div class="crypto-info">
+                            <h4>Solana (SOL)</h4>
+                            <p>Cryptocurrency donations</p>
+                        </div>
                     </div>
-                    <div class="wallet-address">
-                        <code id="solanaAddress">5Ap6T93SRLFj9Urg7SWk1As5nNDunb6zEzyw8fpSUuHo</code>
-                        <button class="copy-btn" onclick="copyAddress()">Copy</button>
+                    <div class="wallet-container">
+                        <div class="wallet-address">
+                            <code id="solanaAddress">5Ap6T93SRLFj9Urg7SWk1As5nNDunb6zEzyw8fpSUuHo</code>
+                        </div>
+                        <button class="copy-btn" onclick="copyAddress()">
+                            <span class="copy-icon">📋</span>
+                            Copy Address
+                        </button>
+                    </div>
+                    <div class="donation-amounts">
+                        <p class="amounts-label">Quick amounts:</p>
+                        <div class="amount-buttons">
+                            <button class="amount-btn" onclick="showDonationMessage(0.05)">0.05 SOL</button>
+                            <button class="amount-btn" onclick="showDonationMessage(0.1)">0.1 SOL</button>
+                            <button class="amount-btn" onclick="showDonationMessage(0.25)">0.25 SOL</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="support-alternatives">
-                    <p><strong>Other ways to support:</strong></p>
-                    <button class="alt-btn" onclick="shareApp()">📢 Share this tool</button>
-                    <button class="alt-btn" onclick="openGitHub()">⭐ Star on GitHub</button>
+                    <h4>Other Ways to Support</h4>
+                    <div class="alt-buttons">
+                        <button class="alt-btn share-btn" onclick="shareApp()">
+                            <span class="alt-icon">📢</span>
+                            <div class="alt-content">
+                                <strong>Share this tool</strong>
+                                <p>Help others discover Pixscaler</p>
+                            </div>
+                        </button>
+                        <button class="alt-btn github-btn" onclick="openGitHub()">
+                            <span class="alt-icon">⭐</span>
+                            <div class="alt-content">
+                                <strong>Star on GitHub</strong>
+                                <p>Show your appreciation</p>
+                            </div>
+                        </button>
+                        <button class="alt-btn hire-btn" onclick="openFreelancer()">
+                            <span class="alt-icon">💼</span>
+                            <div class="alt-content">
+                                <strong>Hire for projects</strong>
+                                <p>Need custom development?</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gratitude-section">
+                    <p><strong>🙏 Thank you for your support!</strong></p>
+                    <p>Every contribution, no matter how small, helps maintain and improve this free tool for everyone.</p>
                 </div>
             </div>
         </div>

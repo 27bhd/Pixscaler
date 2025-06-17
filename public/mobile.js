@@ -425,6 +425,16 @@ function openGitHub() {
     window.open('https://github.com/27bhd/Pixscaler', '_blank');
 }
 
+// Open Freelancer profile
+function openFreelancer() {
+    window.open('https://www.freelancer.com/u/Beniverse', '_blank');
+}
+
+// Show donation message
+function showDonationMessage(amount) {
+    showToast(`Please send ${amount} SOL to the address above. Thank you for your support! 🙏`);
+}
+
 // Show toast notification
 function showToast(message) {
     // Create toast element
