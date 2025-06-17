@@ -450,13 +450,82 @@ function downloadFile(blob, filename) {
 // iOS-specific download function
 function downloadFileIOS(blob, filename) {
     try {
-        // Convert blob to data URL for iOS compatibility
+        // Method 1: Try Web Share API first (works on iOS 12+)
+        if (navigator.share && navigator.canShare) {
+            const file = new File([blob], filename, { type: blob.type });
+            
+            if (navigator.canShare({ files: [file] })) {
+                navigator.share({
+                    files: [file],
+                    title: filename,
+                    text: `Download ${filename} from Pixscaler`
+                }).then(() => {
+                    showToast('File shared successfully! Choose "Save to Files" to download.');
+                }).catch((error) => {
+                    if (error.name !== 'AbortError') {
+                        console.log('Share failed, trying alternative method');
+                        downloadFileIOSAlternative(blob, filename);
+                    }
+                });
+                return;
+            }
+        }
+        
+        // Method 2: Alternative approach if share API fails
+        downloadFileIOSAlternative(blob, filename);
+        
+    } catch (error) {
+        console.error('iOS download error:', error);
+        downloadFileIOSAlternative(blob, filename);
+    }
+}
+
+// Alternative iOS download method
+function downloadFileIOSAlternative(blob, filename) {
+    try {
+        // Convert blob to data URL
         const reader = new FileReader();
         reader.onload = function(e) {
             const dataUrl = e.target.result;
             
-            // Create a new window/tab with the image
+            // Method 1: Try creating a temporary link with data URL
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = filename;
+            link.style.display = 'none';
+            
+            // Add to DOM and click
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show instructions
+            setTimeout(() => {
+                showIOSDownloadInstructions(filename);
+            }, 500);
+        };
+        
+        reader.onerror = function() {
+            // Final fallback: open in new tab
+            openImageInNewTab(blob, filename);
+        };
+        
+        reader.readAsDataURL(blob);
+        
+    } catch (error) {
+        console.error('iOS alternative download error:', error);
+        openImageInNewTab(blob, filename);
+    }
+}
+
+// Open image in new tab for manual save
+function openImageInNewTab(blob, filename) {
+    try {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const dataUrl = e.target.result;
             const newWindow = window.open('', '_blank');
+            
             if (newWindow) {
                 newWindow.document.write(`
                     <!DOCTYPE html>
@@ -510,8 +579,8 @@ function downloadFileIOS(blob, filename) {
                             <div class="filename">${filename}</div>
                             <div class="steps">
                                 📱 <strong>To save this image:</strong><br>
-                                1. Tap and hold the image<br>
-                                2. Select "Save to Photos"<br>
+                                1. Tap and hold the image above<br>
+                                2. Select "Save to Photos" or "Add to Photos"<br>
                                 3. The image will be saved to your Photos app
                             </div>
                         </div>
@@ -519,38 +588,80 @@ function downloadFileIOS(blob, filename) {
                     </html>
                 `);
                 newWindow.document.close();
-                showToast('Image opened in new tab. Tap and hold to save to Photos!');
+                showToast('Image opened in new tab. Tap and hold to save!');
             } else {
-                // Fallback: try to trigger download anyway
-                fallbackDownload(dataUrl, filename);
+                showToast('Please allow popups to download images');
             }
-        };
-        reader.onerror = function() {
-            showToast('Error preparing image for download');
         };
         reader.readAsDataURL(blob);
     } catch (error) {
-        console.error('iOS download error:', error);
+        console.error('Error opening image in new tab:', error);
         showToast('Download failed. Please try again.');
     }
 }
 
-// Fallback download method
-function fallbackDownload(dataUrl, filename) {
-    try {
-        const a = document.createElement('a');
-        a.href = dataUrl;
-        a.download = filename;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        showToast('If download didn\'t start, tap and hold the image to save');
-    } catch (error) {
-        console.error('Fallback download error:', error);
-        showToast('Please tap and hold the image above to save it');
-    }
+// Show iOS-specific download instructions
+function showIOSDownloadInstructions(filename) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 20px;
+        box-sizing: border-box;
+    `;
+    
+    modal.innerHTML = `
+        <div style="
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        ">
+            <h3 style="margin: 0 0 16px 0; color: #007AFF;">📱 Download Instructions</h3>
+            <p style="margin: 0 0 20px 0; color: #333; line-height: 1.5;">
+                <strong>${filename}</strong><br><br>
+                If the download didn't start automatically:
+            </p>
+            <ol style="text-align: left; color: #666; line-height: 1.6; margin: 0 0 20px 0;">
+                <li>Check your Downloads folder in the Files app</li>
+                <li>Or look for the file in Safari's download manager</li>
+                <li>If not found, the image may have opened in a new tab - tap and hold it to save to Photos</li>
+            </ol>
+            <button onclick="this.parentElement.parentElement.remove()" style="
+                background: #007AFF;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+            ">Got it!</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+        if (document.body.contains(modal)) {
+            document.body.removeChild(modal);
+        }
+    }, 10000);
 }
+
+
 
 // Download ZIP archive
 async function downloadZip() {
@@ -559,12 +670,10 @@ async function downloadZip() {
         return;
     }
     
-    // For iOS, offer alternative since ZIP downloads are problematic
+    // For iOS, show options since ZIP downloads can be tricky
     if (isIOS() && processedImages.length > 1) {
-        if (confirm('ZIP downloads don\'t work well on iPhone. Would you like to download images one by one instead?')) {
-            downloadImagesIndividually();
-            return;
-        }
+        showIOSDownloadOptions();
+        return;
     }
     
     const zip = new JSZip();
@@ -581,6 +690,127 @@ async function downloadZip() {
     } catch (error) {
         console.error('ZIP creation error:', error);
         showToast('Error creating ZIP file');
+    }
+}
+
+// Show iOS download options modal
+function showIOSDownloadOptions() {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        padding: 20px;
+        box-sizing: border-box;
+    `;
+    
+    modal.innerHTML = `
+        <div style="
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        ">
+            <h3 style="margin: 0 0 16px 0; color: #007AFF;">📱 Download Options</h3>
+            <p style="margin: 0 0 20px 0; color: #333; line-height: 1.5;">
+                You have ${processedImages.length} images to download. Choose your preferred method:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <button onclick="downloadImagesIndividually(); this.parentElement.parentElement.parentElement.remove();" style="
+                    background: #007AFF;
+                    color: white;
+                    border: none;
+                    padding: 16px;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                ">📱 Download One by One (Recommended)</button>
+                <button onclick="tryZipDownloadIOS(); this.parentElement.parentElement.parentElement.remove();" style="
+                    background: #34C759;
+                    color: white;
+                    border: none;
+                    padding: 16px;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                ">📦 Try ZIP Download</button>
+                <button onclick="this.parentElement.parentElement.parentElement.remove();" style="
+                    background: #8E8E93;
+                    color: white;
+                    border: none;
+                    padding: 12px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    cursor: pointer;
+                ">Cancel</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Try ZIP download on iOS
+async function tryZipDownloadIOS() {
+    if (typeof JSZip === 'undefined') {
+        showToast('ZIP functionality not available');
+        return;
+    }
+    
+    showToast('Creating ZIP file...');
+    
+    const zip = new JSZip();
+    
+    // Add all processed images to ZIP
+    processedImages.forEach((img, index) => {
+        zip.file(img.name, img.blob);
+    });
+    
+    try {
+        const zipBlob = await zip.generateAsync({type: 'blob'});
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `pixscaler-images-${timestamp}.zip`;
+        
+        // Try Web Share API for ZIP files
+        if (navigator.share && navigator.canShare) {
+            const file = new File([zipBlob], filename, { type: 'application/zip' });
+            
+            if (navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: filename,
+                        text: `Download ${processedImages.length} images from Pixscaler`
+                    });
+                    showToast('ZIP file shared! Choose "Save to Files" to download.');
+                    return;
+                } catch (shareError) {
+                    if (shareError.name !== 'AbortError') {
+                        console.log('ZIP share failed, trying fallback');
+                    }
+                }
+            }
+        }
+        
+        // Fallback to regular download
+        downloadFile(zipBlob, filename);
+        
+    } catch (error) {
+        console.error('ZIP creation error:', error);
+        showToast('ZIP creation failed. Try downloading images individually.');
+        downloadImagesIndividually();
     }
 }
 
