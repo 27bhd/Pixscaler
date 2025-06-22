@@ -1,5 +1,5 @@
 // Pixscaler - Advanced Client-Side Image Resizer
-// Built by Beniverse - Now with Bulk Processing Support
+// Built by Beniverse and Djim00o - Now with Bulk Processing Support
 
 // Global state management
 let currentImages = [];
