@@ -629,7 +629,7 @@ graph TB
 
 <div align="center">
 
-**Built with ❤️ by Beniverse**
+**Built with ❤️ by Beniverse and Djim00o**
 
 [![GitHub](https://img.shields.io/badge/💼-GitHub-black?style=for-the-badge)](https://github.com/27bhd)
 [![Repository](https://img.shields.io/badge/📁-Repository-blue?style=for-the-badge)](https://github.com/27bhd/Pixscaler)
@@ -641,7 +641,7 @@ graph TB
 ```
 MIT License
 
-Copyright (c) 2024 Beniverse
+Copyright (c) 2024 Beniverse and Djim00o
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
