@@ -31,7 +31,7 @@
 <body>
 
     <!-- Mobile Header -->
-    <header class="mobile-header">
+    <header class="mobile-header" role="banner">
         <div class="header-content">
             <h1 class="app-title">Pixscaler</h1>
             <div class="header-badges">
@@ -43,18 +43,18 @@
     </header>
 
     <!-- Main App Container -->
-    <main class="app-container">
+    <main class="app-container" id="main-content">
         
         <!-- Upload Section -->
-        <section class="upload-section">
-            <div class="upload-area" id="uploadArea" role="button" tabindex="0">
-                <div class="upload-icon">📱</div>
+        <section class="upload-section" aria-label="Image upload">
+            <div class="upload-area" id="uploadArea" role="button" tabindex="0" aria-label="Tap to select a photo from your device">
+                <div class="upload-icon" aria-hidden="true">📱</div>
                 <h2>Resize Your Image</h2>
                 <p>Tap to select a photo from your device</p>
-                <button class="upload-btn" id="uploadButton">
+                <button class="upload-btn" id="uploadButton" type="button" aria-label="Choose photo from device">
                     Choose Photo
                 </button>
-                <input type="file" id="fileInput" accept="image/*,image/heic,image/heif,.heic,.heif" style="display: none;">
+                <input type="file" id="fileInput" accept="image/*,image/heic,image/heif,.heic,.heif" style="display: none;" aria-label="File input for images">
                 <div class="supported-formats">
                     <small>JPEG, PNG, WebP, GIF, HEIC • Up to 50MB each</small>
                 </div>
@@ -62,57 +62,58 @@
         </section>
 
         <!-- Image Info -->
-        <section class="image-info" id="imageInfo" style="display: none;" aria-live="polite">
+        <section class="image-info" id="imageInfo" style="display: none;" aria-live="polite" aria-label="Selected image information">
             <div class="info-card">
-                <div class="info-icon">🖼️</div>
+                <div class="info-icon" aria-hidden="true">🖼️</div>
                 <div class="info-details">
                     <span class="file-count" id="fileCount">1 image selected</span>
                     <span class="file-size" id="totalSize">2.5 MB</span>
                 </div>
-                <button class="clear-btn" type="button" aria-label="Clear selected image" onclick="clearSelection()">×</button>
+                <button class="clear-btn" type="button" aria-label="Clear selected image">×</button>
             </div>
         </section>
 
         <!-- Settings Panel -->
-        <section class="settings-panel" id="settingsPanel" style="display: none;">
+        <section class="settings-panel" id="settingsPanel" style="display: none;" role="form" aria-label="Image resize settings">
             <h3>Resize Settings</h3>
             
             <!-- Dimensions -->
             <div class="setting-group">
-                <label class="setting-label">Dimensions</label>
-                <div class="dimension-inputs">
+                <label class="setting-label" id="dimensions-label">Dimensions</label>
+                <div class="dimension-inputs" aria-labelledby="dimensions-label">
                     <div class="input-field">
-                        <label>Width</label>
-                        <input type="number" id="width" placeholder="800">
+                        <label for="width">Width</label>
+                        <input type="number" id="width" placeholder="800" aria-describedby="dimension-hint">
                     </div>
                     <div class="input-field">
-                        <label>Height</label>
-                        <input type="number" id="height" placeholder="600">
+                        <label for="height">Height</label>
+                        <input type="number" id="height" placeholder="600" aria-describedby="dimension-hint">
                     </div>
                 </div>
+                <span id="dimension-hint" class="sr-only">Enter dimensions in pixels</span>
             </div>
 
             <!-- Quick Presets -->
             <div class="setting-group">
                 <label class="setting-label">Quick Sizes</label>
-                <div class="preset-grid">
-                    <button class="preset-btn" onclick="setPreset(1920, 1080)">1920×1080</button>
-                    <button class="preset-btn" onclick="setPreset(1280, 720)">1280×720</button>
-                    <button class="preset-btn" onclick="setPreset(800, 600)">800×600</button>
-                    <button class="preset-btn" onclick="setPreset(400, 400)">400×400</button>
+                <div class="preset-grid" role="group" aria-label="Preset dimension options">
+                    <button class="preset-btn" type="button" aria-label="Set dimensions to 1920 by 1080 pixels">1920×1080</button>
+                    <button class="preset-btn" type="button" aria-label="Set dimensions to 1280 by 720 pixels">1280×720</button>
+                    <button class="preset-btn" type="button" aria-label="Set dimensions to 800 by 600 pixels">800×600</button>
+                    <button class="preset-btn" type="button" aria-label="Set dimensions to 400 by 400 pixels">400×400</button>
                 </div>
             </div>
 
             <!-- Quality -->
             <div class="setting-group">
-                <label class="setting-label">Quality: <span id="qualityValue">85%</span></label>
-                <input type="range" id="quality" min="1" max="100" value="85" class="quality-slider">
+                <label class="setting-label" for="quality">Quality: <span id="qualityValue">85%</span></label>
+                <input type="range" id="quality" min="1" max="100" value="85" class="quality-slider" aria-valuemin="1" aria-valuemax="100" aria-valuenow="85">
             </div>
 
             <!-- Format -->
             <div class="setting-group">
-                <label class="setting-label">Format</label>
-                <div class="format-tabs">
+                <label class="setting-label" id="format-label">Format</label>
+                <div class="format-tabs" role="radiogroup" aria-labelledby="format-label">
                     <input type="radio" id="jpeg" name="format" value="jpeg" checked>
                     <label for="jpeg" class="format-tab">JPEG</label>
                     <input type="radio" id="png" name="format" value="png">
@@ -123,28 +124,28 @@
             </div>
 
             <!-- Process Button -->
-            <button class="process-btn" id="processBtn" onclick="processImages()">
-                <span class="btn-icon">✨</span>
+            <button class="process-btn" id="processBtn" type="button" aria-label="Process and resize selected image">
+                <span class="btn-icon" aria-hidden="true">✨</span>
                 <span id="processBtnText">Resize Image</span>
             </button>
         </section>
 
         <!-- Progress Section -->
-        <section class="progress-section" id="progressSection" style="display: none;">
+        <section class="progress-section" id="progressSection" style="display: none;" role="status" aria-live="polite" aria-label="Processing status">
             <div class="progress-card">
                 <h3>Processing Image...</h3>
-                <div class="progress-bar">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
                 <div class="progress-text" id="progressText">Processing 0 of 0 images...</div>
-                <button class="cancel-btn" onclick="cancelProcessing()">Cancel</button>
+                <button class="cancel-btn" type="button" aria-label="Cancel image processing">Cancel</button>
             </div>
         </section>
 
         <!-- Results Section -->
-        <section class="results-section" id="resultsSection" style="display: none;">
+        <section class="results-section" id="resultsSection" style="display: none;" aria-label="Processing results">
             <div class="results-header">
-                <div class="success-icon">✅</div>
+                <div class="success-icon" aria-hidden="true">✅</div>
                 <h3>Done!</h3>
                 <p>Your image has been resized</p>
             </div>
@@ -154,14 +155,14 @@
                 <div class="result-preview">
                     <img id="previewImage" alt="Resized image preview">
                 </div>
-                <button class="download-btn" id="downloadBtn">
-                    <span class="btn-icon">📥</span>
+                <button class="download-btn" id="downloadBtn" type="button" aria-label="Download processed image">
+                    <span class="btn-icon" aria-hidden="true">📥</span>
                     Download Image
                 </button>
             </div>
 
-            <button class="new-image-btn" onclick="resetUpload()">
-                <span class="btn-icon">🔄</span>
+            <button class="new-image-btn" type="button" aria-label="Start over and process another image">
+                <span class="btn-icon" aria-hidden="true">🔄</span>
                 Process Another Image
             </button>
         </section>
@@ -169,27 +170,27 @@
     </main>
 
     <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <button class="nav-btn" onclick="showAbout()">
-            <span class="nav-icon">ℹ️</span>
+    <nav class="bottom-nav" role="navigation" aria-label="App navigation">
+        <button class="nav-btn" type="button" aria-label="View about information">
+            <span class="nav-icon" aria-hidden="true">ℹ️</span>
             <span class="nav-label">About</span>
         </button>
-        <button class="nav-btn" onclick="showDesktopVersion()">
-            <span class="nav-icon">🖥️</span>
+        <button class="nav-btn" type="button" aria-label="Switch to desktop version">
+            <span class="nav-icon" aria-hidden="true">🖥️</span>
             <span class="nav-label">Desktop</span>
         </button>
-        <button class="nav-btn" onclick="showSupport()">
-            <span class="nav-icon">☕</span>
+        <button class="nav-btn" type="button" aria-label="View support options">
+            <span class="nav-icon" aria-hidden="true">☕</span>
             <span class="nav-label">Support</span>
         </button>
     </nav>
 
     <!-- Modal Overlays -->
-    <div class="modal-overlay" id="aboutModal" style="display: none;">
+    <div class="modal-overlay" id="aboutModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>About Pixscaler</h3>
-                <button class="modal-close" onclick="hideModal('aboutModal')">×</button>
+                <h3 id="about-modal-title">About Pixscaler</h3>
+                <button class="modal-close" type="button" aria-label="Close about dialog">×</button>
             </div>
             <div class="modal-body">
                 <div class="about-intro">
@@ -200,28 +201,28 @@
                     <h4>Key Features</h4>
                     <div class="features-list">
                         <div class="feature">
-                            <span class="feature-icon">🚀</span>
+                            <span class="feature-icon" aria-hidden="true">🚀</span>
                             <div class="feature-content">
                                 <strong>Fast Processing</strong>
                                 <p>Instant client-side image processing with HTML5 Canvas</p>
                             </div>
                         </div>
                         <div class="feature">
-                            <span class="feature-icon">🔒</span>
+                            <span class="feature-icon" aria-hidden="true">🔒</span>
                             <div class="feature-content">
                                 <strong>Complete Privacy</strong>
                                 <p>Images never leave your device - no uploads anywhere</p>
                             </div>
                         </div>
                         <div class="feature">
-                            <span class="feature-icon">🎯</span>
+                            <span class="feature-icon" aria-hidden="true">🎯</span>
                             <div class="feature-content">
                                 <strong>Professional Quality</strong>
                                 <p>High-quality output with advanced image smoothing</p>
                             </div>
                         </div>
                         <div class="feature">
-                            <span class="feature-icon">📱</span>
+                            <span class="feature-icon" aria-hidden="true">📱</span>
                             <div class="feature-content">
                                 <strong>Cross-Platform</strong>
                                 <p>Works perfectly on desktop, tablet, and mobile</p>
@@ -242,7 +243,7 @@
                 </div>
 
                 <div class="developer-info">
-                    <div class="developer-avatar">👨‍💻</div>
+                    <div class="developer-avatar" aria-hidden="true">👨‍💻</div>
                     <div class="developer-details">
                         <h4>Benchehida Abdelatif</h4>
                         <p class="developer-title">Full-Stack Developer</p>
@@ -253,22 +254,22 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="supportModal" style="display: none;">
+    <div class="modal-overlay" id="supportModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="support-modal-title">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Support the Project</h3>
-                <button class="modal-close" onclick="hideModal('supportModal')">×</button>
+                <h3 id="support-modal-title">Support the Project</h3>
+                <button class="modal-close" type="button" aria-label="Close support dialog">×</button>
             </div>
             <div class="modal-body">
                 <div class="support-intro">
-                    <div class="support-icon">☕</div>
+                    <div class="support-icon" aria-hidden="true">☕</div>
                     <h4>Support the Project</h4>
                     <p>If this tool saves you time and effort, consider supporting the developer to keep it free and continuously improved!</p>
                 </div>
                 
                 <div class="crypto-section">
                     <div class="crypto-header">
-                        <div class="crypto-icon">💰</div>
+                        <div class="crypto-icon" aria-hidden="true">💰</div>
                         <div class="crypto-info">
                             <h4>Solana (SOL)</h4>
                             <p>Cryptocurrency donations</p>
@@ -278,17 +279,17 @@
                         <div class="wallet-address">
                             <code id="solanaAddress">5Ap6T93SRLFj9Urg7SWk1As5nNDunb6zEzyw8fpSUuHo</code>
                         </div>
-                        <button class="copy-btn" onclick="copyAddress()">
-                            <span class="copy-icon">📋</span>
+                        <button class="copy-btn" type="button" aria-label="Copy Solana wallet address to clipboard">
+                            <span class="copy-icon" aria-hidden="true">📋</span>
                             Copy Address
                         </button>
                     </div>
                     <div class="donation-amounts">
                         <p class="amounts-label">Quick amounts:</p>
-                        <div class="amount-buttons">
-                            <button class="amount-btn" onclick="showDonationMessage(0.05)">0.05 SOL</button>
-                            <button class="amount-btn" onclick="showDonationMessage(0.1)">0.1 SOL</button>
-                            <button class="amount-btn" onclick="showDonationMessage(0.25)">0.25 SOL</button>
+                        <div class="amount-buttons" role="group" aria-label="Suggested donation amounts">
+                            <button class="amount-btn" type="button" aria-label="Donate 0.05 SOL">0.05 SOL</button>
+                            <button class="amount-btn" type="button" aria-label="Donate 0.1 SOL">0.1 SOL</button>
+                            <button class="amount-btn" type="button" aria-label="Donate 0.25 SOL">0.25 SOL</button>
                         </div>
                     </div>
                 </div>
@@ -296,22 +297,22 @@
                 <div class="support-alternatives">
                     <h4>Other Ways to Support</h4>
                     <div class="alt-buttons">
-                        <button class="alt-btn share-btn" onclick="shareApp()">
-                            <span class="alt-icon">📢</span>
+                        <button class="alt-btn share-btn" type="button" aria-label="Share Pixscaler with others">
+                            <span class="alt-icon" aria-hidden="true">📢</span>
                             <div class="alt-content">
                                 <strong>Share this tool</strong>
                                 <p>Help others discover Pixscaler</p>
                             </div>
                         </button>
-                        <button class="alt-btn github-btn" onclick="openGitHub()">
-                            <span class="alt-icon">⭐</span>
+                        <button class="alt-btn github-btn" type="button" aria-label="Star the project on GitHub">
+                            <span class="alt-icon" aria-hidden="true">⭐</span>
                             <div class="alt-content">
                                 <strong>Star on GitHub</strong>
                                 <p>Show your appreciation</p>
                             </div>
                         </button>
-                        <button class="alt-btn hire-btn" onclick="openLinkedIn()">
-                            <span class="alt-icon">💼</span>
+                        <button class="alt-btn hire-btn" type="button" aria-label="Connect on LinkedIn">
+                            <span class="alt-icon" aria-hidden="true">💼</span>
                             <div class="alt-content">
                                 <strong>Connect on LinkedIn</strong>
                                 <p>Let's connect!</p>
@@ -329,6 +330,7 @@
     </div>
 
     <script src="vendor/heic2any.min.js" defer></script>
+    <script src="utils.js"></script>
     <script src="mobile.js" defer></script>
 </body>
 </html>

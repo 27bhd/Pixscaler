@@ -6,36 +6,40 @@
  * Features: Bulk Processing, ZIP Downloads, Privacy-First Architecture
  */
 
-// Global constants
+// Use shared utilities
+const { 
+    CONFIG, 
+    isSupportedImageFile, 
+    isHeicFile, 
+    convertHeicFile, 
+    formatFileSize, 
+    formatProcessingTime, 
+    formatTimeRemaining,
+    generateFileName,
+    yieldToMainThread,
+    cleanupCanvas,
+    loadImageFromFile
+} = window.PixscalerUtils;
+
+// Donation address
 const SOLANA_ADDRESS = '5Ap6T93SRLFj9Urg7SWk1As5nNDunb6zEzyw8fpSUuHo';
 
-const SUPPORTED_MIME_TYPES = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/webp',
-    'image/gif',
-    'image/heic',
-    'image/heif'
-];
-
-const SUPPORTED_EXTENSIONS = ['.jpeg', '.jpg', '.png', '.webp', '.gif', '.heic', '.heif'];
-const HEIC_MIME_TYPES = ['image/heic', 'image/heif'];
-
-// Global state management
+// Application state
 let currentImages = [];
 let processedImages = [];
 let isProcessing = false;
 let processingCancelled = false;
 let previewObjectUrl = null;
+let scrollTicking = false;
 
-// Initialize the app
+// Initialize the app when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     updateImageCounter();
     setupScrollEffects();
     setupSmartDropZone();
     setupKeyboardShortcuts();
+    setupEventListeners();
 });
 
 function initializeApp() {
@@ -72,8 +76,88 @@ function initializeApp() {
     const initialValue = qualitySlider.value;
     qualityValue.textContent = initialValue + '%';
     qualitySlider.style.setProperty('--value', initialValue + '%');
+}
 
-    setupPresetButtons();
+/**
+ * Set up all button event listeners (replacing inline onclick)
+ */
+function setupEventListeners() {
+    // Preset buttons
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const text = this.textContent;
+            const match = text.match(/(\d+)×(\d+)/);
+            if (match) {
+                setPreset(parseInt(match[1]), parseInt(match[2]));
+            }
+        });
+    });
+
+    // Upload button
+    const uploadBtn = document.querySelector('.upload-btn');
+    if (uploadBtn) {
+        uploadBtn.addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+    }
+
+    // Resize button
+    const resizeBtn = document.getElementById('resizeBtn');
+    if (resizeBtn) {
+        resizeBtn.addEventListener('click', processImages);
+    }
+
+    // Clear button
+    const clearBtn = document.querySelector('.clear-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearSelection);
+    }
+
+    // Cancel button
+    const cancelBtn = document.querySelector('.cancel-btn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', cancelProcessing);
+    }
+
+    // Download ZIP button
+    const downloadZipBtn = document.getElementById('downloadZipBtn');
+    if (downloadZipBtn) {
+        downloadZipBtn.addEventListener('click', downloadZip);
+    }
+
+    // New image button
+    const newImageBtn = document.querySelector('.new-image-btn');
+    if (newImageBtn) {
+        newImageBtn.addEventListener('click', resetUpload);
+    }
+
+    // Copy address button
+    const copyBtn = document.querySelector('.copy-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', copyAddress);
+    }
+
+    // Donation amount buttons
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const amount = parseFloat(this.textContent);
+            showDonationMessage(amount);
+        });
+    });
+
+    // Alternative support options
+    document.querySelectorAll('.alt-support span').forEach(span => {
+        span.addEventListener('click', function() {
+            const text = this.textContent;
+            if (text.includes('Share')) {
+                shareProject();
+            } else if (text.includes('GitHub')) {
+                window.open('https://github.com/27bhd/Pixscaler', '_blank');
+            } else if (text.includes('LinkedIn')) {
+                window.open('https://www.linkedin.com/in/benchehida-abdelatif-97b377369/', '_blank');
+            }
+        });
+    });
 }
 
 function handleFileSelect(event) {
@@ -99,27 +183,27 @@ function handleDrop(event) {
     
     const files = Array.from(event.dataTransfer.files);
     if (files.length > 0) {
-        const imageFiles = files.filter(file => file.type.startsWith('image/'));
+        // Use proper file type checking that handles HEIC
+        const imageFiles = files.filter(file => isSupportedImageFile(file));
         if (imageFiles.length > 0) {
             processFileSelection(imageFiles);
         } else {
-            showError('Please select image files (JPEG, PNG, WebP, GIF)');
+            showError('Please select image files (JPEG, PNG, WebP, GIF, HEIC)');
         }
     }
 }
 
 function processFileSelection(files) {
     const validFiles = [];
-    const maxSize = 50 * 1024 * 1024;
     
     for (const file of files) {
         if (!isSupportedImageFile(file)) {
-            showError(`Unsupported file type: ${file.name}. Please use JPEG, PNG, WebP, GIF, or HEIC.`);
+            showError('Unsupported file type: ' + file.name + '. Please use JPEG, PNG, WebP, GIF, or HEIC.');
             continue;
         }
         
-        if (file.size > maxSize) {
-            showError(`File too large: ${file.name}. Please use files smaller than 50MB.`);
+        if (file.size > CONFIG.MAX_FILE_SIZE_BYTES) {
+            showError('File too large: ' + file.name + '. Please use files smaller than 50MB.');
             continue;
         }
         
@@ -169,11 +253,11 @@ async function loadImageFile(file) {
             });
         };
         
-        img.onerror = () => {
+        img.onerror = function() {
             if (objectUrl) {
                 URL.revokeObjectURL(objectUrl);
             }
-            reject(new Error(`Failed to load ${workingFile.name || file.name}`));
+            reject(new Error('Failed to load ' + (workingFile.name || file.name)));
         };
         
         objectUrl = URL.createObjectURL(workingFile);
@@ -209,9 +293,9 @@ function updateUIForMode(isBulk) {
     if (isBulk) {
         uploadText.textContent = 'Drag & drop your images here';
         controlsTitle.textContent = '📦 Bulk Processing Settings';
-        modeIndicator.textContent = `${currentImages.length} images`;
+        modeIndicator.textContent = currentImages.length + ' images';
         modeIndicator.style.display = 'block';
-        resizeBtnText.textContent = `Process ${currentImages.length} Images`;
+        resizeBtnText.textContent = 'Process ' + currentImages.length + ' Images';
     } else {
         uploadText.textContent = 'Drag & drop your image here';
         controlsTitle.textContent = '📐 Image Settings';
@@ -238,10 +322,6 @@ function clearSelection() {
     resetUpload();
 }
 
-function setupPresetButtons() {
-    // Preset handlers are defined in HTML onclick attributes
-}
-
 function setPreset(width, height) {
     document.getElementById('width').value = width;
     document.getElementById('height').value = height;
@@ -263,8 +343,8 @@ async function processImages() {
         return;
     }
 
-    if (width > 8000 || height > 8000) {
-        showError('Maximum dimensions are 8000x8000 pixels');
+    if (width > CONFIG.MAX_DIMENSION_PX || height > CONFIG.MAX_DIMENSION_PX) {
+        showError('Maximum dimensions are ' + CONFIG.MAX_DIMENSION_PX + 'x' + CONFIG.MAX_DIMENSION_PX + ' pixels');
         return;
     }
     
@@ -323,16 +403,16 @@ async function processBulkImages(width, height, quality, format) {
             const imageData = currentImages[i];
             const progress = ((i + 1) / totalImages) * 100;
             
-            progressFill.style.width = `${progress}%`;
-            progressText.textContent = `Processing ${i + 1} of ${totalImages} images...`;
+            progressFill.style.width = progress + '%';
+            progressText.textContent = 'Processing ' + (i + 1) + ' of ' + totalImages + ' images...';
             
             const elapsed = Date.now() - startTime;
             const avgTimePerImage = elapsed / (i + 1);
             const remaining = (totalImages - i - 1) * avgTimePerImage;
-            progressTime.textContent = `Estimated time: ${formatTime(remaining)}`;
+            progressTime.textContent = 'Estimated time: ' + formatTimeRemaining(remaining);
             
             const detail = document.createElement('div');
-            detail.textContent = `✓ Processing ${imageData.name}...`;
+            detail.textContent = '✓ Processing ' + imageData.name + '...';
             progressDetails.appendChild(detail);
             progressDetails.scrollTop = progressDetails.scrollHeight;
             
@@ -347,10 +427,10 @@ async function processBulkImages(width, height, quality, format) {
                     originalSize: imageData.originalSize
                 });
                 
-                detail.textContent = `✅ ${imageData.name} → ${fileName}`;
+                detail.textContent = '✅ ' + imageData.name + ' → ' + fileName;
                 
             } catch (error) {
-                detail.textContent = `❌ Failed: ${imageData.name} (${error.message})`;
+                detail.textContent = '❌ Failed: ' + imageData.name + ' (' + error.message + ')';
             }
             
             await yieldToMainThread();
@@ -359,10 +439,10 @@ async function processBulkImages(width, height, quality, format) {
         if (!processingCancelled) {
             const totalProcessingTime = Date.now() - startTime;
             progressFill.style.width = '100%';
-            progressText.textContent = `Completed ${processedImages.length} of ${totalImages} images`;
+            progressText.textContent = 'Completed ' + processedImages.length + ' of ' + totalImages + ' images';
             progressTime.textContent = 'Processing complete!';
             
-            setTimeout(() => {
+            setTimeout(function() {
                 document.getElementById('bulkProgress').style.display = 'none';
                 showBulkDownload(totalProcessingTime);
             }, 1000);
@@ -417,7 +497,10 @@ function performResize(img, targetWidth, targetHeight, quality, format) {
     }
 
     return new Promise((resolve, reject) => {
-        canvas.toBlob((blob) => {
+        canvas.toBlob(function(blob) {
+            // Clean up canvas to free memory
+            cleanupCanvas(canvas, ctx);
+            
             if (!blob) {
                 reject(new Error('Failed to generate image data'));
                 return;
@@ -432,7 +515,7 @@ function performResize(img, targetWidth, targetHeight, quality, format) {
     });
 }
 
-function showSinglePreview(imageData, width, height, format, originalName, processingTimeMs = 0, originalSize = 0) {
+function showSinglePreview(imageData, width, height, format, originalName, processingTimeMs, originalSize) {
     const previewSection = document.getElementById('preview');
     const previewImage = document.getElementById('previewImage');
     const downloadSection = document.getElementById('downloadSection');
@@ -466,20 +549,24 @@ function showSinglePreview(imageData, width, height, format, originalName, proce
     const newSize = imageData.blob.size;
     const reduction = actualOriginalSize ? Math.round((1 - newSize / actualOriginalSize) * 100) : 0;
     
-    let descriptionHTML = `Your image has been resized to ${width}x${height} pixels.<br>`;
-    let smallText = `Format: ${format.toUpperCase()} | Size: ${formatFileSize(newSize)}${reduction > 0 ? ` | ${reduction}% smaller` : ''}`;
+    let descriptionHTML = 'Your image has been resized to ' + width + 'x' + height + ' pixels.<br>';
+    let smallText = 'Format: ' + format.toUpperCase() + ' | Size: ' + formatFileSize(newSize);
     
-    if (actualOriginalSize > 5 * 1024 * 1024 && processingTimeMs > 0) {
-        smallText += ` | Processed in ${formatProcessingTime(processingTimeMs)}`;
+    if (reduction > 0) {
+        smallText += ' | ' + reduction + '% smaller';
     }
     
-    downloadDescription.innerHTML = descriptionHTML + `<small>${smallText}</small>`;
+    if (actualOriginalSize > CONFIG.LARGE_FILE_THRESHOLD_BYTES && processingTimeMs > 0) {
+        smallText += ' | Processed in ' + formatProcessingTime(processingTimeMs);
+    }
+    
+    downloadDescription.innerHTML = descriptionHTML + '<small>' + smallText + '</small>';
 
     incrementImageCounter();
     checkAchievements(actualOriginalSize, newSize);
 }
 
-function showBulkDownload(processingTimeMs = 0) {
+function showBulkDownload(processingTimeMs) {
     const downloadSection = document.getElementById('downloadSection');
     const downloadTitle = document.getElementById('downloadTitle');
     const downloadDescription = document.getElementById('downloadDescription');
@@ -491,8 +578,8 @@ function showBulkDownload(processingTimeMs = 0) {
     const processingTimeStatDesktop = document.getElementById('processingTimeStatDesktop');
     const processingTimeDesktop = document.getElementById('processingTimeDesktop');
 
-    const totalOriginalSize = processedImages.reduce((sum, img) => sum + img.originalSize, 0);
-    const totalNewSize = processedImages.reduce((sum, img) => sum + img.blob.size, 0);
+    const totalOriginalSize = processedImages.reduce(function(sum, img) { return sum + img.originalSize; }, 0);
+    const totalNewSize = processedImages.reduce(function(sum, img) { return sum + img.blob.size; }, 0);
     const totalReduction = totalOriginalSize ? Math.round((1 - totalNewSize / totalOriginalSize) * 100) : 0;
 
     downloadTitle.textContent = 'Images Processed Successfully!';
@@ -502,10 +589,10 @@ function showBulkDownload(processingTimeMs = 0) {
     bulkDownload.style.display = 'block';
     
     processedCount.textContent = processedImages.length;
-    totalSaved.textContent = `${totalReduction}%`;
+    totalSaved.textContent = totalReduction + '%';
     zipSize.textContent = formatFileSize(totalNewSize);
     
-    const shouldShowTime = totalOriginalSize > 5 * 1024 * 1024 || processedImages.length > 10;
+    const shouldShowTime = totalOriginalSize > CONFIG.LARGE_FILE_THRESHOLD_BYTES || processedImages.length > 10;
     
     if (shouldShowTime && processingTimeMs > 0) {
         processingTimeStatDesktop.style.display = 'block';
@@ -519,25 +606,6 @@ function showBulkDownload(processingTimeMs = 0) {
     for (let i = 0; i < processedImages.length; i++) {
         incrementImageCounter();
     }
-}
-
-function formatProcessingTime(ms) {
-    if (ms < 1000) {
-        return `${ms}ms`;
-    } else if (ms < 60000) {
-        return `${(ms / 1000).toFixed(1)}s`;
-    } else {
-        const minutes = Math.floor(ms / 60000);
-        const seconds = Math.floor((ms % 60000) / 1000);
-        return `${minutes}m ${seconds}s`;
-    }
-}
-
-function yieldToMainThread() {
-    if (typeof requestAnimationFrame === 'function') {
-        return new Promise(resolve => requestAnimationFrame(resolve));
-    }
-    return new Promise(resolve => setTimeout(resolve, 16));
 }
 
 async function downloadZip() {
@@ -558,7 +626,7 @@ async function downloadZip() {
         const url = URL.createObjectURL(zipBlob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `pixscaler_resized_${Date.now()}.zip`;
+        a.download = 'pixscaler_resized_' + Date.now() + '.zip';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -569,29 +637,6 @@ async function downloadZip() {
     } catch (error) {
         showError('Failed to create ZIP: ' + error.message);
     }
-}
-
-function generateFileName(originalName, width, height, format) {
-    const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '');
-    const extension = format === 'jpeg' ? 'jpg' : format;
-    return `${nameWithoutExt}_${width}x${height}.${extension}`;
-}
-
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-function formatTime(ms) {
-    if (ms < 1000) return 'Less than a second';
-    const seconds = Math.floor(ms / 1000);
-    if (seconds < 60) return `${seconds} seconds`;
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}m ${remainingSeconds}s`;
 }
 
 function showLoading() {
@@ -605,7 +650,7 @@ function hideLoading() {
 }
 
 function showError(message) {
-    showDonationToast(`⚠️ ${message}`);
+    showDonationToast('⚠️ ' + message);
 }
 
 function resetUpload() {
@@ -615,7 +660,7 @@ function resetUpload() {
     processingCancelled = false;
     
     try {
-        document.querySelectorAll('a[href^="blob:"]').forEach(link => {
+        document.querySelectorAll('a[href^="blob:"]').forEach(function(link) {
             URL.revokeObjectURL(link.href);
         });
         
@@ -640,13 +685,15 @@ function resetUpload() {
     document.getElementById('fileInput').value = '';
     document.getElementById('width').value = '';
     document.getElementById('height').value = '';
+    
     const qualitySlider = document.getElementById('quality');
-    qualitySlider.value = 85;
-    qualitySlider.style.setProperty('--value', '85%');
-    document.getElementById('qualityValue').textContent = '85%';
+    qualitySlider.value = CONFIG.DEFAULT_QUALITY;
+    qualitySlider.style.setProperty('--value', CONFIG.DEFAULT_QUALITY + '%');
+    document.getElementById('qualityValue').textContent = CONFIG.DEFAULT_QUALITY + '%';
     
     document.getElementById('uploadText').textContent = 'Drag & drop your images here';
     
+    // Hint for garbage collection
     if (window.gc) {
         window.gc();
     }
@@ -692,11 +739,14 @@ function setupSmartDropZone() {
         
         const files = Array.from(e.dataTransfer.files);
         if (files.length > 0) {
-            const imageFiles = files.filter(file => file.type.startsWith('image/'));
+            // Use proper file type checking that handles HEIC
+            const imageFiles = files.filter(function(file) { 
+                return isSupportedImageFile(file); 
+            });
             if (imageFiles.length > 0) {
                 processFileSelection(imageFiles);
             } else {
-                showError('Please drop image files (JPEG, PNG, WebP, GIF)');
+                showError('Please drop image files (JPEG, PNG, WebP, GIF, HEIC)');
             }
         }
     });
@@ -768,18 +818,16 @@ function toggleKeyboardHelp() {
     } else {
         const help = document.createElement('div');
         help.className = 'keyboard-shortcuts show';
-        help.innerHTML = `
-            <h4>⌨️ Keyboard Shortcuts</h4>
-            <div class="shortcut"><span>Ctrl + O</span><span>Upload Images</span></div>
-            <div class="shortcut"><span>Ctrl + Enter</span><span>Process Images</span></div>
-            <div class="shortcut"><span>Ctrl + R</span><span>Reset</span></div>
-            <div class="shortcut"><span>Escape</span><span>Cancel Processing</span></div>
-            <div class="shortcut"><span>1-4</span><span>Quick Presets</span></div>
-            <div class="shortcut"><span>?</span><span>Toggle Help</span></div>
-        `;
+        help.innerHTML = '<h4>⌨️ Keyboard Shortcuts</h4>' +
+            '<div class="shortcut"><span>Ctrl + O</span><span>Upload Images</span></div>' +
+            '<div class="shortcut"><span>Ctrl + Enter</span><span>Process Images</span></div>' +
+            '<div class="shortcut"><span>Ctrl + R</span><span>Reset</span></div>' +
+            '<div class="shortcut"><span>Escape</span><span>Cancel Processing</span></div>' +
+            '<div class="shortcut"><span>1-4</span><span>Quick Presets</span></div>' +
+            '<div class="shortcut"><span>?</span><span>Toggle Help</span></div>';
         document.body.appendChild(help);
         
-        setTimeout(() => {
+        setTimeout(function() {
             if (help.parentNode) {
                 help.parentNode.removeChild(help);
             }
@@ -790,15 +838,13 @@ function toggleKeyboardHelp() {
 function showAchievement(icon, text, detail) {
     const achievement = document.createElement('div');
     achievement.className = 'achievement-popup';
-    achievement.innerHTML = `
-        <span class="achievement-icon">${icon}</span>
-        <div class="achievement-text">${text}</div>
-        <div class="achievement-detail">${detail}</div>
-    `;
+    achievement.innerHTML = '<span class="achievement-icon">' + icon + '</span>' +
+        '<div class="achievement-text">' + text + '</div>' +
+        '<div class="achievement-detail">' + detail + '</div>';
     
     document.body.appendChild(achievement);
     
-    setTimeout(() => {
+    setTimeout(function() {
         if (achievement.parentNode) {
             achievement.parentNode.removeChild(achievement);
         }
@@ -809,9 +855,9 @@ function checkAchievements(originalSize, newSize) {
     const reduction = originalSize ? Math.round((1 - newSize / originalSize) * 100) : 0;
     
     if (reduction >= 50) {
-        showAchievement('🏆', 'Space Saver!', `${reduction}% size reduction achieved`);
+        showAchievement('🏆', 'Space Saver!', reduction + '% size reduction achieved');
     } else if (reduction >= 25) {
-        showAchievement('💾', 'Efficient!', `${reduction}% smaller file size`);
+        showAchievement('💾', 'Efficient!', reduction + '% smaller file size');
     }
     
     const totalProcessed = loadImageCounter();
@@ -825,17 +871,17 @@ function checkAchievements(originalSize, newSize) {
 }
 
 function fallbackShare(text, url) {
-    const fullText = `${text} ${url}`;
-    navigator.clipboard.writeText(fullText).then(() => {
+    const fullText = text + ' ' + url;
+    navigator.clipboard.writeText(fullText).then(function() {
         showDonationToast('Share text copied to clipboard! 📋');
         
-        setTimeout(() => {
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-            const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        setTimeout(function() {
+            const twitterUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+            const linkedinUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url);
             
-            showDonationToast(`Share on: <a href="${twitterUrl}" target="_blank" style="color: #1da1f2;">Twitter</a> | <a href="${linkedinUrl}" target="_blank" style="color: #0077b5;">LinkedIn</a>`);
+            showDonationToast('Share on: <a href="' + twitterUrl + '" target="_blank" style="color: #1da1f2;">Twitter</a> | <a href="' + linkedinUrl + '" target="_blank" style="color: #0077b5;">LinkedIn</a>');
         }, 2000);
-    }).catch(() => {
+    }).catch(function() {
         showDonationToast('Unable to copy to clipboard 😅');
     });
 }
@@ -869,7 +915,7 @@ function incrementImageCounter() {
         updateSocialProof();
         
         if (newCount === 10 || newCount === 50 || newCount === 100 || newCount % 500 === 0) {
-            showAchievement('🎉', `${newCount} Images Processed!`, 'You\'re becoming a pro!');
+            showAchievement('🎉', newCount + ' Images Processed!', 'You\'re becoming a pro!');
         }
     } catch (error) {
         console.warn('Failed to increment image counter:', error);
@@ -878,12 +924,17 @@ function incrementImageCounter() {
 
 function setupScrollEffects() {
     window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5;
-        
-        const hero = document.querySelector('.hero');
-        if (hero) {
-            hero.style.transform = `translateY(${rate}px)`;
+        // Throttle scroll handler with requestAnimationFrame
+        if (!scrollTicking) {
+            requestAnimationFrame(function() {
+                const hero = document.querySelector('.hero');
+                if (hero) {
+                    const scrolled = window.pageYOffset;
+                    hero.style.transform = 'translateY(' + (scrolled * -0.5) + 'px)';
+                }
+                scrollTicking = false;
+            });
+            scrollTicking = true;
         }
     });
 }
@@ -893,7 +944,7 @@ function updateSocialProof() {
         const totalProcessed = loadImageCounter();
         
         if (totalProcessed > 0) {
-            document.title = `Pixscaler - ${totalProcessed.toLocaleString()} Images Processed`;
+            document.title = 'Pixscaler - ' + totalProcessed.toLocaleString() + ' Images Processed';
         }
     } catch (error) {
         console.warn('Failed to update social proof:', error);
@@ -920,19 +971,19 @@ function switchModal(fromModal, toModal) {
 }
 
 function copyAddress() {
-    navigator.clipboard.writeText(SOLANA_ADDRESS).then(() => {
+    navigator.clipboard.writeText(SOLANA_ADDRESS).then(function() {
         const copyBtn = document.querySelector('.copy-btn');
         const originalText = copyBtn.textContent;
         copyBtn.textContent = '✅';
         copyBtn.style.background = '#10b981';
         
-        setTimeout(() => {
+        setTimeout(function() {
             copyBtn.textContent = originalText;
             copyBtn.style.background = '';
         }, 2000);
         
         showDonationToast('Solana address copied! 🚀');
-    }).catch(() => {
+    }).catch(function() {
         showDonationToast('Failed to copy address 😅');
     });
 }
@@ -953,85 +1004,31 @@ function showDonationToast(message) {
     toast.className = 'donation-toast';
     toast.innerHTML = message;
     
-    toast.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 10000;
-        font-weight: 500;
-        animation: slideIn 0.3s ease-out;
-        max-width: 300px;
-        word-wrap: break-word;
-    `;
+    toast.style.cssText = 'position: fixed; top: 20px; right: 20px; ' +
+        'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); ' +
+        'color: white; padding: 12px 20px; border-radius: 8px; ' +
+        'box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10000; ' +
+        'font-weight: 500; animation: slideIn 0.3s ease-out; ' +
+        'max-width: 300px; word-wrap: break-word;';
     
     if (!document.querySelector('#toast-styles')) {
         const style = document.createElement('style');
         style.id = 'toast-styles';
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
+        style.textContent = '@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } } ' +
+            '@keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }';
         document.head.appendChild(style);
     }
     
     document.body.appendChild(toast);
     
-    setTimeout(() => {
+    setTimeout(function() {
         toast.style.animation = 'slideOut 0.3s ease-in';
-        setTimeout(() => {
+        setTimeout(function() {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
             }
         }, 300);
     }, 3000);
-}
-
-function isSupportedImageFile(file) {
-    const type = (file.type || '').toLowerCase();
-    if (SUPPORTED_MIME_TYPES.includes(type)) {
-        return true;
-    }
-    const name = (file.name || '').toLowerCase();
-    return SUPPORTED_EXTENSIONS.some(ext => name.endsWith(ext));
-}
-
-function isHeicFile(file) {
-    const type = (file.type || '').toLowerCase();
-    if (HEIC_MIME_TYPES.includes(type)) {
-        return true;
-    }
-    const name = (file.name || '').toLowerCase();
-    return name.endsWith('.heic') || name.endsWith('.heif');
-}
-
-async function convertHeicFile(file) {
-    if (typeof window.heic2any !== 'function') {
-        throw new Error('HEIC support not available. Please refresh the page.');
-    }
-    
-    const convertedBlob = await window.heic2any({
-        blob: file,
-        toType: 'image/jpeg',
-        quality: 0.9
-    });
-    
-    const newName = replaceExtension(file.name, 'jpg');
-    return new File([convertedBlob], newName, { type: 'image/jpeg', lastModified: Date.now() });
-}
-
-function replaceExtension(name, newExtension) {
-    return name.replace(/\.[^/.]+$/, '') + '.' + newExtension;
 }
 
 function shareProject() {
@@ -1043,7 +1040,7 @@ function shareProject() {
             title: 'Pixscaler - Professional Image Resizer',
             text: text,
             url: url
-        }).catch(() => {
+        }).catch(function() {
             fallbackShare(text, url);
         });
     } else {

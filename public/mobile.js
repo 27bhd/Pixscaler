@@ -4,30 +4,28 @@
  * https://www.linkedin.com/in/benchehida-abdelatif-97b377369/
  */
 
+// Use shared utilities
+const { 
+    CONFIG, 
+    isSupportedImageFile, 
+    isHeicFile, 
+    convertHeicFile, 
+    formatFileSize, 
+    formatProcessingTime,
+    generateFileName,
+    isIOS,
+    cleanupCanvas,
+    loadImageFromFile
+} = window.PixscalerUtils;
+
+// Donation address
 const SOLANA_ADDRESS = '5Ap6T93SRLFj9Urg7SWk1As5nNDunb6zEzyw8fpSUuHo';
 
-const SUPPORTED_MIME_TYPES = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/webp',
-    'image/gif',
-    'image/heic',
-    'image/heif'
-];
-
-const SUPPORTED_EXTENSIONS = ['.jpeg', '.jpg', '.png', '.webp', '.gif', '.heic', '.heif'];
-const HEIC_MIME_TYPES = ['image/heic', 'image/heif'];
-
+// Application state
 let selectedFiles = [];
 let processedImages = [];
 let isProcessing = false;
 let previewObjectUrl = null;
-
-function isIOS() {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}
 
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('fileInput');
@@ -74,8 +72,116 @@ document.addEventListener('DOMContentLoaded', function() {
     qualitySlider.addEventListener('input', function() {
         qualityValue.textContent = this.value + '%';
     });
-    
+
+    // Set up event listeners for buttons
+    setupEventListeners();
 });
+
+/**
+ * Set up all button event listeners
+ */
+function setupEventListeners() {
+    // Preset buttons
+    document.querySelectorAll('.preset-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const text = this.textContent;
+            const match = text.match(/(\d+)×(\d+)/);
+            if (match) {
+                setPreset(parseInt(match[1]), parseInt(match[2]));
+            }
+        });
+    });
+
+    // Process button
+    const processBtn = document.getElementById('processBtn');
+    if (processBtn) {
+        processBtn.addEventListener('click', processImages);
+    }
+
+    // Clear button
+    const clearBtn = document.querySelector('.clear-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearSelection);
+    }
+
+    // Cancel button  
+    const cancelBtn = document.querySelector('.cancel-btn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', cancelProcessing);
+    }
+
+    // New image button
+    const newImageBtn = document.querySelector('.new-image-btn');
+    if (newImageBtn) {
+        newImageBtn.addEventListener('click', resetUpload);
+    }
+
+    // Copy address button
+    const copyBtn = document.querySelector('.copy-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', copyAddress);
+    }
+
+    // Donation amount buttons
+    document.querySelectorAll('.amount-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const amount = parseFloat(this.textContent);
+            showDonationMessage(amount);
+        });
+    });
+
+    // Share button
+    const shareBtn = document.querySelector('.share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', shareApp);
+    }
+
+    // GitHub button
+    const githubBtn = document.querySelector('.github-btn');
+    if (githubBtn) {
+        githubBtn.addEventListener('click', openGitHub);
+    }
+
+    // LinkedIn/Hire button
+    const hireBtn = document.querySelector('.hire-btn');
+    if (hireBtn) {
+        hireBtn.addEventListener('click', openLinkedIn);
+    }
+
+    // Bottom nav buttons
+    document.querySelectorAll('.nav-btn').forEach(function(btn) {
+        const label = btn.querySelector('.nav-label');
+        if (label) {
+            const text = label.textContent.toLowerCase();
+            btn.addEventListener('click', function() {
+                if (text === 'about') {
+                    showAbout();
+                } else if (text === 'desktop') {
+                    showDesktopVersion();
+                } else if (text === 'support') {
+                    showSupport();
+                }
+            });
+        }
+    });
+
+    // Modal close buttons
+    document.querySelectorAll('.modal-close').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const modal = this.closest('.modal-overlay');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Close modal when clicking overlay
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.style.display = 'none';
+        }
+    });
+}
 
 function handleFileSelect(event) {
     const files = Array.from(event.target.files);
@@ -117,7 +223,9 @@ function handleDrop(event) {
     }
 }
 
-function showImageInfo(file = selectedFiles[0]) {
+function showImageInfo(file) {
+    if (!file) file = selectedFiles[0];
+    
     const imageInfo = document.getElementById('imageInfo');
     const fileCount = document.getElementById('fileCount');
     const totalSize = document.getElementById('totalSize');
@@ -169,13 +277,14 @@ function setPreset(width, height) {
     document.getElementById('width').value = width;
     document.getElementById('height').value = height;
     
+    // Visual feedback
     const presetBtns = document.querySelectorAll('.preset-btn');
-    presetBtns.forEach(btn => {
-        if (btn.textContent === `${width}×${height}`) {
+    presetBtns.forEach(function(btn) {
+        if (btn.textContent === width + '×' + height) {
             btn.style.background = 'rgba(102, 126, 234, 0.3)';
             btn.style.borderColor = '#667eea';
             btn.style.color = '#fff';
-            setTimeout(() => {
+            setTimeout(function() {
                 btn.style.background = '';
                 btn.style.borderColor = '';
                 btn.style.color = '';
@@ -198,6 +307,11 @@ async function processImages() {
         showToast('Please enter valid dimensions');
         return;
     }
+
+    if (width > CONFIG.MAX_DIMENSION_PX || height > CONFIG.MAX_DIMENSION_PX) {
+        showToast('Maximum dimensions are ' + CONFIG.MAX_DIMENSION_PX + 'x' + CONFIG.MAX_DIMENSION_PX + ' pixels');
+        return;
+    }
     
     isProcessing = true;
     showProgress();
@@ -208,7 +322,7 @@ async function processImages() {
     try {
         const file = selectedFiles[0];
         
-        updateProgress(0, 1, `Processing ${file.name}...`);
+        updateProgress(0, 1, 'Processing ' + file.name + '...');
         
         const processedImage = await processImage(file, width, height, quality, format);
         processedImages.push(processedImage);
@@ -220,7 +334,7 @@ async function processImages() {
         }
     } catch (error) {
         console.error('Processing error:', error);
-        showToast('Error processing images. Please try again.');
+        showToast('Error processing image. Please try again.');
     } finally {
         isProcessing = false;
         hideProgress();
@@ -235,7 +349,7 @@ async function processImage(file, width, height, quality, format) {
     
     const img = await loadImageFromFile(workingFile);
     
-    return new Promise((resolve, reject) => {
+    return new Promise(function(resolve, reject) {
         try {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -247,8 +361,11 @@ async function processImage(file, width, height, quality, format) {
             ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, width, height);
             
-            const mimeType = `image/${format}`;
-            canvas.toBlob((blob) => {
+            const mimeType = 'image/' + format;
+            canvas.toBlob(function(blob) {
+                // Clean up canvas to free memory
+                cleanupCanvas(canvas, ctx);
+                
                 if (!blob) {
                     reject(new Error('Failed to process image'));
                     return;
@@ -256,15 +373,15 @@ async function processImage(file, width, height, quality, format) {
                 
                 const originalName = file.name.replace(/\.[^/.]+$/, '');
                 const extension = format === 'jpeg' ? 'jpg' : format;
-                const newName = `${originalName}_${width}x${height}.${extension}`;
+                const newName = originalName + '_' + width + 'x' + height + '.' + extension;
                 
                 resolve({
-                    blob,
+                    blob: blob,
                     name: newName,
                     originalSize: file.size,
                     newSize: blob.size,
-                    width,
-                    height
+                    width: width,
+                    height: height
                 });
             }, mimeType, format === 'png' ? undefined : quality);
         } catch (error) {
@@ -299,7 +416,7 @@ function cancelProcessing() {
     showToast('Processing cancelled.');
 }
 
-function showResults(processingTimeMs = 0) {
+function showResults(processingTimeMs) {
     const resultsSection = document.getElementById('resultsSection');
     const singleResult = document.getElementById('singleResult');
     
@@ -315,21 +432,9 @@ function showResults(processingTimeMs = 0) {
     previewObjectUrl = URL.createObjectURL(processedImages[0].blob);
     previewImage.src = previewObjectUrl;
     
-    downloadBtn.onclick = () => {
+    downloadBtn.onclick = function() {
         downloadFile(processedImages[0].blob, processedImages[0].name);
     };
-}
-
-function formatProcessingTime(ms) {
-    if (ms < 1000) {
-        return `${ms}ms`;
-    } else if (ms < 60000) {
-        return `${(ms / 1000).toFixed(1)}s`;
-    } else {
-        const minutes = Math.floor(ms / 60000);
-        const seconds = Math.floor((ms % 60000) / 1000);
-        return `${minutes}m ${seconds}s`;
-    }
 }
 
 function hideResults() {
@@ -361,10 +466,10 @@ function downloadFileIOS(blob, filename) {
                 navigator.share({
                     files: [file],
                     title: filename,
-                    text: `Download ${filename} from Pixscaler`
-                }).then(() => {
+                    text: 'Download ' + filename + ' from Pixscaler'
+                }).then(function() {
                     showToast('✅ Choose "Save to Files" to download your image!');
-                }).catch((error) => {
+                }).catch(function(error) {
                     if (error.name !== 'AbortError') {
                         showToast('Download ready! Check your Files app or try again.');
                     }
@@ -373,6 +478,7 @@ function downloadFileIOS(blob, filename) {
             }
         }
         
+        // Fallback for older iOS or unsupported browsers
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -421,9 +527,9 @@ function showSupport() {
 
 function copyAddress() {
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(SOLANA_ADDRESS).then(() => {
+        navigator.clipboard.writeText(SOLANA_ADDRESS).then(function() {
             showToast('Address copied to clipboard!');
-        }).catch(() => {
+        }).catch(function() {
             fallbackCopy(SOLANA_ADDRESS);
         });
     } else {
@@ -451,76 +557,18 @@ function fallbackCopy(text) {
     document.body.removeChild(textArea);
 }
 
-function isSupportedImageFile(file) {
-    const type = (file.type || '').toLowerCase();
-    if (SUPPORTED_MIME_TYPES.includes(type)) {
-        return true;
-    }
-    const name = (file.name || '').toLowerCase();
-    return SUPPORTED_EXTENSIONS.some(ext => name.endsWith(ext));
-}
-
-function isHeicFile(file) {
-    const type = (file.type || '').toLowerCase();
-    if (HEIC_MIME_TYPES.includes(type)) {
-        return true;
-    }
-    const name = (file.name || '').toLowerCase();
-    return name.endsWith('.heic') || name.endsWith('.heif');
-}
-
-async function convertHeicFile(file) {
-    if (typeof window.heic2any !== 'function') {
-        throw new Error('HEIC support not available. Please refresh and try again.');
-    }
-    
-    const convertedBlob = await window.heic2any({
-        blob: file,
-        toType: 'image/jpeg',
-        quality: 0.9
-    });
-    
-    const newName = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
-    return new File([convertedBlob], newName, { type: 'image/jpeg', lastModified: Date.now() });
-}
-
-function loadImageFromFile(file) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        let url = '';
-        
-        img.onload = function() {
-            URL.revokeObjectURL(url);
-            resolve(img);
-        };
-        
-        img.onerror = function() {
-            URL.revokeObjectURL(url);
-            reject(new Error('Failed to load image. Please try another file.'));
-        };
-        
-        url = URL.createObjectURL(file);
-        img.src = url;
-    });
-}
-
-function formatFileSize(bytes) {
-    if (!bytes) return '0 B';
-    const units = ['B', 'KB', 'MB', 'GB'];
-    const idx = Math.floor(Math.log(bytes) / Math.log(1024));
-    return `${(bytes / Math.pow(1024, idx)).toFixed(1)} ${units[idx]}`;
-}
-
 function shareApp() {
     if (navigator.share) {
         navigator.share({
             title: 'Pixscaler - Mobile Image Resizer',
             text: 'Check out this awesome image resizer tool!',
             url: window.location.href
-        }).catch(console.error);
+        }).catch(function(err) {
+            console.error('Share error:', err);
+        });
     } else {
         if (navigator.clipboard) {
-            navigator.clipboard.writeText(window.location.href).then(() => {
+            navigator.clipboard.writeText(window.location.href).then(function() {
                 showToast('Link copied to clipboard!');
             });
         }
@@ -536,39 +584,22 @@ function openLinkedIn() {
 }
 
 function showDonationMessage(amount) {
-    showToast(`Please send ${amount} SOL to the address above. Thank you for your support! 🙏`);
+    showToast('Please send ' + amount + ' SOL to the address above. Thank you for your support! 🙏');
 }
 
 function showToast(message) {
     const toast = document.createElement('div');
-    toast.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        z-index: 10000;
-        max-width: 80%;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    `;
+    toast.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); ' +
+        'background: rgba(0, 0, 0, 0.9); color: white; padding: 1rem 1.5rem; border-radius: 8px; ' +
+        'font-size: 0.9rem; z-index: 10000; max-width: 80%; text-align: center; ' +
+        'box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);';
     toast.textContent = message;
     
     document.body.appendChild(toast);
     
-    setTimeout(() => {
+    setTimeout(function() {
         if (document.body.contains(toast)) {
             document.body.removeChild(toast);
         }
     }, 3000);
 }
-
-document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('modal-overlay')) {
-        event.target.style.display = 'none';
-    }
-});
