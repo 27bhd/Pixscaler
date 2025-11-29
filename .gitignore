@@ -17,4 +17,10 @@ build/
 .idea/
 *.swp
 *.swo
-*~ 
+*~
+
+# Railway deployment files (legacy - no longer used)
+Procfile
+railway.json
+.railwayignore
+.railway/ 
