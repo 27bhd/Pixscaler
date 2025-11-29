@@ -1,16 +1,32 @@
 {
-  "name": "Pixscaler",
+  "name": "Pixscaler - Free Image Resizer",
   "short_name": "Pixscaler",
-  "description": "Professional image resizing tool by Benchehida Abdelatif",
-  "start_url": "./",
+  "description": "Free online image resizer. Resize, compress, and convert images privately in your browser.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#0a0a0a",
   "theme_color": "#6366f1",
+  "categories": ["photo", "utilities", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Resize Image",
+      "short_name": "Resize",
+      "description": "Upload and resize an image",
+      "url": "/",
+      "icons": [{"src": "android-chrome-192x192.png", "sizes": "192x192"}]
     }
   ]
 }

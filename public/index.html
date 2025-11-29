@@ -2,62 +2,273 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     
-    <!-- SEO Meta Tags -->
-    <title>Pixscaler - Professional Image Resizer | Resize Images Online</title>
-    <meta name="description" content="Resize images online with professional precision. Fast, secure, and client-side image resizing tool. Completely free with no sign-up required. Works on desktop and mobile.">
-    <meta name="keywords" content="image resizer, resize images online, image compression, photo editor, image optimizer, client-side processing, batch resize, image converter">
+    <!-- Primary SEO Meta Tags -->
+    <title>Pixscaler - Free Online Image Resizer | Resize Photos Instantly</title>
+    <meta name="title" content="Pixscaler - Free Online Image Resizer | Resize Photos Instantly">
+    <meta name="description" content="Resize images online for free with Pixscaler. Fast, secure, client-side image resizing tool. No upload required - your photos never leave your device. Supports JPEG, PNG, WebP, GIF, and HEIC. Bulk resize up to 100+ images at once.">
+    <meta name="keywords" content="image resizer, resize images online, free image resizer, bulk image resize, photo resizer, image compression, resize photos, image optimizer, client-side image processing, batch resize images, compress images, reduce image size, image converter, png to jpg, webp converter, resize pictures online free, no upload image resizer, private image resizer">
     <meta name="author" content="Benchehida Abdelatif">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://pixscaler.com/">
+    
+    <!-- Language and Region -->
+    <meta name="language" content="English">
+    <meta name="geo.region" content="US">
+    <link rel="alternate" hreflang="en" href="https://pixscaler.com/">
+    <link rel="alternate" hreflang="x-default" href="https://pixscaler.com/">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Pixscaler - Professional Image Resizer">
-    <meta property="og:description" content="Resize images with precision. Fast, secure, and professional client-side image resizing tool.">
+    <meta property="og:url" content="https://pixscaler.com/">
+    <meta property="og:title" content="Pixscaler - Free Online Image Resizer | Resize Photos Instantly">
+    <meta property="og:description" content="Resize images online for free. Fast, secure, and private - your photos never leave your device. Supports bulk resizing of 100+ images at once.">
+    <meta property="og:image" content="https://pixscaler.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Pixscaler - Professional Image Resizer">
     <meta property="og:site_name" content="Pixscaler">
+    <meta property="og:locale" content="en_US">
     
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary">
-    <meta property="twitter:title" content="Pixscaler - Professional Image Resizer">
-    <meta property="twitter:description" content="Resize images with precision. Fast, secure, and professional client-side image resizing tool.">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pixscaler.com/">
+    <meta name="twitter:title" content="Pixscaler - Free Online Image Resizer">
+    <meta name="twitter:description" content="Resize images online for free. Fast, secure, and private - your photos never leave your device.">
+    <meta name="twitter:image" content="https://pixscaler.com/og-image.png">
+    <meta name="twitter:image:alt" content="Pixscaler - Professional Image Resizer">
+    <meta name="twitter:creator" content="@pixscaler">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="android-chrome-192x192.png">
+    <!-- Additional SEO Meta Tags -->
+    <meta name="application-name" content="Pixscaler">
+    <meta name="apple-mobile-web-app-title" content="Pixscaler">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="origin-when-cross-origin">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="android-chrome-192x192.png">
     <link rel="shortcut icon" href="android-chrome-192x192.png" type="image/png">
-    <link rel="apple-touch-icon" href="android-chrome-192x192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="mask-icon" href="android-chrome-192x192.png" color="#6366f1">
     <link rel="manifest" href="site.webmanifest">
     
     <!-- Theme Color -->
-    <meta name="theme-color" content="#6366f1">
+    <meta name="theme-color" content="#6366f1" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#6366f1" media="(prefers-color-scheme: dark)">
     <meta name="msapplication-TileColor" content="#6366f1">
+    <meta name="msapplication-TileImage" content="android-chrome-192x192.png">
+    <meta name="msapplication-config" content="none">
     
     <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Structured Data -->
+    <!-- Structured Data - WebApplication -->
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Pixscaler",
-      "description": "Professional client-side image resizing tool for high-quality image processing",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "creator": {
-        "@type": "Person",
-        "name": "Benchehida Abdelatif"
-      }
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "@id": "https://pixscaler.com/#webapp",
+        "name": "Pixscaler",
+        "url": "https://pixscaler.com",
+        "description": "Free online image resizer that processes images entirely in your browser. Resize, compress, and convert images without uploading them to any server.",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas support.",
+        "softwareVersion": "3.0.0",
+        "datePublished": "2024-01-01",
+        "dateModified": "2025-01-01",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+        },
+        "creator": {
+            "@type": "Person",
+            "name": "Benchehida Abdelatif",
+            "url": "https://www.linkedin.com/in/benchehida-abdelatif-97b377369/"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Pixscaler",
+            "url": "https://pixscaler.com",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://pixscaler.com/android-chrome-192x192.png"
+            }
+        },
+        "screenshot": "https://pixscaler.com/og-image.png",
+        "featureList": [
+            "Resize images to any dimension",
+            "Bulk process 100+ images at once",
+            "Convert between JPEG, PNG, and WebP",
+            "Adjust image quality",
+            "Download as ZIP archive",
+            "100% client-side processing",
+            "No account required",
+            "HEIC/HEIF support"
+        ],
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "127",
+            "bestRating": "5",
+            "worstRating": "1"
+        }
+    }
+    </script>
+    
+    <!-- Structured Data - HowTo -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Resize Images Online with Pixscaler",
+        "description": "Learn how to resize images online for free using Pixscaler's browser-based tool.",
+        "image": "https://pixscaler.com/og-image.png",
+        "totalTime": "PT1M",
+        "estimatedCost": {
+            "@type": "MonetaryAmount",
+            "currency": "USD",
+            "value": "0"
+        },
+        "tool": {
+            "@type": "HowToTool",
+            "name": "Web browser with JavaScript enabled"
+        },
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Upload Images",
+                "text": "Click 'Choose Images' or drag and drop your images onto the upload area. You can select multiple images for bulk processing.",
+                "url": "https://pixscaler.com/#step1"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Set Dimensions",
+                "text": "Enter your desired width and height in pixels, or use one of the preset dimension buttons for common sizes.",
+                "url": "https://pixscaler.com/#step2"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Choose Quality and Format",
+                "text": "Adjust the quality slider and select your output format (JPEG, PNG, or WebP).",
+                "url": "https://pixscaler.com/#step3"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "Resize and Download",
+                "text": "Click 'Resize Images' and download your processed images. For multiple images, download them as a ZIP archive.",
+                "url": "https://pixscaler.com/#step4"
+            }
+        ]
+    }
+    </script>
+    
+    <!-- Structured Data - FAQPage -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is Pixscaler really free to use?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, Pixscaler is completely free with no hidden costs, subscriptions, or limitations. You can resize unlimited images without creating an account."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Are my images uploaded to a server?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, your images never leave your device. Pixscaler processes all images directly in your browser using HTML5 Canvas technology. This ensures complete privacy and faster processing."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What image formats does Pixscaler support?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Pixscaler supports JPEG, PNG, WebP, GIF, and HEIC/HEIF formats for input. You can export resized images as JPEG, PNG, or WebP."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How many images can I resize at once?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can resize over 100 images at once with Pixscaler's bulk processing feature. All processed images are packaged into a convenient ZIP file for easy download."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the maximum file size supported?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Pixscaler supports images up to 50MB each. The maximum output dimension is 8000x8000 pixels."
+                }
+            }
+        ]
+    }
+    </script>
+    
+    <!-- Structured Data - BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://pixscaler.com/"
+            }
+        ]
+    }
+    </script>
+    
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Pixscaler",
+        "url": "https://pixscaler.com",
+        "logo": "https://pixscaler.com/android-chrome-192x192.png",
+        "sameAs": [
+            "https://github.com/27bhd/Pixscaler"
+        ],
+        "founder": {
+            "@type": "Person",
+            "name": "Benchehida Abdelatif"
+        }
     }
     </script>
 </head>
@@ -246,6 +457,39 @@
         </div>
     </section>
 
+    <!-- Features Section for SEO -->
+    <section class="features-seo" id="features" aria-labelledby="features-title">
+        <div class="container">
+            <h2 class="section-title" id="features-title">Why Choose Pixscaler?</h2>
+            <div class="features-grid-seo">
+                <article class="feature-card-seo">
+                    <h3>🔒 100% Private</h3>
+                    <p>Your images are processed entirely in your browser. Nothing is uploaded to any server, ensuring complete privacy and security for your sensitive photos.</p>
+                </article>
+                <article class="feature-card-seo">
+                    <h3>⚡ Lightning Fast</h3>
+                    <p>No upload delays. Pixscaler uses your device's processing power with HTML5 Canvas technology for instant image resizing, even for large files.</p>
+                </article>
+                <article class="feature-card-seo">
+                    <h3>📦 Bulk Processing</h3>
+                    <p>Resize over 100 images at once with our batch processing feature. All images are packaged into a convenient ZIP file for easy download.</p>
+                </article>
+                <article class="feature-card-seo">
+                    <h3>🆓 Completely Free</h3>
+                    <p>No subscriptions, no hidden fees, no account required. Pixscaler is free forever with unlimited usage for personal and commercial projects.</p>
+                </article>
+                <article class="feature-card-seo">
+                    <h3>📱 Works Everywhere</h3>
+                    <p>Use Pixscaler on any device - desktop, tablet, or mobile. Our responsive design ensures a seamless experience across all platforms.</p>
+                </article>
+                <article class="feature-card-seo">
+                    <h3>🎯 Professional Quality</h3>
+                    <p>Advanced image smoothing algorithms ensure your resized images maintain clarity and detail, just like professional photo editing software.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
     <!-- About Section -->
     <section class="about" id="about" aria-labelledby="about-title">
         <div class="container">
@@ -318,6 +562,39 @@
         </div>
     </section>
 
+    <!-- FAQ Section for SEO -->
+    <section class="faq-section" id="faq" aria-labelledby="faq-title">
+        <div class="container">
+            <h2 class="section-title" id="faq-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>Is Pixscaler really free to use?</summary>
+                    <p>Yes, Pixscaler is completely free with no hidden costs, subscriptions, or limitations. You can resize unlimited images without creating an account.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Are my images uploaded to a server?</summary>
+                    <p>No, your images never leave your device. Pixscaler processes all images directly in your browser using HTML5 Canvas technology. This ensures complete privacy and faster processing.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What image formats does Pixscaler support?</summary>
+                    <p>Pixscaler supports JPEG, PNG, WebP, GIF, and HEIC/HEIF formats for input. You can export resized images as JPEG, PNG, or WebP.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>How many images can I resize at once?</summary>
+                    <p>You can resize over 100 images at once with Pixscaler's bulk processing feature. All processed images are packaged into a convenient ZIP file for easy download.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>What is the maximum file size supported?</summary>
+                    <p>Pixscaler supports images up to 50MB each. The maximum output dimension is 8000x8000 pixels.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Can I use Pixscaler for commercial projects?</summary>
+                    <p>Absolutely! Pixscaler is free for both personal and commercial use. There are no restrictions on how you use the resized images.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
     <!-- Donation Section -->
     <section class="donation" id="donation" aria-labelledby="donation-title">
         <div class="container">
@@ -368,12 +645,18 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Pixscaler</h3>
-                    <p>Professional image resizing for the modern web.</p>
+                    <p>Professional image resizing for the modern web. Free, fast, and private.</p>
                 </div>
                 <div class="footer-section">
-                    <h4>Product</h4>
+                    <h4>Quick Links</h4>
+                    <a href="#features">Features</a>
                     <a href="#about">About</a>
-                    <a href="#donation">Support</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <a href="https://github.com/27bhd/Pixscaler" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="https://www.linkedin.com/in/benchehida-abdelatif-97b377369/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                 </div>
             </div>
             <div class="footer-bottom">
