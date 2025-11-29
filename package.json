@@ -1,0 +1,28 @@
+{
+  "name": "pixscaler",
+  "version": "3.0.0",
+  "description": "Free client-side image resizer - no uploads, complete privacy",
+  "main": "public/index.html",
+  "scripts": {
+    "dev": "npx serve public -p 3000",
+    "build": "echo 'No build step required - static files ready for deployment'"
+  },
+  "keywords": [
+    "image-resizer",
+    "client-side",
+    "free",
+    "privacy",
+    "canvas",
+    "javascript",
+    "static",
+    "no-upload",
+    "pwa"
+  ],
+  "author": "Benchehida Abdelatif",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/27bhd/Pixscaler.git"
+  },
+  "homepage": "https://pixscaler.com"
+}

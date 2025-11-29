@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    
+    <!-- SEO Meta Tags -->
+    <title>Pixscaler - Professional Image Resizer | Resize Images Online</title>
+    <meta name="description" content="Resize images online with professional precision. Fast, secure, and client-side image resizing tool. Completely free with no sign-up required. Works on desktop and mobile.">
+    <meta name="keywords" content="image resizer, resize images online, image compression, photo editor, image optimizer, client-side processing, batch resize, image converter">
+    <meta name="author" content="Benchehida Abdelatif">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pixscaler - Professional Image Resizer">
+    <meta property="og:description" content="Resize images with precision. Fast, secure, and professional client-side image resizing tool.">
+    <meta property="og:site_name" content="Pixscaler">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary">
+    <meta property="twitter:title" content="Pixscaler - Professional Image Resizer">
+    <meta property="twitter:description" content="Resize images with precision. Fast, secure, and professional client-side image resizing tool.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="android-chrome-192x192.png">
+    <link rel="shortcut icon" href="android-chrome-192x192.png" type="image/png">
+    <link rel="apple-touch-icon" href="android-chrome-192x192.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Pixscaler",
+      "description": "Professional client-side image resizing tool for high-quality image processing",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "Benchehida Abdelatif"
+      }
+    }
+    </script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Pixscaler</h1>
+                <div class="tagline">Professional Image Resizing</div>
+            </div>
+            <div class="nav-center">
+                <div class="nav-links">
+                    <a href="#about">About</a>
+                    <a href="#donation" class="donate-link">☕ Support</a>
+                </div>
+            </div>
+            <div class="nav-badges">
+                <span class="nav-badge free-badge">✨ Free Forever</span>
+                <span class="nav-badge privacy-badge">🔒 Private</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Resize Images Like a Pro</h1>
+            <p class="hero-subtitle">Transform your images with professional precision. Fast, secure, and high-quality resizing for creators, developers, and businesses.</p>
+            
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea" role="button" tabindex="0">
+                <div class="upload-icon">🖼️</div>
+                <p id="uploadText">Drag & drop your images here</p>
+                <div class="upload-or">or</div>
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    Choose Images
+                </button>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                <div class="upload-info">
+                    <small>Support for JPEG, PNG, WebP, GIF • Single or multiple files • Up to 50MB each</small>
+                </div>
+            </div>
+
+            <!-- Bulk Processing Info -->
+            <div class="bulk-info" id="bulkInfo" style="display: none;" aria-live="polite">
+                <div class="bulk-stats">
+                    <span id="fileCount">0</span> images selected
+                    <span class="separator">•</span>
+                    <span id="totalSize">0 MB</span> total
+                </div>
+                <div class="bulk-actions">
+                    <button class="clear-btn" type="button" aria-label="Clear all selected images" onclick="clearSelection()">Clear All</button>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls" id="controls" style="display: none;">
+                <div class="controls-header">
+                    <h3 id="controlsTitle">📐 Image Settings</h3>
+                    <div class="mode-indicator" id="modeIndicator"></div>
+                </div>
+                
+                <div class="controls-grid">
+                    <div class="control-group dimensions">
+                        <div class="control-row">
+                            <div class="input-group">
+                                <label>Width:</label>
+                                <input type="number" id="width" placeholder="800">
+                                <span>px</span>
+                            </div>
+                            <div class="input-group">
+                                <label>Height:</label>
+                                <input type="number" id="height" placeholder="600">
+                                <span>px</span>
+                            </div>
+                        </div>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="setPreset(1920, 1080)">1920×1080</button>
+                            <button class="preset-btn" onclick="setPreset(1280, 720)">1280×720</button>
+                            <button class="preset-btn" onclick="setPreset(800, 600)">800×600</button>
+                            <button class="preset-btn" onclick="setPreset(400, 400)">400×400</button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group settings">
+                        <div class="input-group quality-group">
+                            <label>Quality:</label>
+                            <input type="range" id="quality" min="1" max="100" value="85">
+                            <span id="qualityValue">85%</span>
+                        </div>
+                        <div class="format-options">
+                            <input type="radio" id="jpeg" name="format" value="jpeg" checked>
+                            <label for="jpeg">JPEG</label>
+                            <input type="radio" id="png" name="format" value="png">
+                            <label for="png">PNG</label>
+                            <input type="radio" id="webp" name="format" value="webp">
+                            <label for="webp">WebP</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="resize-btn" id="resizeBtn" onclick="processImages()">
+                    ✨ <span id="resizeBtnText">Resize Images</span>
+                </button>
+            </div>
+
+            <!-- Bulk Progress -->
+            <div class="bulk-progress" id="bulkProgress" style="display: none;">
+                <div class="progress-header">
+                    <h3>Processing Images...</h3>
+                    <button class="cancel-btn" onclick="cancelProcessing()">Cancel</button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="progressText">Processing 0 of 0 images...</span>
+                    <span id="progressTime">Estimated time: calculating...</span>
+                </div>
+                <div class="progress-details" id="progressDetails"></div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing your image with professional precision...</p>
+            </div>
+
+            <!-- Preview -->
+            <div class="preview-section" id="preview" style="display: none;">
+                <h3>Preview</h3>
+                <img id="previewImage" alt="Resized image preview">
+            </div>
+
+            <!-- Download -->
+            <div class="download-section" id="downloadSection" style="display: none;">
+                <div class="success-icon">✅</div>
+                <h3 id="downloadTitle">Images Processed Successfully!</h3>
+                <p id="downloadDescription">Your images have been processed with professional optimization.</p>
+                
+                <!-- Single Image Download -->
+                <div class="single-download" id="singleDownload" style="display: none;">
+                    <a href="#" class="download-btn" id="downloadBtn" download>
+                        📥 Download Image
+                    </a>
+                </div>
+                
+                <!-- Bulk Download -->
+                <div class="bulk-download" id="bulkDownload" style="display: none;">
+                    <div class="download-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="processedCount">0</span>
+                            <span class="stat-label">Images Processed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalSaved">0%</span>
+                            <span class="stat-label">Size Reduction</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="zipSize">0 MB</span>
+                            <span class="stat-label">ZIP Size</span>
+                        </div>
+                        <div class="stat-item" id="processingTimeStatDesktop" style="display: none;">
+                            <span class="stat-number" id="processingTimeDesktop">0s</span>
+                            <span class="stat-label">Processing Time</span>
+                        </div>
+                    </div>
+                    <button class="download-zip-btn" id="downloadZipBtn" onclick="downloadZip()">
+                        📦 Download ZIP Archive
+                    </button>
+                    <div class="zip-info">
+                        <small>All images with original names + dimensions (e.g., photo_800x600.jpg)</small>
+                    </div>
+                </div>
+                
+                <button class="new-image-btn" onclick="resetUpload()">
+                    🔄 Process More Images
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">About Pixscaler</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Pixscaler was built to solve a common problem: the need for fast, reliable image resizing without compromising quality. As a full-stack developer with experience in building scalable web applications, I understand the importance of having the right tools for the job.</p>
+                    
+                    <p>This tool combines modern web technologies with efficient image processing to deliver professional-grade resizing that works seamlessly across all devices. Whether you're optimizing images for your website, preparing assets for an application, or creating content for social media, Pixscaler provides the precision and speed you need.</p>
+                    
+                    <p>Built with modern HTML5 Canvas API and JavaScript, Pixscaler processes images entirely in your browser with exceptional quality. Your images never leave your device, ensuring complete privacy and security.</p>
+                    
+                    <p>The goal is simple: provide a fast, reliable, and user-friendly image resizing tool that developers and creators can depend on.</p>
+                    
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <span class="feature-emoji">🚀</span>
+                            <div>
+                                <h4>Fast Processing</h4>
+                                <p>Optimized with HTML5 Canvas for instant client-side processing</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-emoji">🎯</span>
+                            <div>
+                                <h4>High Quality Output</h4>
+                                <p>Professional-grade resizing maintains image clarity and detail</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-emoji">🔒</span>
+                            <div>
+                                <h4>Complete Privacy</h4>
+                                <p>Images processed entirely in your browser - never uploaded anywhere</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-emoji">📱</span>
+                            <div>
+                                <h4>Cross-Platform</h4>
+                                <p>Works seamlessly on desktop, tablet, and mobile devices</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-stack">
+                        <h4>Built With</h4>
+                        <div class="tech-items">
+                            <span class="tech-item">HTML5 Canvas</span>
+                            <span class="tech-item">JavaScript</span>
+                            <span class="tech-item">CSS3</span>
+                            <span class="tech-item">Client-Side</span>
+                            <span class="tech-item">Privacy-First</span>
+                            <span class="tech-item">PWA Ready</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="developer-card">
+                    <div class="developer-avatar">👨‍💻</div>
+                    <h3>Benchehida Abdelatif</h3>
+                    <p>Full-Stack Developer</p>
+                    <p>"Building efficient web applications with modern technologies."</p>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/benchehida-abdelatif-97b377369/" class="social-link" target="_blank">LinkedIn</a>
+                        <a href="https://github.com/27bhd" class="social-link" target="_blank">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Section -->
+    <section class="donation" id="donation">
+        <div class="container">
+            <div class="donation-content">
+                <div class="donation-header">
+                    <h2><span class="emoji">☕</span> Support the Project</h2>
+                    <p>If this tool saves you time and effort, consider supporting the developer!</p>
+                </div>
+                
+                <div class="crypto-card">
+                    <div class="crypto-header">
+                        <div class="crypto-icon">💰</div>
+                        <h3>Solana (SOL)</h3>
+                    </div>
+                    <div class="wallet-address">
+                        <code id="solanaAddress">5Ap6T93SRLFj9Urg7SWk1As5nNDunb6zEzyw8fpSUuHo</code>
+                        <button class="copy-btn" onclick="copyAddress()">📋 Copy</button>
+                    </div>
+                    <div class="donation-amounts">
+                        <div class="amount-label">Quick amounts:</div>
+                        <div class="amount-buttons">
+                            <button class="amount-btn" onclick="showDonationMessage(0.1)">0.1 SOL</button>
+                            <button class="amount-btn" onclick="showDonationMessage(0.25)">0.25 SOL</button>
+                            <button class="amount-btn" onclick="showDonationMessage(0.05)">0.05 SOL</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="donation-note">
+                    <p>🙏 Every contribution helps maintain and improve this free tool for everyone!</p>
+                </div>
+                
+                <div class="donation-alternatives">
+                    <h4>🌟 Other Ways to Support</h4>
+                    <div class="alt-support">
+                        <span onclick="shareProject()">📢 Share this tool</span>
+                        <span onclick="window.open('https://github.com/27bhd/Pixscaler', '_blank')">⭐ Star on GitHub</span>
+                        <span onclick="window.open('https://www.linkedin.com/in/benchehida-abdelatif-97b377369/', '_blank')">💼 Connect on LinkedIn</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Pixscaler</h3>
+                    <p>Professional image resizing for the modern web.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <a href="#about">About</a>
+                    <a href="#donation">Support</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Pixscaler. Built by <a href="https://www.linkedin.com/in/benchehida-abdelatif-97b377369/" target="_blank">Benchehida Abdelatif</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="dragAnnounce" class="sr-only" aria-live="polite"></div>
+
+    <!-- Mobile Detection Script -->
+    <script>
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                   (window.innerWidth <= 768 && window.innerHeight <= 1024);
+        }
+        
+        const forceDesktop = localStorage.getItem('forceDesktop') === 'true';
+        
+        if (isMobileDevice() && !forceDesktop && !window.location.href.includes('mobile.html')) {
+            window.location.href = 'mobile.html';
+        }
+    </script>
+    
+    <script src="vendor/jszip.min.js" defer></script>
+    <script src="vendor/heic2any.min.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+</html>
