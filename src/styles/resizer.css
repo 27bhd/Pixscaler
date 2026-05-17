@@ -1,0 +1,344 @@
+/* =============================================================
+   Pixscaler — Resizer Component Styles
+   ============================================================= */
+
+/* ── Resizer wrapper ───────────────────────────────────────── */
+.resizer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* ── Settings bar (appears after upload) ──────────────────── */
+.resizer__settings-bar {
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.settings-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.settings-row--dim {
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 110px;
+}
+
+.settings-field--wide { flex: 1; min-width: 180px; }
+
+.settings-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.settings-label--block {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.dim-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+}
+
+.dim-sep {
+  font-size: 0.9rem;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+
+.settings-privacy {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  border-top: 1px solid var(--surface-border);
+  padding-top: 0.5rem;
+  margin-top: 0.1rem;
+}
+
+.resizer__input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--border-radius-sm);
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background-color: var(--surface-card);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  -moz-appearance: textfield;
+}
+
+.resizer__input::-webkit-outer-spin-button,
+.resizer__input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.resizer__input:focus {
+  outline: none;
+  border-color: var(--color-medium-teal);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-medium-teal) 20%, transparent);
+}
+
+.resizer__input--dim {
+  width: 100px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.resizer__input--readonly {
+  opacity: 0.88;
+  cursor: default;
+  background-color: color-mix(in srgb, var(--surface-card) 85%, var(--surface-border));
+}
+
+.resizer__select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--border-radius-sm);
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background-color: var(--surface-card);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.resizer__select:focus {
+  outline: none;
+  border-color: var(--color-medium-teal);
+}
+
+.resizer__range {
+  width: 100%;
+  accent-color: var(--color-medium-teal);
+  cursor: pointer;
+}
+
+.resizer__lock {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  padding-bottom: 0.45rem;
+  transition: color var(--transition-fast);
+  gap: 0;
+}
+
+.resizer__lock input { display: none; }
+.resizer__lock:hover { color: var(--color-deep-teal); }
+.resizer__lock input:checked + svg { color: var(--color-deep-teal); }
+
+
+/* ── Dropzone ──────────────────────────────────────────────── */
+.resizer__dropzone {
+  border: 2px dashed var(--surface-border);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--surface-card);
+  cursor: pointer;
+  transition: border-color var(--transition-normal), background-color var(--transition-normal);
+  user-select: none;
+}
+
+/* Compact variant when files already exist */
+.resizer__dropzone--compact {
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--border-radius-md);
+}
+
+.resizer__dropzone--compact .resizer__dropzone-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.resizer__dropzone-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: left;
+}
+
+.resizer__dropzone:hover,
+.resizer__dropzone--active {
+  border-color: var(--color-medium-teal);
+  background-color: color-mix(in srgb, var(--color-mint-green) 6%, white);
+}
+
+.resizer__dropzone--active .resizer__dropzone-icon { color: var(--color-medium-teal); }
+
+.resizer__dropzone-icon {
+  color: var(--text-faint);
+  transition: color var(--transition-normal);
+  flex-shrink: 0;
+}
+
+.resizer__dropzone-text {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.resizer__dropzone-browse { color: var(--color-medium-teal); font-weight: 500; }
+
+.resizer__dropzone-sub { font-size: 0.78rem; color: var(--text-faint); margin-top: 0.1rem; }
+
+/* ── Actions bar ───────────────────────────────────────────── */
+.resizer__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--surface-card-alt);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--border-radius-md);
+}
+
+.resizer__status-summary { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.resizer__action-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.resizer__zip-error {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--color-error);
+  line-height: 1.45;
+}
+
+.resizer__tag--processing { background-color: color-mix(in srgb, #d4941a 20%, transparent); color: #7a5000; }
+.resizer__tag--done { background-color: color-mix(in srgb, var(--color-mint-green) 25%, transparent); color: var(--color-deep-teal); }
+.resizer__tag--error { background-color: color-mix(in srgb, var(--color-error) 15%, transparent); color: var(--color-error); }
+
+/* ── Empty state ───────────────────────────────────────────── */
+.resizer__empty {
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  padding: 1rem;
+}
+
+/* ── File list ─────────────────────────────────────────────── */
+.resizer__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── File row ──────────────────────────────────────────────── */
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--border-radius-md);
+  transition: border-color var(--transition-fast);
+}
+
+.file-row--done { border-left: 3px solid var(--color-mint-green); }
+.file-row--error { border-left: 3px solid var(--color-error); }
+.file-row--processing { border-left: 3px solid var(--color-medium-teal); }
+
+.file-row__thumb {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: var(--border-radius-sm);
+  flex-shrink: 0;
+  border: 1px solid var(--surface-border);
+  background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 0 0 / 10px 10px;
+}
+
+.file-row__info { flex: 1; min-width: 0; }
+
+.file-row__name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.2rem;
+}
+
+.file-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.file-row__size--compressed { color: var(--color-deep-teal); font-weight: 500; }
+.file-row__savings { color: var(--color-medium-teal); font-weight: 500; }
+.file-row__dims { color: var(--text-faint); }
+.file-row__arrow { color: var(--text-faint); }
+
+.file-row__error { font-size: 0.78rem; color: var(--color-error); margin-top: 0.2rem; }
+
+.file-row__badge-wrap { flex-shrink: 0; }
+
+.file-row__actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* ── Badges ────────────────────────────────────────────────── */
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background-color: var(--surface-border);
+  color: var(--text-muted);
+}
+
+.badge--processing { background: color-mix(in srgb, var(--color-medium-teal) 15%, transparent); color: var(--color-deep-teal); }
+.badge--done { background: color-mix(in srgb, var(--color-mint-green) 25%, transparent); color: var(--color-deep-teal); }
+.badge--error { background: color-mix(in srgb, var(--color-error) 12%, transparent); color: var(--color-error); }
+
+/* ── Small button variant ──────────────────────────────────── */
+.btn--sm {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+}
+
+/* ── Screen-reader only ────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

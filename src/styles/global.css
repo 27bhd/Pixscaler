@@ -1,0 +1,338 @@
+/* =============================================================
+   Pixscaler — Global Design System
+   Token source: docs/COLOUR_DIRECTION.md
+   ============================================================= */
+
+/* ── Google Font ───────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* ── Colour Tokens ─────────────────────────────────────────── */
+:root {
+  /* Brand palette */
+  --color-deep-teal:    #1F6F5F;
+  --color-medium-teal:  #2FA084;
+  --color-mint-green:   #6FCF97;
+  --color-soft-grey:    #EEEEEE;
+
+  /* Text hierarchy (docs: COLOUR_DIRECTION.md → Text direction) */
+  --text-primary:  #1c1c1a; /* Deep Charcoal — body copy & headings */
+  --text-muted:    #6b6b64; /* Stone Grey — sub-headings, helper text */
+  --text-faint:    #9a9a92; /* Soft Grey — timestamps, placeholders */
+
+  /* Surfaces */
+  --surface-base:      var(--color-soft-grey);
+  --surface-card:      #ffffff;
+  --surface-card-alt:  #f8f8f8;
+  --surface-border:    #d8d8d6;
+
+  /* Brand gradient */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-soft-grey)   0%,
+    var(--color-mint-green)  33%,
+    var(--color-medium-teal) 66%,
+    var(--color-deep-teal)   100%
+  );
+
+  /* Semantic statuses */
+  --color-success: var(--color-mint-green);
+  --color-error:   #e05555;
+  --color-warning: #d4941a;
+
+  /* Motion */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* Layout */
+  --max-width-content: 720px;
+  --max-width-wide:    1200px;
+  --border-radius-sm:  6px;
+  --border-radius-md:  12px;
+  --border-radius-lg:  20px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.07);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.13);
+}
+
+/* ── Reset & Base ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  background-color: var(--surface-base);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img,
+video,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--color-medium-teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-deep-teal);
+}
+
+/* ── Typography ────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(1.9rem, 5vw, 2.8rem); }
+h2 { font-size: clamp(1.4rem, 3.5vw, 2rem);  }
+h3 { font-size: clamp(1.1rem, 2.5vw, 1.4rem); }
+h4 { font-size: 1.1rem; }
+
+p {
+  max-width: 70ch;
+  color: var(--text-primary);
+}
+
+small,
+.text-faint {
+  font-size: 0.85rem;
+  color: var(--text-faint);
+}
+
+.text-muted { color: var(--text-muted); }
+
+/* ── Layout Utilities ──────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--max-width-wide);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.container--narrow {
+  max-width: var(--max-width-content);
+}
+
+main {
+  flex: 1;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.4rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn--primary {
+  background-color: var(--color-deep-teal);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background-color: var(--color-medium-teal);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.btn--secondary {
+  background-color: transparent;
+  color: var(--color-deep-teal);
+  border: 2px solid var(--color-deep-teal);
+}
+
+.btn--secondary:hover {
+  background-color: var(--color-deep-teal);
+  color: #fff;
+}
+
+.btn--ghost {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--surface-border);
+}
+
+.btn--ghost:hover {
+  background-color: var(--surface-card-alt);
+  color: var(--text-primary);
+}
+
+/* ── Cards ─────────────────────────────────────────────────── */
+.card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Tag Chips ─────────────────────────────────────────────── */
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--color-mint-green) 20%, transparent);
+  color: var(--color-deep-teal);
+}
+
+/* ── Prose (blog articles) ─────────────────────────────────── */
+.prose {
+  max-width: var(--max-width-content);
+}
+
+.prose h2 { margin-top: 2.5rem; margin-bottom: 0.75rem; }
+.prose h3 { margin-top: 2rem;   margin-bottom: 0.5rem;  }
+
+.prose p  { margin-bottom: 1.25rem; }
+
+.prose ul,
+.prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose li { margin-bottom: 0.4rem; }
+
+.prose blockquote {
+  border-left: 4px solid var(--color-medium-teal);
+  padding-left: 1rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-block: 1.5rem;
+}
+
+.prose code {
+  font-size: 0.88em;
+  background-color: color-mix(in srgb, var(--color-mint-green) 15%, #fff);
+  color: var(--color-deep-teal);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+.prose pre {
+  background-color: #1c2320;
+  color: #e0f2ea;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  overflow-x: auto;
+  margin-block: 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+.prose a {
+  font-weight: 500;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.prose th {
+  background-color: var(--color-deep-teal);
+  color: #fff;
+  text-align: left;
+  padding: 0.6rem 0.9rem;
+}
+
+.prose td {
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.prose tr:last-child td { border-bottom: none; }
+.prose tr:nth-child(even) td { background-color: var(--surface-card-alt); }
+
+/* ── Gradient Hero Banner ──────────────────────────────────── */
+.hero-gradient {
+  background: var(--gradient-brand);
+  color: #fff;
+}
+
+/* ── Divider ───────────────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--surface-border);
+  margin-block: 2rem;
+}
+
+/* ── Focus Visible ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-medium-teal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Skip Link (a11y) ──────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--color-deep-teal);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.9rem;
+  z-index: 9999;
+}
+
+.skip-link:focus { top: 1rem; }
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .container { padding-inline: 1rem; }
+  h1 { font-size: 1.8rem; }
+}
