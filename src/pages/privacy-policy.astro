@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const lastUpdated = '17 May 2026';
+---
+
+<BaseLayout
+  title="Privacy Policy | Pixscaler"
+  description="How Pixscaler handles your data: image processing stays in your browser; the public site is served through Cloudflare."
+>
+  <article class="legal-page section">
+    <div class="container container--narrow prose">
+      <h1>Privacy Policy</h1>
+      <p class="legal-page__date">Last updated: {lastUpdated}</p>
+
+      <p>
+        This page describes what happens when you use the Pixscaler website. It is meant to be
+        plain and accurate. It is not personalised legal advice.
+      </p>
+
+      <h2>Image processing</h2>
+      <p>
+        Pixscaler resizes and compresses images <strong>in your browser</strong> using standard
+        web APIs (including Web Workers and canvas). Your image files are not uploaded to us for
+        processing, and we do not store them on our servers. Output files are created locally and
+        offered to you as downloads.
+      </p>
+
+      <h2>What we receive from you</h2>
+      <p>
+        We do not run accounts or logins on this site. We do not ask you to upload images to our
+        servers for the tool to work. We therefore do not receive the <em>contents</em> of the files
+        you process through the tool.
+      </p>
+
+      <h2>Hosting and delivery (Cloudflare)</h2>
+      <p>
+        The public website (HTML, scripts, and other static assets) is served through
+        <a href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a>,
+        which provides hosting and content delivery for the project. When you load a page, your
+        browser connects to Cloudflare’s network. Like any web host, Cloudflare processes technical
+        data needed to operate the service (for example IP address, request URL, and browser signals).
+        How Cloudflare handles that data is described in
+        <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">
+          Cloudflare’s privacy policy
+        </a>.
+      </p>
+
+      <h2>Analytics and advertising</h2>
+      <p>
+        On the <strong>production</strong> site we load <strong>Google AdSense</strong> using the
+        standard async script so <strong>Auto ads</strong> can run. Google decides which formats
+        appear and where they are placed on a page, within the options you configure in your AdSense
+        account. How Google uses data for advertising is described in
+        <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">
+          Google’s Advertising Policies
+        </a>
+        and related pages.
+      </p>
+      <p>
+        We do not load third-party visitor analytics scripts (such as Google Analytics) in our layout.
+      </p>
+      <p>
+        The site publishes an <code>ads.txt</code> file at the domain root listing authorized sellers
+        (including our AdSense publisher ID). That file supports transparency for programmatic buyers; the
+        script above is what can display ads.
+      </p>
+
+      <h2>Cookies</h2>
+      <p>
+        We do not set our own first-party cookies for analytics. <strong>Google</strong> may use
+        cookies and similar technologies when AdSense runs, as described in Google’s policies. Technical
+        cookies or similar mechanisms may also be used by Cloudflare or your browser as part of normal
+        HTTPS delivery; refer to Cloudflare’s documentation and your browser settings if you want to limit
+        those.
+      </p>
+
+      <h2>Links to other sites</h2>
+      <p>
+        This site links to external pages (for example GitHub). Those sites have their own policies
+        and may collect data when you visit them.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        We may update this policy when the site or our providers change. The date at the top shows
+        when it was last revised.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions or feedback about this policy are welcome via issues on the
+        <a href="https://github.com/27bhd/Pixscaler" target="_blank" rel="noopener noreferrer">
+          GitHub repository
+        </a>.
+      </p>
+
+      <hr class="divider" />
+      <p>
+        <a href="/">Back to Pixscaler →</a>
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .section { padding-block: 3.5rem; }
+  .legal-page__date { color: var(--text-faint); font-size: 0.85rem; margin-bottom: 2rem; }
+</style>

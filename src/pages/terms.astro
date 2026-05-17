@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const lastUpdated = '17 May 2026';
+---
+
+<BaseLayout
+  title="Terms of Service | Pixscaler"
+  description="Terms of use for the Pixscaler client-side image tool and website."
+>
+  <article class="legal-page section">
+    <div class="container container--narrow prose">
+      <h1>Terms of Service</h1>
+      <p class="legal-page__date">Last updated: {lastUpdated}</p>
+
+      <p>
+        By using the Pixscaler website, you agree to these terms. If you do not agree, please do not
+        use the site.
+      </p>
+
+      <h2>1. What Pixscaler is</h2>
+      <p>
+        Pixscaler is a free, open-source tool for resizing and compressing images in your browser.
+        Processing uses Web Workers and canvas APIs on your device. The image content you process is
+        not sent to us as part of that workflow.
+      </p>
+
+      <h2>2. Acceptable use</h2>
+      <p>
+        You may use Pixscaler only with images you have the right to process. You are responsible
+        for complying with copyright and other laws that apply to you.
+      </p>
+      <p>You agree not to:</p>
+      <ul>
+        <li>Use the site in a way that is unlawful or infringes someone else’s rights.</li>
+        <li>Attempt to disrupt the site or overload it (for example with abusive automated traffic).</li>
+      </ul>
+
+      <h2>3. No warranties</h2>
+      <p>
+        Pixscaler is provided <strong>as is</strong>, without warranties of any kind, to the fullest
+        extent allowed by law. We do not guarantee that output files will meet any third-party
+        requirement (size, format, dimensions), that every browser will support every feature, or
+        that the site will always be available.
+      </p>
+      <p>
+        Always verify results yourself before submitting files to government portals, employers,
+        shops, or other services.
+      </p>
+
+      <h2>4. Limitation of liability</h2>
+      <p>
+        To the maximum extent permitted by applicable law, the project maintainers and contributors
+        are not liable for any damages arising from your use of Pixscaler or this website, including
+        indirect or consequential damages or loss of data.
+      </p>
+
+      <h2>5. Hosting</h2>
+      <p>
+        The website is delivered through
+        <a href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a>.
+        Your use of the site is also subject to Cloudflare’s terms and policies where they apply to
+        visitors.
+      </p>
+
+      <h2>6. Open source</h2>
+      <p>
+        Source code is published on
+        <a href="https://github.com/27bhd/Pixscaler" target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+        under the MIT Licence. The exact grant of rights is in the <code>LICENSE</code> file in the
+        repository root. If you fork or reuse the code, read that file first.
+      </p>
+
+      <h2>7. Changes</h2>
+      <p>
+        We may update these terms. When we do, we will change the date at the top of this page.
+        Continued use of the site after an update means you accept the revised terms.
+      </p>
+
+      <hr class="divider" />
+      <p>
+        <a href="/">Back to Pixscaler →</a>
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .section { padding-block: 3.5rem; }
+  .legal-page__date { color: var(--text-faint); font-size: 0.85rem; margin-bottom: 2rem; }
+</style>
