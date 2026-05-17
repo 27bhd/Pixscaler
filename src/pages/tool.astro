@@ -1,0 +1,307 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ImageResizer from '../components/ImageResizer';
+---
+
+<BaseLayout
+  title="Free Image Resizer and Compressor — Pixscaler"
+  description="Compress, resize, and convert images to WebP or AVIF locally in your browser. Adjust quality and dimensions, batch-process up to 50 files, and download instantly. Your files never touch a server."
+>
+
+  <!-- ── Immediate tool entry: no distractions ── -->
+  <section class="tool-entry" aria-labelledby="tool-heading">
+    <div class="container">
+      <div class="tool-entry__header">
+        <h1 id="tool-heading" class="tool-entry__title">
+          Image resizer and compressor
+        </h1>
+        <p class="tool-entry__sub">
+          Drop images below. Set your format, quality, and optional dimensions. Download compressed files instantly.
+          Everything runs locally in your browser.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Resizer workspace ── -->
+  <section class="workspace section" aria-label="Image resizer workspace">
+    <div class="container">
+      <ImageResizer client:load />
+    </div>
+  </section>
+
+  <!-- ── SEO content + presets ── -->
+  <section class="tool-presets section" aria-labelledby="presets-heading">
+    <div class="container">
+      <h2 id="presets-heading" class="tool-presets__title">Platform presets</h2>
+      <p class="tool-presets__sub">
+        Open a pre-configured workspace with the exact dimensions and format for your platform.
+      </p>
+      <div class="preset-chips">
+        <a href="/resize/shopify-product-image" class="preset-chip">Shopify Product</a>
+        <a href="/resize/instagram-post" class="preset-chip">Instagram Post</a>
+        <a href="/resize/instagram-story" class="preset-chip">Instagram Story</a>
+        <a href="/resize/facebook-cover-photo" class="preset-chip">Facebook Cover</a>
+        <a href="/resize/youtube-thumbnail" class="preset-chip">YouTube Thumbnail</a>
+        <a href="/resize/passport-photo-online" class="preset-chip">Passport Photo</a>
+        <a href="/resize/linkedin-post" class="preset-chip">LinkedIn Post</a>
+        <a href="/resize/blog-featured-image" class="preset-chip">Blog Hero</a>
+        <a href="/resize/twitter-og-image" class="preset-chip">Twitter Card</a>
+        <a href="/resize" class="preset-chip preset-chip--all">All presets</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEO content block ── -->
+  <section class="seo-content section" aria-labelledby="seo-heading">
+    <div class="container">
+      <div class="seo-content__grid">
+
+        <article class="seo-block prose">
+          <h2 id="seo-heading">How Pixscaler compresses images</h2>
+          <p>
+            Most image compression tools upload your files to a remote server, process them there,
+            and send the result back. Pixscaler takes a different approach. When you drop a file
+            into the workspace above, the browser reads it directly using the File API. A Web Worker
+            running on your own hardware takes that data, renders the image onto an offscreen canvas,
+            applies the compression settings you chose, and exports the result as a Blob.
+            At no point does any image data travel over the internet.
+          </p>
+          <p>
+            This matters in three specific ways. First, your files stay private regardless of what
+            is in them. Passport scans, medical photos, confidential product mockups: none of them
+            leave your machine. Second, because there is no network round-trip, compression happens
+            as fast as your hardware allows. On a modern laptop, a batch of 30 high-resolution photos
+            typically completes in a few seconds. Third, the tool works offline. Once the page has
+            loaded, you can disconnect from the internet and the compressor still works.
+          </p>
+
+          <h3>Quality and file size</h3>
+          <p>
+            Use the quality slider for lossy formats (WebP, AVIF, JPEG). After compression, each row
+            shows the original size, the new size, and the output dimensions so you can judge whether
+            to raise or lower quality before downloading. If a portal or email client enforces a hard
+            file size limit, adjust dimensions and quality and re-run until the listed size meets your
+            requirement—there is no guaranteed single-click way to hit an exact byte cap for every image.
+          </p>
+
+          <h3>Converting images to WebP and AVIF</h3>
+          <p>
+            WebP and AVIF are the two modern image formats most worth using on the web right now.
+            WebP produces files roughly 25 to 35 percent smaller than JPEG at the same visual quality
+            and has universal browser support. AVIF compresses further than WebP, typically 45 to 55
+            percent smaller than JPEG, but takes slightly longer to encode.
+          </p>
+          <p>
+            Both formats are selectable in Pixscaler's format dropdown. For most web use cases, WebP
+            is the right default. Use AVIF for key images on pages where file size is a primary concern
+            and your audience is on modern browsers. Both formats support transparency, so either can
+            replace PNG files with alpha channels.
+          </p>
+
+          <h3>Resizing images to exact dimensions</h3>
+          <p>
+            When you enter <strong>both</strong> width and height, the output image is exactly that many
+            pixels wide and tall. If that does not match your source aspect ratio, the image is scaled
+            non-uniformly (stretched or squeezed) to fill the frame—useful when a platform expects a
+            fixed aspect ratio.
+          </p>
+          <p>
+            When you enter <strong>only width</strong> or <strong>only height</strong>, the aspect ratio
+            lock (on by default) keeps the other side proportional to your original. Turn the lock off
+            if you want the missing side to stay at the original pixel size instead.
+          </p>
+          <p>
+            For platform-specific dimension requirements, the preset pages at the top of this section
+            open the workspace with the correct width, height, and format. You drop the file, tune quality
+            if needed, and download the result.
+          </p>
+        </article>
+
+        <aside class="seo-content__aside">
+          <div class="card seo-aside-card">
+            <h3 class="seo-aside-card__title">When to use each format</h3>
+            <dl class="format-guide">
+              <dt>WebP</dt>
+              <dd>Best default for photos and graphics. Universal browser support. Supports transparency.</dd>
+              <dt>AVIF</dt>
+              <dd>Smallest files of any widely supported format. Slightly slower to encode. Modern browsers only.</dd>
+              <dt>JPEG</dt>
+              <dd>Use when a specific system requires JPEG. Most government portals and legacy upload forms.</dd>
+              <dt>PNG</dt>
+              <dd>Use for screenshots with sharp text, diagrams, or images that need lossless accuracy.</dd>
+            </dl>
+          </div>
+
+          <div class="card seo-aside-card" style="margin-top: 1rem;">
+            <h3 class="seo-aside-card__title">Ballpark sizes on the web</h3>
+            <p class="size-reference__intro">
+              Portals and best-practice guides often cite rough limits. Pixscaler does not auto-enforce them;
+              use the size readout after compressing and adjust quality or dimensions yourself.
+            </p>
+            <ul class="size-reference">
+              <li><span class="size-reference__name">Passport / visa photo</span><span class="size-reference__val">often under 200 KB</span></li>
+              <li><span class="size-reference__name">Blog hero image</span><span class="size-reference__val">often under 150 KB</span></li>
+              <li><span class="size-reference__name">Shopify product</span><span class="size-reference__val">often under 250 KB</span></li>
+              <li><span class="size-reference__name">Social media post</span><span class="size-reference__val">often under 300 KB</span></li>
+              <li><span class="size-reference__name">Email inline image</span><span class="size-reference__val">often under 100 KB</span></li>
+            </ul>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Privacy note ── -->
+  <section class="privacy-note section" aria-labelledby="privacy-note-heading">
+    <div class="container container--narrow">
+      <h2 id="privacy-note-heading">Your files never leave your computer</h2>
+      <p>
+        Pixscaler uses the browser's built-in Web Workers API to handle all compression and resizing
+        locally. There is no backend. When you close the tab, nothing about your images is retained
+        anywhere. This makes Pixscaler safe to use for sensitive documents including identity documents,
+        medical images, and confidential business assets.
+      </p>
+      <a href="/privacy-policy" class="btn btn--secondary" style="margin-top: 1rem;">
+        Read the privacy policy
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .section { padding-block: 3rem; }
+
+  /* ── Tool entry header ── */
+  .tool-entry {
+    padding-block: 2.5rem 1.5rem;
+    border-bottom: 1px solid var(--surface-border);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-mint-green) 10%, var(--surface-base)) 0%,
+      var(--surface-base) 55%
+    );
+  }
+
+  .tool-entry__title {
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .tool-entry__sub {
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 60ch;
+    line-height: 1.6;
+  }
+
+  /* ── Presets section ── */
+  .tool-presets { border-bottom: 1px solid var(--surface-border); }
+  .tool-presets__title { margin-bottom: 0.5rem; }
+  .tool-presets__sub { color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem; }
+
+  .preset-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+  .preset-chip {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 999px;
+    background-color: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .preset-chip:hover {
+    background-color: var(--color-deep-teal);
+    border-color: var(--color-deep-teal);
+    color: #fff;
+  }
+
+  .preset-chip--all {
+    background-color: color-mix(in srgb, var(--color-mint-green) 15%, transparent);
+    border-color: color-mix(in srgb, var(--color-mint-green) 55%, transparent);
+    color: var(--color-deep-teal);
+  }
+
+  /* ── SEO content ── */
+  .seo-content { background: var(--surface-card); border-block: 1px solid var(--surface-border); }
+
+  .seo-content__grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .seo-content__grid { grid-template-columns: 1fr; }
+    .seo-content__aside { display: none; }
+  }
+
+  /* ── Aside cards ── */
+  .seo-aside-card__title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .format-guide {
+    display: grid;
+    gap: 0;
+  }
+
+  .format-guide dt {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--color-deep-teal);
+    margin-top: 0.75rem;
+  }
+
+  .format-guide dd {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-left: 0;
+    line-height: 1.5;
+  }
+
+  .size-reference {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .size-reference li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  .size-reference li:last-child { border-bottom: none; }
+
+  .size-reference__name { color: var(--text-muted); }
+  .size-reference__val { font-weight: 600; color: var(--color-deep-teal); font-size: 0.8rem; }
+
+  .size-reference__intro {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  /* ── Privacy note ── */
+  .privacy-note { border-top: 1px solid var(--surface-border); }
+  .privacy-note h2 { margin-bottom: 1rem; }
+  .privacy-note p { color: var(--text-muted); max-width: 64ch; }
+</style>

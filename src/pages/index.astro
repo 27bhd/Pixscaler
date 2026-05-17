@@ -1,0 +1,338 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Pixscaler — Built by Benchehida Abdelatif"
+  description="Pixscaler is a free, open-source, 100% client-side image resizer and compressor. Built by Benchehida Abdelatif, a full-stack engineer from Algeria focused on fast, privacy-first tools."
+>
+  <!-- ── Hero ── -->
+  <section class="about-hero">
+    <div class="container container--narrow">
+      <div class="about-hero__inner">
+        <div class="about-hero__text">
+          <p class="about-hero__label">Open source project</p>
+          <h1 class="about-hero__title">
+            A tool built by someone who compresses images too.
+          </h1>
+          <p class="about-hero__sub">
+            Pixscaler started because most image tools either upload your files to a server,
+            require an account, or show you five pop-ups before you can download anything.
+            This one does none of that.
+          </p>
+          <div class="about-hero__actions">
+            <a href="/tool" class="btn btn--primary">Open the tool</a>
+            <a href="/blog" class="btn btn--ghost">Read the guides</a>
+          </div>
+        </div>
+        <div class="about-hero__profile">
+          <div class="profile-card">
+            <div class="profile-card__avatar-wrap">
+              <img
+                src="https://avatars.githubusercontent.com/u/143453540?v=4"
+                alt="Benchehida Abdelatif"
+                width="56"
+                height="56"
+                class="profile-card__avatar"
+              />
+            </div>
+            <h2 class="profile-card__name">Benchehida Abdelatif</h2>
+            <p class="profile-card__location">Mostaganem, Algeria</p>
+            <p class="profile-card__bio">
+              Full-stack engineer building SaaS platforms optimized for SEO and global
+              scale on the Cloudflare edge.
+            </p>
+            <div class="profile-card__links">
+              <a
+                href="https://github.com/27bhd/Pixscaler"
+                class="profile-card__link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://www.linkedin.com/in/beniverse/"
+                class="profile-card__link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about-hero__strip" aria-hidden="true"></div>
+  </section>
+
+  <!-- ── About the tool ── -->
+  <section class="about-section section" aria-labelledby="about-tool-heading">
+    <div class="container container--narrow">
+      <h2 id="about-tool-heading">What Pixscaler does</h2>
+      <p>
+        Pixscaler compresses, resizes, and converts images entirely inside your browser.
+        There is no server involved. When you drop a file into the workspace, the processing
+        runs inside a Web Worker on your own hardware. The compressed result is handed back
+        to you as a download. Nothing leaves your computer.
+      </p>
+      <p>
+        It supports batch processing, format conversion to WebP and AVIF, a quality slider with
+        before-and-after file sizes in the list, optional pixel dimensions, and platform presets for
+        common use cases like Shopify product images, Instagram posts, and passport photo portals.
+      </p>
+
+      <div class="feature-list">
+        <div class="feature-list__item">
+          <div class="feature-list__marker" aria-hidden="true"></div>
+          <div>
+            <strong>100% client-side.</strong> Web Workers handle all processing on your machine. No uploads, no cloud, no account.
+          </div>
+        </div>
+        <div class="feature-list__item">
+          <div class="feature-list__marker" aria-hidden="true"></div>
+          <div>
+            <strong>Quality control.</strong> Use the quality slider and compare the listed file sizes before and after compression.
+          </div>
+        </div>
+        <div class="feature-list__item">
+          <div class="feature-list__marker" aria-hidden="true"></div>
+          <div>
+            <strong>Modern formats.</strong> Convert to WebP or AVIF—many photos end up meaningfully smaller than a JPEG at the same visual quality, though the exact savings depends on the image content and settings you choose.
+          </div>
+        </div>
+        <div class="feature-list__item">
+          <div class="feature-list__marker" aria-hidden="true"></div>
+          <div>
+            <strong>Batch processing.</strong> Drop up to 50 files, compress them all, and download as a single ZIP.
+          </div>
+        </div>
+        <div class="feature-list__item">
+          <div class="feature-list__marker" aria-hidden="true"></div>
+          <div>
+            <strong>Platform presets.</strong> Pre-configured dimension and format settings for Shopify, Instagram, Facebook, YouTube, and more.
+          </div>
+        </div>
+        <div class="feature-list__item">
+          <div class="feature-list__marker" aria-hidden="true"></div>
+          <div>
+            <strong>Open source.</strong> The full codebase is public. Read it, fork it, or contribute.
+          </div>
+        </div>
+      </div>
+
+      <a href="/tool" class="btn btn--primary" style="margin-top: 1.5rem;">Open the resizer</a>
+    </div>
+  </section>
+
+  <!-- ── About the builder ── -->
+  <section class="builder-section section" aria-labelledby="builder-heading">
+    <div class="container container--narrow">
+      <h2 id="builder-heading">Who built this</h2>
+      <p>
+        My name is Benchehida Abdelatif. I am a full-stack engineer based in Mostaganem, Algeria.
+        I build high-performance SaaS platforms optimized for SEO and global scale, primarily
+        on the Cloudflare edge using serverless architecture (Hono, Workers, D1).
+      </p>
+      <p>
+        I built Pixscaler as a side project to solve a real problem I kept running into:
+        image compression tools that make you upload sensitive files to a third-party server
+        before you can get a smaller version back. The answer was straightforward. Run the
+        whole thing locally using the browser's canvas API and Web Workers.
+      </p>
+      <p>
+        My other work includes building Lervos (an AI-powered assistant), Utilido (an internal
+        tooling platform), and various client projects where I take complex requirements and
+        convert them into lightweight, fast applications that rank well and convert users.
+      </p>
+      <p>
+        If you want to collaborate on a project or have a role where edge-native engineering
+        and technical SEO matter, feel free to reach out.
+      </p>
+
+      <div class="builder-links">
+        <a
+          href="https://github.com/27bhd/Pixscaler"
+          class="btn btn--secondary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+        <a href="/privacy-policy" class="btn btn--ghost">Privacy policy</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section { padding-block: 4rem; }
+
+  /* ── About hero ── */
+  .about-hero {
+    padding-block: 4rem 0;
+    border-bottom: 1px solid var(--surface-border);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-mint-green) 10%, var(--surface-base)) 0%,
+      var(--surface-base) 65%
+    );
+  }
+
+  .about-hero__inner {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 3rem;
+    align-items: start;
+    padding-bottom: 3.5rem;
+  }
+
+  .about-hero__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-medium-teal);
+    margin-bottom: 1rem;
+  }
+
+  .about-hero__title {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+  }
+
+  .about-hero__sub {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    max-width: 56ch;
+    margin-bottom: 2rem;
+  }
+
+  .about-hero__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+  .about-hero__strip {
+    height: 4px;
+    background: var(--gradient-brand);
+    opacity: 0.65;
+    margin-top: 0;
+  }
+
+  /* ── Profile card ── */
+  .profile-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .profile-card__avatar-wrap { margin-bottom: 0.25rem; }
+
+  .profile-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: block;
+    object-fit: cover;
+    border: 2px solid var(--surface-border);
+  }
+
+  .profile-card__name {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .profile-card__location {
+    font-size: 0.8rem;
+    color: var(--text-faint);
+  }
+
+  .profile-card__bio {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  .profile-card__link {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-deep-teal);
+    text-decoration: none;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--color-deep-teal) 30%, transparent);
+    border-radius: 999px;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .profile-card__link:hover {
+    background-color: var(--color-deep-teal);
+    color: #fff;
+  }
+
+  .profile-card__links {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  /* ── About section ── */
+  .about-section { border-bottom: 1px solid var(--surface-border); }
+  .about-section p { color: var(--text-muted); margin-bottom: 1.1rem; }
+  .about-section h2 { margin-bottom: 1.25rem; }
+
+  /* ── Feature list ── */
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1.75rem;
+  }
+
+  .feature-list__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  .feature-list__marker {
+    flex-shrink: 0;
+    margin-top: 0.45rem;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-medium-teal);
+  }
+
+  .feature-list__item strong { color: var(--text-primary); }
+
+  /* ── Builder section ── */
+  .builder-section { background-color: var(--surface-card); border-block: 1px solid var(--surface-border); }
+  .builder-section h2 { margin-bottom: 1.25rem; }
+  .builder-section p { color: var(--text-muted); margin-bottom: 1.1rem; max-width: 66ch; }
+
+  .builder-links { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+
+  /* ── Responsive ── */
+  @media (max-width: 760px) {
+    .about-hero__inner {
+      grid-template-columns: 1fr;
+    }
+    .about-hero__profile { order: -1; }
+    .profile-card { flex-direction: row; align-items: center; flex-wrap: wrap; }
+    .profile-card__avatar-wrap { flex-shrink: 0; }
+  }
+</style>
