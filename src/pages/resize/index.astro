@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import presets from '../../data/presets.json';
+
+const grouped = presets.reduce<Record<string, typeof presets>>(
+  (acc, p) => {
+    acc[p.platform] = acc[p.platform] ?? [];
+    acc[p.platform].push(p);
+    return acc;
+  },
+  {},
+);
+
+---
+
+<BaseLayout
+  title="Image Resize Presets — Platform Dimensions for Social, Shopify, and More"
+  description="Choose a platform preset to open Pixscaler pre-configured with the exact image dimensions and format for Facebook, Instagram, Shopify, YouTube, and more."
+>
+  <section class="presets-index section">
+    <div class="container">
+      <header class="presets-index__header">
+        <h1 class="presets-index__title">Image resize presets</h1>
+        <p class="presets-index__sub">
+          Each preset opens the Pixscaler workspace pre-configured with the correct
+          dimensions and format for that platform.
+          Drop your image and download the result.
+        </p>
+      </header>
+
+      {Object.entries(grouped).map(([platform, items]) => (
+        <div class="preset-group">
+          <h2 class="preset-group__title">{platform}</h2>
+          <ul class="preset-grid" role="list">
+            {items.map((preset) => (
+              <li class="preset-item" role="listitem">
+                <a href={`/resize/${preset.slug}`} class="preset-item__link card">
+                  <div class="preset-item__header">
+                    <h3 class="preset-item__label">{preset.label}</h3>
+                    <span class="tag">{preset.format.toUpperCase()}</span>
+                  </div>
+                  <p class="preset-item__dims">{preset.width} × {preset.height} px</p>
+                  <p class="preset-item__desc">
+                    {preset.description.length > 90
+                      ? `${preset.description.slice(0, 90)}...`
+                      : preset.description}
+                  </p>
+                  <span class="preset-item__cta">Open preset →</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      <div class="presets-index__back">
+        <a href="/" class="btn btn--secondary">← Back to the tool</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section { padding-block: 3.5rem; }
+
+  .presets-index__header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--surface-border);
+    padding-bottom: 2rem;
+  }
+
+  .presets-index__title { margin-bottom: 0.75rem; }
+
+  .presets-index__sub {
+    color: var(--text-muted);
+    max-width: 60ch;
+  }
+
+  .preset-group { margin-bottom: 3rem; }
+
+  .preset-group__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  .preset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    list-style: none;
+  }
+
+  .preset-item__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    height: 100%;
+    transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .preset-item__link:hover {
+    border-color: var(--color-medium-teal);
+    box-shadow: var(--shadow-md);
+    color: var(--text-primary);
+  }
+
+  .preset-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .preset-item__label { font-size: 0.95rem; font-weight: 600; }
+
+  .preset-item__dims {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--color-medium-teal);
+  }
+
+  .preset-item__desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .preset-item__cta {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-deep-teal);
+    margin-top: 0.5rem;
+  }
+
+  .presets-index__back { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--surface-border); }
+</style>
