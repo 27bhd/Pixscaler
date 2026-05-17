@@ -1,0 +1,26 @@
+{
+  "output": {
+    "width": 1200,
+    "height": 630
+  },
+  "textBox": {
+    "x": 75,
+    "y": 198,
+    "width": 1049,
+    "height": 371,
+    "verticalAlign": "center"
+  },
+  "typography": {
+    "fontSize": 54,
+    "fontSizeMin": 24,
+    "lineHeight": 1.12,
+    "fill": "#1c1c1a",
+    "fontFamily": "Outfit",
+    "fontWeight": 700
+  },
+  "paths": {
+    "baseImage": "base.png",
+    "blogDir": "../../src/content/blog",
+    "outputDir": "../../public/og/blog"
+  }
+}

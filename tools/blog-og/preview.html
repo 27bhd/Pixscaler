@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog OG: text safe zone</title>
+  <style>
+    :root {
+      font-family: system-ui, sans-serif;
+      color: #1c1c1a;
+      background: #eee;
+    }
+    body { margin: 0; padding: 1rem; max-width: 1100px; margin-inline: auto; }
+    h1 { font-size: 1.15rem; margin-top: 0; }
+    p, li { font-size: 0.9rem; line-height: 1.5; color: #444; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin: 0.75rem 0; }
+    button {
+      font: inherit;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      border: 1px solid #1f6f5f;
+      background: #1f6f5f;
+      color: #fff;
+      cursor: pointer;
+    }
+    button.secondary { background: #fff; color: #1f6f5f; }
+    #wrap {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 1rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+    canvas { display: block; width: 100%; height: auto; vertical-align: top; cursor: crosshair; touch-action: none; }
+    pre {
+      background: #1c2320;
+      color: #e0f2ea;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 0.78rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .hint { font-size: 0.82rem; color: #666; }
+    code { background: #e8e8e4; padding: 0.1em 0.35em; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Blog Open Graph: define where title text may go</h1>
+  <p>
+    Internal canvas is always <strong>1200 × 630</strong> (same as generated PNGs). Load your template,
+    then <strong>click and drag</strong> a rectangle over the area where the blog title is allowed.
+    Download the JSON and merge <code>textBox</code> into <code>tools/blog-og/config.json</code>, or replace the whole file.
+  </p>
+  <ol class="hint">
+    <li>Save your artwork as <code>tools/blog-og/base.png</code> (or load it here first to check composition).</li>
+    <li>Draw the safe rectangle (green fill shows the allowed title region).</li>
+    <li>Download config JSON → copy <code>textBox</code> into <code>config.json</code>.</li>
+    <li>Run <code>npm run og:blog</code> from the repo root.</li>
+  </ol>
+
+  <div class="row">
+    <input type="file" id="file" accept="image/*" />
+    <button type="button" class="secondary" id="btnClear">Clear rectangle</button>
+    <button type="button" id="btnDownload">Download config.json</button>
+  </div>
+  <p class="hint" id="status">No image loaded.</p>
+
+  <div id="wrap">
+    <canvas id="c" width="1200" height="630"></canvas>
+  </div>
+
+  <p class="hint">Current <code>textBox</code> (pixels, origin top-left):</p>
+  <pre id="out">{"x":0,"y":0,"width":0,"height":0}</pre>
+
+  <script>
+    const OUT_W = 1200;
+    const OUT_H = 630;
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const file = document.getElementById('file');
+    const out = document.getElementById('out');
+    const status = document.getElementById('status');
+
+    const DEFAULT_TYPO = {
+      fontSize: 54,
+      fontSizeMin: 24,
+      lineHeight: 1.12,
+      fill: '#1c1c1a',
+      fontFamily: 'Outfit',
+      fontWeight: 700,
+    };
+
+    let bg = null;
+    let drag = null;
+    let rect = { x: 96, y: 200, width: 1008, height: 340 };
+
+    function draw() {
+      ctx.fillStyle = '#f4f4f2';
+      ctx.fillRect(0, 0, OUT_W, OUT_H);
+      if (bg) {
+        const scale = Math.max(OUT_W / bg.width, OUT_H / bg.height);
+        const w = bg.width * scale;
+        const h = bg.height * scale;
+        const dx = (OUT_W - w) / 2;
+        const dy = (OUT_H - h) / 2;
+        ctx.drawImage(bg, dx, dy, w, h);
+      }
+      ctx.fillStyle = 'rgba(46, 160, 132, 0.22)';
+      ctx.strokeStyle = 'rgba(31, 111, 95, 0.95)';
+      ctx.lineWidth = 3;
+      ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+      ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+      ctx.fillStyle = 'rgba(31, 111, 95, 0.9)';
+      ctx.font = '600 14px system-ui,sans-serif';
+      ctx.fillText('Title safe zone', rect.x + 8, rect.y + 22);
+      out.textContent = JSON.stringify({ textBox: rect }, null, 2);
+    }
+
+    function canvasCoords(ev) {
+      const r = canvas.getBoundingClientRect();
+      const sx = canvas.width / r.width;
+      const sy = canvas.height / r.height;
+      const x = (ev.clientX - r.left) * sx;
+      const y = (ev.clientY - r.top) * sy;
+      return {
+        x: Math.max(0, Math.min(OUT_W, x)),
+        y: Math.max(0, Math.min(OUT_H, y)),
+      };
+    }
+
+    canvas.addEventListener('pointerdown', (ev) => {
+      canvas.setPointerCapture(ev.pointerId);
+      drag = canvasCoords(ev);
+      rect = { x: drag.x, y: drag.y, width: 0, height: 0 };
+      draw();
+    });
+
+    canvas.addEventListener('pointermove', (ev) => {
+      if (!drag) return;
+      const p = canvasCoords(ev);
+      rect.x = Math.min(drag.x, p.x);
+      rect.y = Math.min(drag.y, p.y);
+      rect.width = Math.abs(p.x - drag.x);
+      rect.height = Math.abs(p.y - drag.y);
+      draw();
+    });
+
+    function endDrag() {
+      drag = null;
+      if (rect.width < 24 || rect.height < 24) {
+        status.textContent = 'Rectangle too small; drag a larger area.';
+      } else {
+        status.textContent = `textBox: ${Math.round(rect.x)}, ${Math.round(rect.y)}, ${Math.round(rect.width)}×${Math.round(rect.height)}`;
+      }
+    }
+
+    canvas.addEventListener('pointerup', endDrag);
+    canvas.addEventListener('pointercancel', endDrag);
+
+    file.addEventListener('change', () => {
+      const f = file.files && file.files[0];
+      if (!f) return;
+      const url = URL.createObjectURL(f);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        bg = img;
+        status.textContent = `Loaded: ${f.name} (${img.naturalWidth}×${img.naturalHeight}). Draw the title region.`;
+        draw();
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        status.textContent = 'Could not read image.';
+      };
+      img.src = url;
+    });
+
+    document.getElementById('btnClear').addEventListener('click', () => {
+      rect = { x: 96, y: 200, width: 1008, height: 340 };
+      status.textContent = 'Reset to starter rectangle.';
+      draw();
+    });
+
+    document.getElementById('btnDownload').addEventListener('click', () => {
+      const full = {
+        output: { width: OUT_W, height: OUT_H },
+        textBox: {
+          x: Math.round(rect.x),
+          y: Math.round(rect.y),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+          verticalAlign: 'center',
+        },
+        typography: DEFAULT_TYPO,
+        paths: {
+          baseImage: 'base.png',
+          blogDir: '../../src/content/blog',
+          outputDir: '../../public/og/blog',
+        },
+      };
+      const blob = new Blob([JSON.stringify(full, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'config.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    draw();
+  </script>
+</body>
+</html>
