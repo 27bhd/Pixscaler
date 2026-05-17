@@ -1,0 +1,44 @@
+---
+/**
+ * AdUnit.astro — intentionally not imported anywhere yet; reserved for future AdSense placement.
+ * Non-intrusive AdSense container.
+ * Policy: never placed over the dropzone or interstitial — only in sidebar
+ * or directly below the primary CTA per docs/writing/trust-naming-conversion.md.
+ */
+
+interface Props {
+  slot?: 'sidebar' | 'below-cta';
+  label?: string;
+}
+
+const { slot = 'sidebar', label = 'Advertisement' } = Astro.props;
+---
+
+<div class={`ad-unit ad-unit--${slot}`} aria-label={label}>
+  <!-- AdSense script will be added here once the site is approved -->
+  <!-- Placeholder keeps layout stable and prevents Cumulative Layout Shift -->
+  <p class="ad-unit__placeholder" aria-hidden="true">Ad</p>
+</div>
+
+<style>
+  .ad-unit {
+    background-color: color-mix(in srgb, var(--surface-border) 30%, transparent);
+    border: 1px dashed var(--surface-border);
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+    overflow: hidden;
+  }
+
+  .ad-unit--sidebar { width: 100%; max-width: 300px; }
+  .ad-unit--below-cta { width: 100%; max-width: 728px; min-height: 90px; margin-inline: auto; }
+
+  .ad-unit__placeholder {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+</style>
