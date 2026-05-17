@@ -1,0 +1,141 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+/** Structured data and byline: site owner (matches About page). */
+const articleAuthor = 'Benchehida Abdelatif';
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+const updatedLabel = post.data.updatedDate
+  ? ` · Updated ${formatDate(post.data.updatedDate)}`
+  : '';
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogImage={post.data.heroImage}
+  article={{
+    publishedTime: post.data.pubDate,
+    modifiedTime: post.data.updatedDate,
+    authorName: articleAuthor,
+  }}
+>
+  <article class="blog-post">
+    <header class="blog-post__header">
+      <div class="container container--narrow">
+        <div class="blog-post__meta">
+          <time datetime={post.data.pubDate.toISOString()} class="blog-post__date">
+            {formatDate(post.data.pubDate)}{updatedLabel}
+          </time>
+          <span class="blog-post__author">by {articleAuthor}</span>
+        </div>
+
+        <h1 class="blog-post__title">{post.data.title}</h1>
+        <p class="blog-post__desc">{post.data.description}</p>
+
+        {post.data.tags.length > 0 && (
+          <div class="blog-post__tags" aria-label="Tags">
+            {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+        )}
+      </div>
+    </header>
+
+    <div class="blog-post__body">
+      <div class="container">
+        <div class="prose blog-post__content">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    <footer class="blog-post__footer">
+      <div class="container container--narrow">
+        <hr class="divider" />
+        <div class="blog-post__footer-inner">
+          <a href="/blog" class="btn btn--ghost">← All articles</a>
+          <a href="/tool" class="btn btn--primary">Try Pixscaler →</a>
+        </div>
+      </div>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  /* ── Header ── */
+  .blog-post__header {
+    padding-block: 3.5rem 2.5rem;
+    border-bottom: 1px solid var(--surface-border);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-mint-green) 10%, var(--surface-base)) 0%,
+      var(--surface-base) 60%
+    );
+  }
+
+  .blog-post__meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+    color: var(--text-faint);
+  }
+
+  .blog-post__title {
+    margin-bottom: 0.85rem;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    line-height: 1.2;
+  }
+
+  .blog-post__desc {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 62ch;
+    margin-bottom: 1.25rem;
+  }
+
+  .blog-post__tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  /* ── Body layout ── */
+  .blog-post__body { padding-block: 3rem; }
+
+  .blog-post__layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .blog-post__layout { grid-template-columns: 1fr; }
+    .blog-post__sidebar { display: none; }
+  }
+
+  .blog-post__sidebar { position: sticky; top: 80px; }
+
+  /* ── Footer ── */
+  .blog-post__footer { padding-block: 2rem 3rem; }
+  .blog-post__footer-inner {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+</style>
