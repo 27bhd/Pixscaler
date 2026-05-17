@@ -1,26 +1,54 @@
+# ─── Astro ─────────────────────────────────────────────────────────
+dist/
+.astro/
+
+# ─── Dependencies ──────────────────────────────────────────────────
 node_modules/
+
+# ─── Logs ───────────────────────────────────────────────────────────
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.npm
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─── Environment (never commit secrets) ────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Testing / coverage ─────────────────────────────────────────────
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+blob-report/
+
+# ─── Caches & local tooling ─────────────────────────────────────────
+.cache/
+.turbo/
+.eslintcache
+*.tsbuildinfo
+.parcel-cache/
+
+# ─── Deploy / host (optional local state) ───────────────────────────
+.vercel/
+.netlify/
+
+# ─── OS ─────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
-*.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-dist/
-build/
-.vscode/
+ehthumbs.db
+Desktop.ini
+
+# ─── Editors (keep shared .vscode/*.json; ignore personal overrides) ─
 .idea/
 *.swp
 *.swo
 *~
 
-# Railway deployment files (legacy - no longer used)
-Procfile
-railway.json
-.railwayignore
-.railway/ 
+# User-specific VS Code / Cursor (machine-local)
+.vscode/settings.json
+!.vscode/settings.json.example
