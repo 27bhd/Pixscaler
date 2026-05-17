@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ImageResizer from '../components/ImageResizer';
+import presets from '../data/presets.json';
 ---
 
 <BaseLayout
@@ -38,15 +39,11 @@ import ImageResizer from '../components/ImageResizer';
         Open a pre-configured workspace with the exact dimensions and format for your platform.
       </p>
       <div class="preset-chips">
-        <a href="/resize/shopify-product-image" class="preset-chip">Shopify Product</a>
-        <a href="/resize/instagram-post" class="preset-chip">Instagram Post</a>
-        <a href="/resize/instagram-story" class="preset-chip">Instagram Story</a>
-        <a href="/resize/facebook-cover-photo" class="preset-chip">Facebook Cover</a>
-        <a href="/resize/youtube-thumbnail" class="preset-chip">YouTube Thumbnail</a>
-        <a href="/resize/passport-photo-online" class="preset-chip">Passport Photo</a>
-        <a href="/resize/linkedin-post" class="preset-chip">LinkedIn Post</a>
-        <a href="/resize/blog-featured-image" class="preset-chip">Blog Hero</a>
-        <a href="/resize/twitter-og-image" class="preset-chip">Twitter Card</a>
+        {presets.map((preset) => (
+          <a href={`/resize/${preset.slug}`} class="preset-chip">
+            {preset.label}
+          </a>
+        ))}
         <a href="/resize" class="preset-chip preset-chip--all">All presets</a>
       </div>
     </div>

@@ -20,14 +20,28 @@ interface Preset {
   platform: string;
   description: string;
   keywords: string;
+  explainerHeading?: string;
+  explainerParagraphs?: string[];
+  explainerBullets?: string[];
 }
 
 const { preset } = Astro.props as { preset: Preset };
+
+const metaSuffix = ` Pixscaler: ${preset.width}x${preset.height}px ${preset.format.toUpperCase()}, local in your browser.`;
+const maxMeta = 300;
+let metaDescription = `${preset.description.trim()}${metaSuffix}`;
+if (metaDescription.length > maxMeta) {
+  const budget = maxMeta - metaSuffix.length - 1;
+  let head = preset.description.trim().slice(0, Math.max(48, budget - 1)).trimEnd();
+  const sp = head.lastIndexOf(' ');
+  if (sp > 48) head = head.slice(0, sp);
+  metaDescription = `${head}…${metaSuffix}`;
+}
 ---
 
 <BaseLayout
-  title={`Resize Image for ${preset.label} | Pixscaler`}
-  description={`Free local tool to resize and compress images to the exact ${preset.label} dimensions (${preset.width}×${preset.height}px). Runs in your browser, no uploads needed.`}
+  title={`Resize image for ${preset.label} | Pixscaler`}
+  description={metaDescription}
 >
   <!-- ── Preset header ── -->
   <section class="preset-header">
@@ -70,31 +84,47 @@ const { preset } = Astro.props as { preset: Preset };
   <!-- ── Why this preset ── -->
   <section class="preset-explainer section">
     <div class="container container--narrow prose">
-      <h2>Why {preset.label} dimensions matter</h2>
-      <p>
-        When you upload an image to {preset.platform} that is the wrong size, the platform
-        either crops it automatically or stretches it to fill the frame. Both outcomes
-        reduce image quality and can make your content look unprofessional.
-      </p>
-      <p>
-        Using {preset.width} × {preset.height} pixels ensures your image fills the
-        display area correctly across desktop and mobile. The {preset.format.toUpperCase()}
-        format is recommended here because it offers a good balance of quality
-        and file size for this use case, keeping pages fast without visible compression
-        artefacts at normal viewing distances.
-      </p>
+      <h2>{preset.explainerHeading ?? `Why ${preset.label} dimensions matter`}</h2>
+      {preset.explainerParagraphs && preset.explainerParagraphs.length > 0 ? (
+        preset.explainerParagraphs.map((p) => <p>{p}</p>)
+      ) : (
+        <>
+          <p>
+            When you upload an image to {preset.platform} that is the wrong size, the platform
+            either crops it automatically or stretches it to fill the frame. Both outcomes
+            reduce image quality and can make your content look unprofessional.
+          </p>
+          <p>
+            Using {preset.width} x {preset.height} pixels helps your image fill the
+            display area correctly across desktop and mobile. The {preset.format.toUpperCase()}
+            format is a practical default here because it balances quality
+            and file size for this use case, keeping pages fast without obvious compression
+            artefacts at normal viewing distances.
+          </p>
+        </>
+      )}
       <h3>Tips before you upload</h3>
       <ul>
-        <li>Check that any text or key content sits inside the safe zone, away from edges that may be cropped on smaller screens.</li>
-        <li>The tool above outputs exactly {preset.width} × {preset.height} pixels. If your source photo has a different aspect ratio, it will be stretched or squeezed to fit that frame—plan your composition accordingly.</li>
-        <li>Use the quality slider and the before/after file sizes in the list to tune compression before you download.</li>
-        <li>After downloading, confirm the result looks correct before publishing.</li>
+        {preset.explainerBullets && preset.explainerBullets.length > 0 ? (
+          preset.explainerBullets.map((item) => <li>{item}</li>)
+        ) : (
+          <>
+            <li>Check that any text or key content sits inside the safe zone, away from edges that may be cropped on smaller screens.</li>
+            <li>The tool above outputs exactly {preset.width} x {preset.height} pixels. If your source photo has a different aspect ratio, it will be stretched or squeezed to fit that frame. Plan your composition accordingly.</li>
+            <li>Use the quality slider and the before/after file sizes in the list to tune compression before you download.</li>
+            <li>After downloading, confirm the result looks correct before publishing.</li>
+          </>
+        )}
       </ul>
       <p>
         All compression happens locally in your browser. Your image files never leave your computer.
       </p>
       <p>
-        <a href="/">Try more settings with the full Pixscaler workspace →</a>
+        <a href="/blog">Read image sizing guides on the blog</a>
+        {' · '}
+        <a href="/tool">Open the full resizer workspace</a>
+        {' · '}
+        <a href="/">About Pixscaler</a>
       </p>
     </div>
   </section>

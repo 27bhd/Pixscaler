@@ -11,6 +11,50 @@
     "keywords": "facebook cover photo size, facebook banner image dimensions"
   },
   {
+    "slug": "facebook-group-cover",
+    "label": "Facebook Group Cover",
+    "width": 1640,
+    "height": 856,
+    "aspectRatio": "1.91:1",
+    "format": "jpeg",
+    "platform": "Facebook",
+    "description": "Group cover art for Facebook communities. A 1640 x 856 pixel canvas matches the wide banner area groups use on desktop, with extra height compared to a standard Page cover.",
+    "keywords": "facebook group cover photo size, facebook group banner dimensions",
+    "explainerHeading": "Why Facebook group covers use a different frame than Page covers",
+    "explainerParagraphs": [
+      "Group headers sit in their own layout. Guides commonly recommend a 1640 x 856 pixel image so your artwork matches the wider, slightly taller banner area before Facebook crops it on phones.",
+      "If you upload a random aspect ratio, Facebook will centre-crop or letterbox. Exporting to this exact canvas keeps faces, logos, and headline text where you expect them on both desktop and mobile."
+    ],
+    "explainerBullets": [
+      "Keep text and logos in the central two thirds. Side crops are common on narrow screens.",
+      "This preset outputs exactly 1640 x 856. If your source is wider or taller, the tool scales to fill the frame. Plan composition before you compress.",
+      "JPEG at sensible quality keeps file size under typical upload limits. Check the byte readout after processing.",
+      "Compare with the Page cover preset if you manage both a Page and a Group so you export the right template for each surface."
+    ]
+  },
+  {
+    "slug": "facebook-event-cover",
+    "label": "Facebook Event Cover",
+    "width": 1920,
+    "height": 1005,
+    "aspectRatio": "1.91:1",
+    "format": "jpeg",
+    "platform": "Facebook",
+    "description": "Cover image for a Facebook event. A 1920 x 1005 pixel image matches the wide event header many teams design for, with room for date and venue text in the safe area.",
+    "keywords": "facebook event cover photo size, facebook event image dimensions",
+    "explainerHeading": "Why event covers need a predictable wide frame",
+    "explainerParagraphs": [
+      "Event pages stretch a single image behind the title block. A 1920 x 1005 pixel export is a common recommendation so your art stays sharp on large displays while still fitting the aspect ratio Facebook expects.",
+      "Mobile visitors see a tighter crop. Designing on this canvas, then keeping critical detail near the centre, reduces the chance that your headline or logo disappears behind overlays."
+    ],
+    "explainerBullets": [
+      "Avoid tiny type along the bottom edge. Facebook overlays event details there on some layouts.",
+      "Export JPEG, then use the quality slider until the file size feels reasonable for mobile attendees on slow connections.",
+      "After download, open the image at 100% zoom and read every line of text. If it feels soft, raise quality or simplify the layout.",
+      "If you also run a Page or Group, remember event covers are a separate size from those banners. Pick the preset that matches where you are publishing."
+    ]
+  },
+  {
     "slug": "instagram-post",
     "label": "Instagram Post (Square)",
     "width": 1080,
@@ -31,6 +75,50 @@
     "platform": "Instagram",
     "description": "Stories fill the full phone screen vertically. The recommended size is 1080 x 1920 pixels.",
     "keywords": "instagram story size, instagram story image dimensions"
+  },
+  {
+    "slug": "instagram-portrait-post",
+    "label": "Instagram Portrait Post (4:5)",
+    "width": 1080,
+    "height": 1350,
+    "aspectRatio": "4:5",
+    "format": "jpeg",
+    "platform": "Instagram",
+    "description": "Tall feed posts that use more vertical space than a square. 1080 x 1350 pixels is the standard 4:5 portrait frame for the main Instagram feed.",
+    "keywords": "instagram portrait post size, instagram 4:5 dimensions, instagram vertical post",
+    "explainerHeading": "Why portrait 4:5 posts are popular in the feed",
+    "explainerParagraphs": [
+      "Portrait frames take more screen height while someone scrolls, so product shots and portraits often feel stronger at 1080 x 1350 than at square.",
+      "Instagram still crops thumbnails on your profile grid. Keep faces and logos near the vertical centre so the grid preview does not cut off the story you are trying to tell."
+    ],
+    "explainerBullets": [
+      "This preset locks the export to 1080 x 1350. If your camera file is ultra wide, expect side bands or a centre crop depending on how you composed the shot before export.",
+      "JPEG is the practical default for photos. Use PNG only when you need razor sharp text on a flat background.",
+      "Watch file size after compression. Large portraits can still weigh several hundred kilobytes at high quality.",
+      "If you also post Reels or Stories, compare this frame to the 9:16 story preset so you pick the right canvas for each placement."
+    ]
+  },
+  {
+    "slug": "instagram-landscape-post",
+    "label": "Instagram Landscape Post (1.91:1)",
+    "width": 1080,
+    "height": 566,
+    "aspectRatio": "1.91:1",
+    "format": "jpeg",
+    "platform": "Instagram",
+    "description": "Wide feed posts at 1080 x 566 pixels, matching the common 1.91:1 landscape frame for Instagram photos.",
+    "keywords": "instagram landscape post size, instagram wide post dimensions",
+    "explainerHeading": "When a wide landscape post still makes sense",
+    "explainerParagraphs": [
+      "Landscape posts use less vertical space in the feed than portrait, but they suit panoramic shots, group tables, and banners that were already designed wide.",
+      "1080 x 566 pixels lines up with the 1.91:1 ratio many social guides quote for Instagram landscape. Starting from that size reduces surprise crops after upload."
+    ],
+    "explainerBullets": [
+      "Keep important detail in the middle band. Thin strips at top and bottom are easy to miss on phones.",
+      "The tool exports exactly 1080 x 566. If your source is portrait, the result will stretch unless you crop first in your editor.",
+      "Check text legibility at phone width. Wide posts already read small in the feed.",
+      "For link-style art that must match other networks, compare this preset to the blog and Open Graph presets on Pixscaler."
+    ]
   },
   {
     "slug": "shopify-product-image",
@@ -55,6 +143,50 @@
     "keywords": "shopify hero banner size, shopify banner image dimensions"
   },
   {
+    "slug": "shopify-collection-image",
+    "label": "Shopify Collection Image (Square)",
+    "width": 1024,
+    "height": 1024,
+    "aspectRatio": "1:1",
+    "format": "webp",
+    "platform": "Shopify",
+    "description": "Square thumbnail for a Shopify collection. 1024 x 1024 pixels is a common recommendation for collection grid images that still load quickly.",
+    "keywords": "shopify collection image size, shopify collection thumbnail dimensions",
+    "explainerHeading": "Why collection thumbnails deserve their own square export",
+    "explainerParagraphs": [
+      "Collection pages show a grid of category tiles. A consistent square asset at 1024 x 1024 keeps rows aligned and avoids Shopify scaling a mismatched photo in unpredictable ways.",
+      "WebP keeps file weight lower than JPEG for many product-style photos, which helps collection pages on mobile data."
+    ],
+    "explainerBullets": [
+      "Match this size across every collection for a calmer storefront layout.",
+      "If your source is rectangular, expect the preset to stretch to a square. Crop to 1:1 in your editor first when you need letterboxing instead.",
+      "Use the byte readout after compression. Large collections multiply every extra kilobyte across many tiles.",
+      "Pair this with the product image preset when you want a square hero in the collection and a higher resolution square on the product page itself."
+    ]
+  },
+  {
+    "slug": "shopify-collection-banner",
+    "label": "Shopify Collection Banner (2:1)",
+    "width": 2048,
+    "height": 1024,
+    "aspectRatio": "2:1",
+    "format": "webp",
+    "platform": "Shopify",
+    "description": "Wide banner for a Shopify collection page header. 2048 x 1024 pixels matches a 2:1 landscape frame many themes use above collection grids.",
+    "keywords": "shopify collection banner size, shopify collection header image",
+    "explainerHeading": "When to use a wide collection banner instead of only thumbnails",
+    "explainerParagraphs": [
+      "Some themes show a hero strip above collection products. A 2048 x 1024 image gives enough width for retina desktops while staying a predictable 2:1 shape for theme CSS.",
+      "If your theme does not use a collection banner, you can still export here for seasonal campaigns and swap assets when your developer enables the block."
+    ],
+    "explainerBullets": [
+      "Keep copy out of the far edges. Full-width banners often crop on tablets.",
+      "WebP keeps the hero lighter than a huge JPEG. Re-run compression if Lighthouse flags collection pages.",
+      "This preset outputs a fixed 2048 x 1024 canvas. Plan composition before you upload.",
+      "Compare with the 3:1 store hero banner preset if you are unsure which header slot you are filling."
+    ]
+  },
+  {
     "slug": "linkedin-post",
     "label": "LinkedIn Post Image",
     "width": 1200,
@@ -64,6 +196,72 @@
     "platform": "LinkedIn",
     "description": "LinkedIn post images display at 1200 x 627 pixels in the feed. Use a moderate quality setting for a good balance of clarity and file size.",
     "keywords": "linkedin post image size, linkedin image dimensions"
+  },
+  {
+    "slug": "linkedin-profile-cover",
+    "label": "LinkedIn Profile Cover Photo",
+    "width": 1584,
+    "height": 396,
+    "aspectRatio": "4:1",
+    "format": "jpeg",
+    "platform": "LinkedIn",
+    "description": "Personal profile banner on LinkedIn. 1584 x 396 pixels matches the wide strip behind your headshot on desktop layouts.",
+    "keywords": "linkedin cover photo size, linkedin profile banner dimensions",
+    "explainerHeading": "How LinkedIn profile banners crop on different widths",
+    "explainerParagraphs": [
+      "LinkedIn shows a very wide, short image behind your photo. 1584 x 396 pixels is the size most design guides recommend for personal profiles so your export matches what the network expects.",
+      "Mobile viewers see a tighter horizontal slice. If you pack detail edge to edge on desktop, part of it may disappear on phones."
+    ],
+    "explainerBullets": [
+      "Avoid placing your name or logo where the circular profile photo overlaps the banner on desktop.",
+      "Keep contrast strong. Banners sit behind white UI and can look washed out if the palette is too light.",
+      "Export JPEG, then tune quality with the slider until the file still looks crisp at full width.",
+      "If you manage a company page, use the company cover preset instead. The pixel dimensions are different."
+    ]
+  },
+  {
+    "slug": "linkedin-company-cover",
+    "label": "LinkedIn Company Page Cover",
+    "width": 1128,
+    "height": 191,
+    "aspectRatio": "5.91:1",
+    "format": "jpeg",
+    "platform": "LinkedIn",
+    "description": "Banner for a LinkedIn company page. 1128 x 191 pixels follows the shorter strip many guides quote for organisation profiles.",
+    "keywords": "linkedin company page cover size, linkedin business banner dimensions",
+    "explainerHeading": "Why company page covers are even shorter than personal banners",
+    "explainerParagraphs": [
+      "Organisation profiles use a narrower, shorter header than personal accounts. 1128 x 191 pixels is the pair most reference charts list for that slot.",
+      "Because the strip is shallow, treat it like a logo bar or a single panoramic line, not a poster with small print."
+    ],
+    "explainerBullets": [
+      "Use large type if you include words at all. Thin lines disappear on high DPI laptops.",
+      "This preset stretches to exactly 1128 x 191. Ultra tall source photos will look squeezed unless you crop first.",
+      "JPEG keeps uploads simple. Check the final kilobytes before you publish.",
+      "Pair with the LinkedIn post image preset when you need feed graphics as well as the static page banner."
+    ]
+  },
+  {
+    "slug": "linkedin-article-cover",
+    "label": "LinkedIn Article Cover Image",
+    "width": 1200,
+    "height": 644,
+    "aspectRatio": "1.86:1",
+    "format": "jpeg",
+    "platform": "LinkedIn",
+    "description": "Hero image for a LinkedIn article. 1200 x 644 pixels matches the wide cover frame commonly used at the top of long-form posts.",
+    "keywords": "linkedin article cover image size, linkedin newsletter image dimensions",
+    "explainerHeading": "How article covers differ from feed post images",
+    "explainerParagraphs": [
+      "Articles show a dedicated cover above the body text. Guides often recommend 1200 x 644 so the hero stays sharp in the article reader and in previews when people share the link.",
+      "Feed post images and article covers are not interchangeable sizes. Exporting the wrong ratio makes LinkedIn scale or crop in ways that are hard to predict from the editor alone."
+    ],
+    "explainerBullets": [
+      "Keep faces and titles in the central band. Reader chrome can cover corners on some devices.",
+      "Use moderate JPEG quality. Long articles already carry plenty of weight without an oversized hero.",
+      "After export, open the article draft and preview on mobile before you publish.",
+      "If you cross-post the same story to your blog, compare this preset to the blog featured image preset for consistent framing."
+    ]
   },
   {
     "slug": "twitter-og-image",
@@ -77,6 +275,28 @@
     "keywords": "twitter card image size, og image dimensions, twitter share preview"
   },
   {
+    "slug": "x-profile-header",
+    "label": "X Profile Header Banner",
+    "width": 1500,
+    "height": 500,
+    "aspectRatio": "3:1",
+    "format": "jpeg",
+    "platform": "Twitter / X",
+    "description": "Profile header strip on X (Twitter). 1500 x 500 pixels is the wide 3:1 banner that sits behind your avatar on desktop.",
+    "keywords": "twitter header size, x profile banner dimensions",
+    "explainerHeading": "Designing around the avatar overlap on X headers",
+    "explainerParagraphs": [
+      "The header is a full width strip, but your profile photo sits on top of the bottom left on many layouts. 1500 x 500 pixels is the canvas size most references give for that banner.",
+      "If you ignore the overlap, logos and faces can hide under the circular avatar. Treat the lower left as reserved space even if your mock-up looks empty there."
+    ],
+    "explainerBullets": [
+      "Keep critical branding in the centre and upper third.",
+      "Export JPEG under a few hundred kilobytes when you can. Headers reload on every profile view.",
+      "This preset forces 1500 x 500. Ultra tall artwork will stretch horizontally unless you crop first.",
+      "For link previews, use the Open Graph card preset instead. Headers and cards answer different jobs."
+    ]
+  },
+  {
     "slug": "passport-photo-online",
     "label": "Passport Photo (Standard)",
     "width": 600,
@@ -86,6 +306,28 @@
     "platform": "Government & Visa Portals",
     "description": "Many government and visa portal forms ask for passport-style photos at roughly 600 x 750 pixels in JPEG format, with strict file size limits that vary by site. Always check the specific portal's latest requirements before submitting.",
     "keywords": "resize photo for passport application, compress passport photo to 200kb, passport photo size online"
+  },
+  {
+    "slug": "square-id-photo-online",
+    "label": "Square ID Photo (600 x 600)",
+    "width": 600,
+    "height": 600,
+    "aspectRatio": "1:1",
+    "format": "jpeg",
+    "platform": "Government & Visa Portals",
+    "description": "Square headshot frame used by many online ID and verification flows. 600 x 600 pixels is a common target, but every portal sets its own rules. Confirm dimensions and file size on the form before you submit.",
+    "keywords": "square passport photo online, 600x600 id photo, visa photo square dimensions",
+    "explainerHeading": "When a portal asks for a square photo instead of a tall passport frame",
+    "explainerParagraphs": [
+      "Some systems request a 1:1 headshot at 600 x 600 pixels. Others ask for different sizes entirely. This preset is a practical starting canvas, not a guarantee that every government site accepts it.",
+      "Always read the live instructions on the portal. Requirements for background colour, glasses, and expression override anything a generic tool can promise."
+    ],
+    "explainerBullets": [
+      "Leave headroom above the hair. Auto-crop tools on the portal may still trim edges.",
+      "Use JPEG and watch the kilobyte readout if the form caps file size.",
+      "If the portal specifies a different pixel size, use the full Pixscaler workspace and type those dimensions manually.",
+      "For tall biometric frames, use the passport style preset on Pixscaler instead of this square."
+    ]
   },
   {
     "slug": "youtube-thumbnail",
@@ -99,6 +341,28 @@
     "keywords": "youtube thumbnail size, youtube thumbnail dimensions, resize youtube thumbnail"
   },
   {
+    "slug": "youtube-channel-banner",
+    "label": "YouTube Channel Banner",
+    "width": 2560,
+    "height": 1440,
+    "aspectRatio": "16:9",
+    "format": "jpeg",
+    "platform": "YouTube",
+    "description": "Channel art banner behind videos on your YouTube page. 2560 x 1440 pixels matches the full 16:9 canvas YouTube expects, with a smaller safe area visible on all devices.",
+    "keywords": "youtube channel art size, youtube banner dimensions, youtube channel banner safe area",
+    "explainerHeading": "Why channel art is a large canvas with a small safe area",
+    "explainerParagraphs": [
+      "YouTube asks for a 2560 x 1440 pixel image, then crops differently on TV, desktop, tablet, and phone. Only a centred region stays visible everywhere. Most guides place that safe region at about 1546 x 423 pixels in the middle of the banner.",
+      "Treat the outer edges as bleed. Logos, slogans, and upload schedules should live inside the safe box or they will vanish on mobile."
+    ],
+    "explainerBullets": [
+      "Design at full size, then visually box out the 1546 x 423 centre before you flatten for export.",
+      "JPEG under YouTube's 6 MB channel art limit is fine for photographic banners. Watch the readout after compression.",
+      "This preset outputs the full 2560 x 1440 frame. It does not draw the safe rectangle for you. Use guides in your design tool.",
+      "For video thumbnails, use the dedicated thumbnail preset. Thumbnails and channel art are different jobs."
+    ]
+  },
+  {
     "slug": "blog-featured-image",
     "label": "Blog Featured Image",
     "width": 1200,
@@ -108,5 +372,49 @@
     "platform": "General Web",
     "description": "A standard blog hero image used for Open Graph previews and the post header. 1200 x 630 pixels in WebP keeps the image sharp for social shares and fast for readers.",
     "keywords": "blog image size, featured image dimensions, og image size"
+  },
+  {
+    "slug": "apple-touch-icon",
+    "label": "Apple Touch Icon (180 x 180)",
+    "width": 180,
+    "height": 180,
+    "aspectRatio": "1:1",
+    "format": "png",
+    "platform": "General Web",
+    "description": "Square icon for iOS when someone saves your site to the home screen. 180 x 180 pixels is the common single size for modern iPhones. PNG keeps edges crisp.",
+    "keywords": "apple touch icon size, ios home screen icon 180x180",
+    "explainerHeading": "Why touch icons stay square and lossless",
+    "explainerParagraphs": [
+      "iOS applies its own rounding and shadow when it displays a touch icon. Apple recommends a square 180 x 180 pixel PNG without baked corners so the system can style it consistently.",
+      "If you upload a fuzzy source, every shortcut looks fuzzy. Start from a vector logo or a high resolution master, then scale down here."
+    ],
+    "explainerBullets": [
+      "Do not add rounded corners in the file. Let iOS handle the mask.",
+      "Keep important glyph detail inside the central 80 percent. Minor cropping can still occur on some devices.",
+      "PNG is the right default for flat graphics and logos. JPEG can ring on hard edges.",
+      "Favicons for browser tabs use different sizes. This preset targets the touch icon link only."
+    ]
+  },
+  {
+    "slug": "email-hero-image",
+    "label": "Email and CMS Hero (2:1)",
+    "width": 1200,
+    "height": 600,
+    "aspectRatio": "2:1",
+    "format": "jpeg",
+    "platform": "General Web",
+    "description": "Wide hero block for email templates and content systems that use a 2:1 frame. 1200 x 600 pixels scales down cleanly to 600 CSS pixels wide on many desktop readers. JPEG is the safest default for email because many clients still do not render WebP reliably.",
+    "keywords": "email hero image size, newsletter banner dimensions, jpeg email header, cms hero image 2:1",
+    "explainerHeading": "Why email heroes need a simple wide frame",
+    "explainerParagraphs": [
+      "Many marketing emails use a full width hero at the top of the message. A 1200 x 600 pixel master gives designers enough pixels for retina displays while still mapping to a 600 pixel logical width in common templates.",
+      "Not every ESP uses the same width. Treat this as a sensible default export, then confirm your template's max width in your email builder."
+    ],
+    "explainerBullets": [
+      "Keep text large. Email clients block images by default for some users, so the alt text matters as much as the picture.",
+      "JPEG is the practical default for broad email client support. If your ESP or CMS preview confirms WebP in the inbox, switch format in Pixscaler before download.",
+      "Avoid tiny details along the bottom edge. Mobile readers often crop heroes slightly.",
+      "For social link previews, use the blog or Open Graph presets instead. Email and social cards are different crops."
+    ]
   }
 ]
