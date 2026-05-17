@@ -1,0 +1,320 @@
+---
+// BaseLayout.astro — Core shell for all pages
+// Injects global styles, font, SEO meta, header, footer
+
+import '../styles/global.css';
+import '../styles/resizer.css';
+
+/** Rich results: BlogPosting + article Open Graph. Author matches site owner. */
+export interface ArticleSeo {
+  publishedTime: Date;
+  modifiedTime?: Date;
+  authorName: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  article?: ArticleSeo;
+}
+
+const {
+  title,
+  description,
+  canonicalUrl,
+  ogImage = '/og-default.png',
+  article,
+} = Astro.props;
+
+const canonical = canonicalUrl ?? new URL(Astro.url.pathname, Astro.site).href;
+const siteTitle = title.includes('Pixscaler') ? title : `${title} | Pixscaler`;
+
+const siteBase = Astro.site ?? new URL('https://pixscaler.com');
+const siteOrigin = siteBase.href.replace(/\/$/, '') + '/';
+const orgId = `${siteOrigin}#organization`;
+const websiteId = `${siteOrigin}#website`;
+const ogImageAbsolute = new URL(ogImage, Astro.site).href;
+
+const ogType = article ? 'article' : 'website';
+
+const siteJsonDescription =
+  'Free client-side image resizer, compressor, and format converter. Processing runs in your browser; files are not uploaded to Pixscaler servers.';
+
+const jsonLdGraph: Record<string, unknown>[] = [
+  {
+    '@type': 'WebSite',
+    '@id': websiteId,
+    url: siteOrigin,
+    name: 'Pixscaler',
+    description: siteJsonDescription,
+    publisher: { '@id': orgId },
+  },
+  {
+    '@type': 'Organization',
+    '@id': orgId,
+    name: 'Pixscaler',
+    url: siteOrigin,
+    founder: {
+      '@type': 'Person',
+      name: 'Benchehida Abdelatif',
+    },
+  },
+];
+
+if (article) {
+  jsonLdGraph.push({
+    '@type': 'BlogPosting',
+    '@id': `${canonical}#article`,
+    headline: title,
+    description,
+    datePublished: article.publishedTime.toISOString(),
+    ...(article.modifiedTime
+      ? { dateModified: article.modifiedTime.toISOString() }
+      : {}),
+    author: {
+      '@type': 'Person',
+      name: article.authorName,
+    },
+    publisher: { '@id': orgId },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonical,
+    },
+    image: ogImageAbsolute,
+  });
+}
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': jsonLdGraph,
+};
+
+const structuredDataJson = JSON.stringify(structuredData).replace(/</g, '\\u003c');
+
+/** Google AdSense (Auto ads). Same publisher ID as public/ads.txt */
+const ADSENSE_CLIENT = 'ca-pub-5535091950705957';
+/** Omit in dev to avoid skewing metrics; use `npm run build && npm run preview` to test. */
+const adsenseInHead = import.meta.env.PROD;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1F6F5F" />
+
+    <title>{siteTitle}</title>
+    <meta name="description" content={description} />
+
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageAbsolute} />
+    {article && (
+      <>
+        <meta property="article:published_time" content={article.publishedTime.toISOString()} />
+        {article.modifiedTime && (
+          <meta property="article:modified_time" content={article.modifiedTime.toISOString()} />
+        )}
+        <meta property="article:author" content={article.authorName} />
+      </>
+    )}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbsolute} />
+
+    <script is:inline type="application/ld+json" set:html={structuredDataJson} />
+
+    <!-- Sitemap & RSS -->
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Pixscaler Blog" href="/rss.xml" />
+
+    <!-- Global styles are bundled by Astro/Vite via the <style> import below -->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/Pixscaler.ico" />
+
+    {adsenseInHead && (
+      <script
+        is:inline
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+        crossorigin="anonymous"
+      />
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <!-- ── Site Header ── -->
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a href="/" class="site-header__logo" aria-label="Pixscaler home">
+          <img src="/Pixscaler.webp" alt="Pixscaler logo" width="32" height="32" class="site-header__logo-img" />
+          <span class="site-header__wordmark">Pixscaler</span>
+        </a>
+
+        <nav class="site-nav" aria-label="Main navigation">
+          <ul class="site-nav__list">
+            <li><a href="/tool" class="site-nav__link">Tool</a></li>
+            <li><a href="/resize" class="site-nav__link">Presets</a></li>
+            <li><a href="/blog" class="site-nav__link">Blog</a></li>
+            <li><a href="/" class="site-nav__link">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ── Page Content ── -->
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!-- ── Site Footer ── -->
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <div class="site-footer__brand">
+          <p class="site-footer__tagline">
+            Pixscaler compresses and converts your images locally, inside your browser. 
+            Your files never touch a server.
+          </p>
+        </div>
+        <nav aria-label="Footer navigation" class="site-footer__nav">
+          <ul>
+            <li><a href="/tool">Tool</a></li>
+            <li><a href="/resize">Presets</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/">About</a></li>
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/terms">Terms</a></li>
+          </ul>
+        </nav>
+        <p class="site-footer__copy">
+          &copy; {new Date().getFullYear()} Pixscaler. Open source and free to use.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  /* ── Header ─────────────────────────────────────────────── */
+  .site-header {
+    background-color: var(--surface-card);
+    border-bottom: 1px solid var(--surface-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    gap: 2rem;
+  }
+
+  .site-header__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    transition: opacity var(--transition-fast);
+  }
+
+  .site-header__logo:hover { opacity: 0.8; color: var(--text-primary); }
+
+  .site-header__logo-img {
+    border-radius: 6px;
+    display: block;
+  }
+
+  .site-nav__list {
+    display: flex;
+    list-style: none;
+    gap: 0.25rem;
+  }
+
+  .site-nav__link {
+    display: block;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: var(--border-radius-sm);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .site-nav__link:hover {
+    background-color: var(--surface-base);
+    color: var(--text-primary);
+  }
+
+  /* ── Footer ─────────────────────────────────────────────── */
+  .site-footer {
+    background-color: var(--color-deep-teal);
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: auto;
+    padding-block: 2.5rem;
+  }
+
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem 3rem;
+    align-items: start;
+  }
+
+  .site-footer__tagline {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 45ch;
+  }
+
+  .site-footer__nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
+
+  .site-footer__nav a {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .site-footer__nav a:hover { color: #fff; }
+
+  .site-footer__copy {
+    grid-column: 1 / -1;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  @media (max-width: 640px) {
+    .site-footer__inner { grid-template-columns: 1fr; }
+    .site-nav__list { gap: 0; }
+  }
+</style>
