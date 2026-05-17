@@ -1,28 +1,34 @@
 {
   "name": "pixscaler",
-  "version": "3.0.0",
-  "description": "Free client-side image resizer - no uploads, complete privacy",
-  "main": "public/index.html",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "dev": "npx serve public -p 3000",
-    "build": "echo 'No build step required - static files ready for deployment'"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "og:blog": "node tools/blog-og/generate.mjs",
+    "og:blog:sync": "node tools/sync-blog-og.mjs",
+    "astro": "astro"
   },
-  "keywords": [
-    "image-resizer",
-    "client-side",
-    "free",
-    "privacy",
-    "canvas",
-    "javascript",
-    "static",
-    "no-upload",
-    "pwa"
-  ],
-  "author": "Benchehida Abdelatif",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/27bhd/Pixscaler.git"
+  "dependencies": {
+    "@astrojs/react": "^5.0.5",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^6.3.3",
+    "jszip": "^3.10.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   },
-  "homepage": "https://pixscaler.com"
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@fontsource/outfit": "^5.2.8",
+    "sharp": "^0.34.5",
+    "typescript": "^6.0.3"
+  }
 }
