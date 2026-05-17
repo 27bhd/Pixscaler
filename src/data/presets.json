@@ -1,0 +1,112 @@
+[
+  {
+    "slug": "facebook-cover-photo",
+    "label": "Facebook Cover Photo",
+    "width": 1640,
+    "height": 624,
+    "aspectRatio": "2.63:1",
+    "format": "jpeg",
+    "platform": "Facebook",
+    "description": "The banner image shown at the top of your Facebook page. It displays at 1640 x 624 pixels on desktop. JPEG works well for photographs.",
+    "keywords": "facebook cover photo size, facebook banner image dimensions"
+  },
+  {
+    "slug": "instagram-post",
+    "label": "Instagram Post (Square)",
+    "width": 1080,
+    "height": 1080,
+    "aspectRatio": "1:1",
+    "format": "jpeg",
+    "platform": "Instagram",
+    "description": "Square posts display at 1080 x 1080 pixels in the Instagram grid. JPEG works best for photos, PNG for graphics with text.",
+    "keywords": "instagram post size, instagram square image dimensions"
+  },
+  {
+    "slug": "instagram-story",
+    "label": "Instagram Story",
+    "width": 1080,
+    "height": 1920,
+    "aspectRatio": "9:16",
+    "format": "jpeg",
+    "platform": "Instagram",
+    "description": "Stories fill the full phone screen vertically. The recommended size is 1080 x 1920 pixels.",
+    "keywords": "instagram story size, instagram story image dimensions"
+  },
+  {
+    "slug": "shopify-product-image",
+    "label": "Shopify Product Image",
+    "width": 2048,
+    "height": 2048,
+    "aspectRatio": "1:1",
+    "format": "webp",
+    "platform": "Shopify",
+    "description": "Shopify recommends 2048 x 2048 pixels for product images to support zoom. Convert to WebP to keep load times fast without losing quality.",
+    "keywords": "shopify product image size, shopify image dimensions, shopify webp"
+  },
+  {
+    "slug": "shopify-banner",
+    "label": "Shopify Hero Banner",
+    "width": 1800,
+    "height": 600,
+    "aspectRatio": "3:1",
+    "format": "webp",
+    "platform": "Shopify",
+    "description": "Shopify hero banners display across the full store header. A 1800 x 600 pixel WebP image keeps detail sharp on desktop without slowing the page down.",
+    "keywords": "shopify hero banner size, shopify banner image dimensions"
+  },
+  {
+    "slug": "linkedin-post",
+    "label": "LinkedIn Post Image",
+    "width": 1200,
+    "height": 627,
+    "aspectRatio": "1.91:1",
+    "format": "jpeg",
+    "platform": "LinkedIn",
+    "description": "LinkedIn post images display at 1200 x 627 pixels in the feed. Use a moderate quality setting for a good balance of clarity and file size.",
+    "keywords": "linkedin post image size, linkedin image dimensions"
+  },
+  {
+    "slug": "twitter-og-image",
+    "label": "Twitter / X Open Graph Image",
+    "width": 1200,
+    "height": 630,
+    "aspectRatio": "1.91:1",
+    "format": "jpeg",
+    "platform": "Twitter / X",
+    "description": "When you share a link on Twitter/X, the card image pulls from the og:image meta tag. Use 1200 x 630 pixels for a clean summary card.",
+    "keywords": "twitter card image size, og image dimensions, twitter share preview"
+  },
+  {
+    "slug": "passport-photo-online",
+    "label": "Passport Photo (Standard)",
+    "width": 600,
+    "height": 750,
+    "aspectRatio": "4:5",
+    "format": "jpeg",
+    "platform": "Government & Visa Portals",
+    "description": "Many government and visa portal forms ask for passport-style photos at roughly 600 x 750 pixels in JPEG format, with strict file size limits that vary by site. Always check the specific portal's latest requirements before submitting.",
+    "keywords": "resize photo for passport application, compress passport photo to 200kb, passport photo size online"
+  },
+  {
+    "slug": "youtube-thumbnail",
+    "label": "YouTube Thumbnail",
+    "width": 1280,
+    "height": 720,
+    "aspectRatio": "16:9",
+    "format": "jpeg",
+    "platform": "YouTube",
+    "description": "YouTube thumbnails display at 1280 x 720 pixels. JPEG is the most widely supported format. YouTube allows up to 2MB per thumbnail; use the quality slider and check the output size before uploading.",
+    "keywords": "youtube thumbnail size, youtube thumbnail dimensions, resize youtube thumbnail"
+  },
+  {
+    "slug": "blog-featured-image",
+    "label": "Blog Featured Image",
+    "width": 1200,
+    "height": 630,
+    "aspectRatio": "1.91:1",
+    "format": "webp",
+    "platform": "General Web",
+    "description": "A standard blog hero image used for Open Graph previews and the post header. 1200 x 630 pixels in WebP keeps the image sharp for social shares and fast for readers.",
+    "keywords": "blog image size, featured image dimensions, og image size"
+  }
+]
