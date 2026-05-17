@@ -1,0 +1,2 @@
+# Google AdSense (seller declaration for authorized digital sellers)
+google.com, pub-5535091950705957, DIRECT, f08c47fec0942fa0
